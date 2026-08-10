@@ -838,5 +838,3 @@ Dessa forma, os requisitos permanecem independentes das decisões de implementa�
 **Versão:** 1.0
 
 **Última atualização:** 2026-08-10
-
-**Próximo documento:** `02-arquitetura.md`
