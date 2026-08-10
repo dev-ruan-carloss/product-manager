@@ -1,0 +1,34 @@
+﻿# cspell:words vite
+# Dependencies
+node_modules/
+
+# Build
+dist/
+build/
+
+# Cache
+.cache/
+.vite/
+coverage/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local IDE settings
+.idea/
+
+# Temporary files
+*.tmp
+*.temp
