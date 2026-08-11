@@ -20,7 +20,7 @@ defineEmits<{
 <template>
   <div
     role="alert"
-    class="flex flex-col items-center justify-center rounded-xl border border-slate-200 bg-white px-6 py-16 text-center shadow-sm dark:border-slate-700 dark:bg-slate-950"
+    class="flex flex-col items-center justify-center rounded-xl border border-slate-200 bg-white px-3 py-8 text-center shadow-sm sm:px-6 sm:py-12 dark:border-slate-700 dark:bg-slate-950"
   >
     <div
       class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-rose-50 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400"
@@ -34,11 +34,11 @@ defineEmits<{
         />
       </svg>
     </div>
-    <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100">{{ title }}</h2>
-    <p class="mt-2 max-w-md text-sm text-slate-500 dark:text-slate-400">{{ description }}</p>
+    <h2 class="break-words text-lg font-semibold text-slate-900 dark:text-slate-100">{{ title }}</h2>
+    <p class="mt-2 max-w-md break-words text-sm text-slate-500 dark:text-slate-400">{{ description }}</p>
     <button
       type="button"
-      class="mt-6 inline-flex items-center justify-center rounded-lg bg-violet-600 px-4 py-2.5 text-sm font-medium text-white outline-none hover:bg-violet-700 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950"
+      class="mt-6 inline-flex min-h-11 items-center justify-center rounded-lg bg-violet-600 px-4 py-2.5 text-sm font-medium text-white outline-none hover:bg-violet-700 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950"
       @click="$emit('retry')"
     >
       {{ actionLabel }}

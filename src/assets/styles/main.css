@@ -3,10 +3,26 @@
 /* Dark Mode controlado por classe `.dark` no <html> (não só prefers-color-scheme). */
 @custom-variant dark (&:where(.dark, .dark *));
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 html,
 body,
 #app {
   min-height: 100%;
+}
+
+.app-shell {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -49,4 +65,53 @@ html.dark :focus-visible {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}
+
+/*
+  Controles PrimeVue devem respeitar o container pai.
+  Evita overflow horizontal sem esconder o problema com overflow-x-hidden.
+*/
+.p-inputtext,
+.p-textarea,
+.p-select,
+.p-iconfield,
+.p-inputnumber,
+.p-inputnumber-input {
+  max-width: 100%;
+}
+
+.p-iconfield,
+.p-inputnumber,
+.p-select {
+  width: 100%;
+}
+
+.p-paginator {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  max-width: 100%;
+}
+
+.p-paginator .p-paginator-content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  max-width: 100%;
+}
+
+.p-paginator .p-paginator-pages {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.125rem;
+}
+
+.p-toast {
+  max-width: min(100vw - 1.5rem, 25rem);
 }

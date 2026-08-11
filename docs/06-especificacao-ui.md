@@ -107,6 +107,12 @@ O cabeçalho deverá apresentar:
 
 No mobile, a navegação deverá ser adaptada para o espaço disponível.
 
+**Implementação atual (responsividade):**
+
+- Em telas menores que `lg`, o Header organiza identidade + controles (tema/favoritos) na primeira linha e navegação + “Novo Produto” na segunda, com `flex-wrap`.
+- Em `lg+`, identidade, navegação e ações permanecem em uma composição horizontal fluida.
+- Áreas de toque dos controles do Header permanecem utilizáveis; safe-area superior é considerada via `env(safe-area-inset-top)`.
+
 O controle de tema (`ThemeToggle`) deve:
 
 - permanecer no Header global;
@@ -132,7 +138,7 @@ Conteúdo:
 
 Não inclui redes sociais, contatos, links externos ou dados fictícios.
 
-No desktop, os links de navegação podem aparecer em linha; no mobile, empilhados. O layout principal usa `min-h-screen` + `flex-1` no conteúdo para manter o rodapé ao final da viewport quando a página tem pouco conteúdo.
+No desktop, os links de navegação podem aparecer em linha; no mobile, empilhados. O layout principal usa `min-height: 100vh` com fallback moderno `100dvh` (classe `.app-shell`) + `flex-1` no conteúdo para manter o rodapé ao final da viewport quando a página tem pouco conteúdo. Safe-area inferior é considerada via `env(safe-area-inset-bottom)`.
 
 ---
 
@@ -296,6 +302,10 @@ Cada produto deverá utilizar um componente reutilizável:
 `ProductCard`
 
 A quantidade de colunas deverá se adaptar ao espaço disponível.
+
+**Implementação atual:** o grid utiliza `auto-fill` + `minmax(min(100%, 14rem), 1fr)`.
+
+O `min(100%, 14rem)` garante que a trilha nunca exceda a largura útil do container (inclui padding lateral), evitando overflow em 320px/360px. Em auditoria de validação: 1 coluna em smartphones estreitos; múltiplas colunas conforme o espaço (com ou sem sidebar).
 
 ---
 
@@ -780,13 +790,33 @@ As mensagens deverão ser curtas e compreensíveis.
 
 A interface deverá funcionar corretamente a partir de:
 
-`360px`
+`320px`
 
 Deverá ser validada pelo menos em:
 
+- 320px;
 - 360px;
 - 768px;
 - desktop.
+
+### Status (Fase 9 — parte responsiva)
+
+**Status:** **CONCLUÍDO**
+
+Ajustes aplicados na camada de apresentação:
+
+- alvo mínimo de usabilidade: **320px+**;
+- prioridade: sem espaços em branco forçados; quando faltar largura, usar `flex-wrap`;
+- Header/Footer reorganizados com wrap e hierarquia preservada (sem `justify-between` gerando vazio no mobile);
+- catálogo, favoritos, detalhes e formulários com paddings compactos em telas estreitas;
+- grid fluido (`auto-fill` + `minmax(min(100%, 14rem), 1fr)`), validado sem overflow de 320px a 1920px;
+- cards com altura de linha alinhada (`auto-rows-fr` + `h-full`) e conteúdo empilhado no topo (sem `mt-auto`);
+- paginação com wrap;
+- controles PrimeVue com `max-width: 100%`;
+- ausência de `overflow-x-hidden` como solução genérica;
+- segunda auditoria de validação (viewports mobile/tablet/desktop + Light/Dark) concluída para a parte responsiva.
+
+Acessibilidade completa permanece pendente (ver seção 48 / Fase 9).
 
 ---
 
@@ -800,6 +830,8 @@ Em telas pequenas:
 - botões deverão possuir área adequada para toque;
 - textos não deverão ultrapassar a largura da tela;
 - formulários deverão utilizar a largura disponível.
+
+**Implementação atual:** filtros/ordenação empilham abaixo de `md`; formulário em coluna única abaixo de `md`; ações de detalhes/formulário em coluna no mobile; textos longos usam quebra natural (`break-words`) em vez de truncamento indiscriminado.
 
 ---
 
@@ -975,7 +1007,7 @@ A interface será considerada adequada quando:
 - [x] Estados de loading estão implementados.
 - [x] Estados de erro estão implementados.
 - [x] Estados vazios estão implementados.
-- [ ] Interface é responsiva a partir de 360px.
+- [x] Interface é responsiva a partir de 320px.
 - [x] Componentes PrimeVue são utilizados.
 - [x] TailwindCSS é utilizado para estilização e layout.
 - [ ] Interface possui navegação acessível por teclado.
@@ -987,6 +1019,6 @@ A interface será considerada adequada quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.6
+**Versão:** 1.7
 
 **Última atualização:** 2026-08-11

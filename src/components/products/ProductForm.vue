@@ -121,18 +121,18 @@ function onCancel(): void {
 </script>
 
 <template>
-  <form class="space-y-6" novalidate @submit="onSubmit">
-    <div class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_20rem]">
+  <form class="min-w-0 space-y-4 sm:space-y-6" novalidate @submit="onSubmit">
+    <div class="grid min-w-0 gap-4 sm:gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(16rem,20rem)]">
       <section
-        class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 dark:border-slate-700 dark:bg-slate-950"
+        class="min-w-0 rounded-xl border border-slate-200 bg-white p-3 shadow-sm sm:p-6 dark:border-slate-700 dark:bg-slate-950"
         aria-labelledby="product-form-heading"
       >
         <h2 id="product-form-heading" class="text-lg font-semibold text-slate-900 dark:text-slate-100">
           Informações do produto
         </h2>
 
-        <div class="mt-5 grid gap-5 sm:grid-cols-2">
-          <div class="space-y-1.5 sm:col-span-1">
+        <div class="mt-4 grid min-w-0 gap-4 sm:mt-5 sm:gap-5 md:grid-cols-2">
+          <div class="min-w-0 space-y-1.5 md:col-span-1">
             <label for="product-title" class="block text-sm font-medium text-slate-700 dark:text-slate-200">
               Título do produto
               <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
@@ -165,7 +165,7 @@ function onCancel(): void {
             </p>
           </div>
 
-          <div class="space-y-1.5 sm:col-span-1">
+          <div class="min-w-0 space-y-1.5 md:col-span-1">
             <label for="product-category" class="block text-sm font-medium text-slate-700 dark:text-slate-200">
               Categoria
               <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
@@ -215,7 +215,7 @@ function onCancel(): void {
             </p>
           </div>
 
-          <div class="space-y-1.5 sm:col-span-1">
+          <div class="min-w-0 space-y-1.5 md:col-span-1">
             <label for="product-price" class="block text-sm font-medium text-slate-700 dark:text-slate-200">
               Preço
               <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
@@ -249,7 +249,7 @@ function onCancel(): void {
             </p>
           </div>
 
-          <div class="space-y-1.5 sm:col-span-1">
+          <div class="min-w-0 space-y-1.5 md:col-span-1">
             <label for="product-image" class="block text-sm font-medium text-slate-700 dark:text-slate-200">
               URL da imagem
               <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
@@ -282,7 +282,7 @@ function onCancel(): void {
             </p>
           </div>
 
-          <div class="space-y-1.5 sm:col-span-2">
+          <div class="min-w-0 space-y-1.5 md:col-span-2">
             <label for="product-description" class="block text-sm font-medium text-slate-700 dark:text-slate-200">
               Descrição
               <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
@@ -319,9 +319,9 @@ function onCancel(): void {
         </div>
       </section>
 
-      <aside class="space-y-4 xl:sticky xl:top-6 xl:self-start">
+      <aside class="min-w-0 space-y-3 sm:space-y-4 xl:sticky xl:top-6 xl:self-start">
         <section
-          class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-950"
+          class="min-w-0 rounded-xl border border-slate-200 bg-white p-3 shadow-sm sm:p-5 dark:border-slate-700 dark:bg-slate-950"
           aria-labelledby="product-preview-heading"
         >
           <h2 id="product-preview-heading" class="text-base font-semibold text-slate-900 dark:text-slate-100">
@@ -353,7 +353,7 @@ function onCancel(): void {
         </section>
 
         <section
-          class="rounded-xl border border-violet-100 bg-violet-50/60 p-5 dark:border-violet-900/60 dark:bg-violet-950/30"
+          class="min-w-0 rounded-xl border border-violet-100 bg-violet-50/60 p-3 sm:p-5 dark:border-violet-900/60 dark:bg-violet-950/30"
           aria-labelledby="product-tips-heading"
         >
           <div class="flex items-center gap-2">
@@ -394,14 +394,14 @@ function onCancel(): void {
     </div>
 
     <div
-      class="flex flex-col-reverse gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-5 dark:border-slate-700 dark:bg-slate-950"
+      class="flex flex-col-reverse gap-2 rounded-xl border border-slate-200 bg-white p-3 shadow-sm sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-3 sm:p-5 dark:border-slate-700 dark:bg-slate-950"
     >
       <Button
         type="button"
         label="Cancelar"
         severity="secondary"
         outlined
-        class="w-full sm:w-auto"
+        class="min-h-11 w-full sm:w-auto"
         :disabled="submitting"
         @click="onCancel"
       >
@@ -414,7 +414,7 @@ function onCancel(): void {
         type="submit"
         :label="submitLabel"
         severity="primary"
-        class="w-full !border-violet-600 !bg-violet-600 hover:!bg-violet-700 sm:w-auto"
+        class="min-h-11 w-full !border-violet-600 !bg-violet-600 hover:!bg-violet-700 sm:w-auto"
         :loading="submitting"
         :disabled="submitting"
         :aria-busy="submitting"

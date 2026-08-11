@@ -27,8 +27,8 @@ function goToCatalog(): void {
 </script>
 
 <template>
-  <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:py-8">
-    <nav class="mb-4 text-sm text-slate-400 dark:text-slate-500" aria-label="Trilha de navegação">
+  <div class="mx-auto max-w-7xl px-2.5 py-3 sm:px-6 sm:py-6 lg:py-8">
+    <nav class="mb-3 text-sm text-slate-400 dark:text-slate-500" aria-label="Trilha de navegação">
       <ol class="flex flex-wrap items-center gap-1.5">
         <li>
           <RouterLink
@@ -43,17 +43,17 @@ function goToCatalog(): void {
       </ol>
     </nav>
 
-    <header class="mb-6 space-y-1 sm:mb-8">
-      <h1 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-100">Meus Favoritos</h1>
+    <header class="mb-3 min-w-0 space-y-1 sm:mb-6">
+      <h1 class="break-words text-xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-100">Meus Favoritos</h1>
       <p class="text-sm text-slate-500 sm:text-base dark:text-slate-400">
         Produtos que você adicionou aos favoritos.
       </p>
     </header>
 
-    <section class="min-w-0 space-y-5" aria-label="Produtos favoritos">
+    <section class="min-w-0 space-y-3 sm:space-y-5" aria-label="Produtos favoritos">
       <div
         v-if="!isEmpty && !hasError"
-        class="flex flex-wrap items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm dark:border-slate-700 dark:bg-slate-950"
+        class="flex min-w-0 flex-wrap items-center gap-2 rounded-xl border border-slate-200 bg-white px-2.5 py-2.5 shadow-sm sm:gap-3 sm:px-4 sm:py-3 dark:border-slate-700 dark:bg-slate-950"
       >
         <span
           class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-600 text-white"
@@ -65,7 +65,7 @@ function goToCatalog(): void {
             />
           </svg>
         </span>
-        <p class="text-sm font-medium text-slate-700 dark:text-slate-200">
+        <p class="min-w-0 text-sm font-medium leading-relaxed text-slate-700 dark:text-slate-200">
           <span class="tabular-nums">{{ favoritesCount }}</span>
           {{ favoritesCount === 1 ? 'produto favoritado' : 'produtos favoritados' }}
         </p>
@@ -110,7 +110,7 @@ function goToCatalog(): void {
 
         <p
           v-if="unavailableFavoritesCount > 0"
-          class="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200"
+          class="break-words rounded-lg border border-amber-200 bg-amber-50 px-3 py-3 text-sm text-amber-800 sm:px-4 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200"
           role="status"
         >
           {{ unavailableFavoritesCount }}

@@ -386,7 +386,7 @@ A interface deverá considerar, no mínimo:
 - tablets;
 - desktops.
 
-A largura mínima considerada para a interface deverá ser aproximadamente 360px.
+A largura mínima considerada para a interface deverá ser aproximadamente 320px.
 
 ### Critérios de aceite
 
@@ -731,7 +731,7 @@ O projeto será considerado funcionalmente concluído quando atender aos seguint
 - [x] Estados vazios são tratados.
 - [x] Estados sem resultados são tratados.
 - [x] Navegação entre as áreas funciona corretamente.
-- [ ] Interface é responsiva.
+- [x] Interface é responsiva.
 - [ ] Requisitos básicos de acessibilidade são atendidos.
 - [x] TypeScript é utilizado de forma consistente.
 - [x] A separação de responsabilidades é respeitada.
@@ -854,6 +854,6 @@ Dessa forma, os requisitos permanecem independentes das decisões de implementa�
 
 **Status:** Em andamento
 
-**Versão:** 1.2
+**Versão:** 1.3
 
 **Última atualização:** 2026-08-11

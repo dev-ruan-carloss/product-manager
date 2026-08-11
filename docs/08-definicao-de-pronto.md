@@ -202,19 +202,21 @@ A interface será considerada pronta quando:
 
 A aplicação deverá ser validada em:
 
-- [ ] 360px.
-- [ ] Mobile.
-- [ ] Tablet.
-- [ ] Desktop.
+- [x] 320px.
+- [x] 360px.
+- [x] Mobile.
+- [x] Tablet.
+- [x] Desktop.
 
 Também deverá ser verificado:
 
-- [ ] Ausência de overflow horizontal.
-- [ ] Grid adaptável.
-- [ ] Navegação adaptável.
-- [ ] Formulários adaptáveis.
-- [ ] Botões adequados para toque.
-- [ ] Textos sem quebra inadequada.
+- [x] Ausência de overflow horizontal.
+- [x] Grid adaptável.
+- [x] Navegação adaptável.
+- [x] Formulários adaptáveis.
+- [x] Botões adequados para toque.
+- [x] Textos sem quebra inadequada.
+- [x] Sem espaçamento em branco excessivo; wrap quando faltar espaço.
 
 ---
 
@@ -346,7 +348,7 @@ O projeto somente será considerado pronto quando:
 - [ ] API estiver integrada.
 - [ ] Favoritos estiverem persistidos.
 - [ ] Formulários estiverem validados.
-- [ ] Responsividade estiver validada.
+- [x] Responsividade estiver validada.
 - [ ] Acessibilidade básica estiver validada.
 - [ ] Estados de loading, erro e vazio estiverem implementados.
 - [ ] Lint estiver passando.
@@ -382,6 +384,6 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 
 **Status:** Em andamento
 
-**Versão:** 1.5
+**Versão:** 1.6
 
 **Última atualização:** 2026-08-11

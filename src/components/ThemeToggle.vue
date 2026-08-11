@@ -15,7 +15,7 @@ const title = computed(() => (themeStore.isDark ? 'Modo claro' : 'Modo escuro'))
 <template>
   <button
     type="button"
-    class="inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-600 outline-none transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-violet-500 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-slate-100"
+    class="inline-flex h-9 w-9 items-center justify-center rounded-full text-slate-600 outline-none transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-violet-500 sm:h-10 sm:w-10 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-slate-100"
     :aria-label="ariaLabel"
     :aria-pressed="themeStore.isDark"
     :title="title"

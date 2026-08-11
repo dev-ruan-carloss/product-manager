@@ -444,9 +444,9 @@ Esses elementos não foram tratados como funcionalidades pendentes.
 ### Responsividade
 
 - Utilização do mesmo grid do catálogo.
-- Comportamento de `1 → 2 → 3 → 4` colunas conforme viewport.
+- Grid fluido com `auto-fill` + `minmax(min(100%, 16rem), 1fr)` (1 a N colunas conforme espaço útil).
 - Container `max-w-7xl`.
-- Paddings alinhados às demais views.
+- Paddings alinhados às demais views (`px-3` no mobile, `sm:px-6` em diante).
 - Ausência de overflow horizontal.
 
 ### Acessibilidade
@@ -796,16 +796,18 @@ Garantir funcionamento adequado a partir de 360px e atender critérios básicos 
 
 ### Responsividade
 
-- [ ] Validar 360px.
-- [ ] Validar mobile.
-- [ ] Validar tablet.
-- [ ] Validar desktop.
-- [ ] Ajustar grid.
-- [ ] Ajustar navegação.
-- [ ] Ajustar filtros.
-- [ ] Ajustar formulários.
-- [ ] Validar áreas de toque.
-- [ ] Garantir ausência de overflow horizontal.
+- [x] Validar 320px.
+- [x] Validar 360px.
+- [x] Validar mobile.
+- [x] Validar tablet.
+- [x] Validar desktop.
+- [x] Ajustar grid.
+- [x] Ajustar navegação.
+- [x] Ajustar filtros.
+- [x] Ajustar formulários.
+- [x] Validar áreas de toque.
+- [x] Garantir ausência de overflow horizontal.
+- [x] Evitar espaçamento em branco excessivo (layout compacto + wrap).
 
 ### Acessibilidade
 
@@ -1042,7 +1044,7 @@ A implementação será considerada concluída quando:
 - [x] PrimeVue estiver configurado no projeto.
 - [x] TailwindCSS estiver configurado no projeto.
 - [x] Estados de loading, erro e vazio estiverem implementados nas telas.
-- [ ] Responsividade estiver validada a partir de 360px.
+- [x] Responsividade estiver validada a partir de 320px.
 - [ ] Acessibilidade básica estiver validada.
 - [x] Lint estiver passando.
 - [x] Build estiver passando.
@@ -1093,13 +1095,14 @@ Resumo do acompanhamento:
 | Edição | concluída |
 | Footer estrutural (`AppFooter` + `DefaultLayout`) | concluída |
 | Tema Light/Dark Mode (`themeStore` + `ThemeToggle`) | concluída |
-| Responsividade/acessibilidade | pendente |
+| Responsividade (Fase 9 — parte responsiva) | concluída |
+| Acessibilidade (Fase 9 — parte a11y) | pendente |
 | QA | pendente |
 | Entrega | pendente |
 
 ### Próxima fase
 
-**Fase 9 — Responsividade e acessibilidade**
+**Fase 9 — Acessibilidade** (itens de a11y ainda pendentes) e, em seguida, **Fase 10 — QA final**
 
 ---
 
@@ -1107,6 +1110,6 @@ Resumo do acompanhamento:
 
 **Status:** Em andamento
 
-**Versão:** 1.9
+**Versão:** 1.10
 
 **Última atualização:** 2026-08-11

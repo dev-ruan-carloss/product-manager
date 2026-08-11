@@ -20,9 +20,9 @@ function onInput(event: Event): void {
 </script>
 
 <template>
-  <div class="w-full">
+  <div class="min-w-0 w-full">
     <label class="sr-only" :for="inputId ?? 'product-search'">Buscar produto</label>
-    <IconField class="w-full">
+    <IconField class="w-full min-w-0">
       <InputIcon>
         <SearchIcon />
       </InputIcon>

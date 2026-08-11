@@ -10,9 +10,11 @@ useThemeStore()
 </script>
 
 <template>
-  <div class="flex min-h-screen flex-col bg-slate-50 text-slate-900 transition-colors duration-150 dark:bg-slate-900 dark:text-slate-100">
+  <div
+    class="app-shell flex flex-col bg-slate-50 text-slate-900 transition-colors duration-150 dark:bg-slate-900 dark:text-slate-100"
+  >
     <AppHeader />
-    <main class="flex-1">
+    <main class="min-w-0 flex-1">
       <RouterView />
     </main>
     <AppFooter />

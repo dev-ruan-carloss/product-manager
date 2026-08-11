@@ -42,33 +42,36 @@ function onItemsPerPageChange(value: number): void {
 <template>
   <div
     v-if="showPagination"
-    class="flex flex-col gap-4 border-t border-slate-200 pt-4 sm:flex-row sm:items-center sm:justify-between dark:border-slate-700"
+    class="flex min-w-0 flex-col gap-2 border-t border-slate-200 pt-3 sm:gap-3 sm:pt-4 dark:border-slate-700"
   >
-    <p class="text-sm text-slate-500 dark:text-slate-400" aria-live="polite">
+    <p class="text-sm leading-relaxed text-slate-500 dark:text-slate-400" aria-live="polite">
       Mostrando {{ rangeStart }} a {{ rangeEnd }} de {{ totalProducts }} produtos
     </p>
 
-    <Paginator
-      v-if="showPageControls"
-      :first="first"
-      :rows="itemsPerPage"
-      :total-records="totalProducts"
-      template="PrevPageLink PageLinks NextPageLink"
-      class="!bg-transparent !p-0"
-      @page="onPage"
-    />
-
-    <div class="w-full sm:w-44">
-      <label class="sr-only" for="items-per-page">Itens por página</label>
-      <Select
-        input-id="items-per-page"
-        :model-value="itemsPerPage"
-        :options="pageSizeOptions"
-        option-label="label"
-        option-value="value"
-        class="w-full"
-        @update:model-value="onItemsPerPageChange"
+    <div class="flex min-w-0 flex-wrap items-center gap-2 sm:gap-3">
+      <Paginator
+        v-if="showPageControls"
+        :first="first"
+        :rows="itemsPerPage"
+        :total-records="totalProducts"
+        :page-link-size="3"
+        template="PrevPageLink PageLinks NextPageLink"
+        class="!max-w-full !bg-transparent !p-0"
+        @page="onPage"
       />
+
+      <div class="min-w-0 w-full basis-full sm:w-auto sm:max-w-[11rem] sm:basis-auto sm:flex-1">
+        <label class="sr-only" for="items-per-page">Itens por página</label>
+        <Select
+          input-id="items-per-page"
+          :model-value="itemsPerPage"
+          :options="pageSizeOptions"
+          option-label="label"
+          option-value="value"
+          class="w-full"
+          @update:model-value="onItemsPerPageChange"
+        />
+      </div>
     </div>
   </div>
 </template>

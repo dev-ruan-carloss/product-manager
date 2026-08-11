@@ -49,15 +49,15 @@ function selectCategory(category: CategoryFilter): void {
 
 <template>
   <aside
-    class="flex flex-col gap-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm lg:sticky lg:top-6 lg:self-start dark:border-slate-700 dark:bg-slate-950"
+    class="flex min-w-0 flex-col gap-3 rounded-xl border border-slate-200 bg-white p-3 shadow-sm sm:gap-5 sm:p-5 lg:sticky lg:top-6 lg:self-start dark:border-slate-700 dark:bg-slate-950"
     aria-label="Filtros de produtos"
   >
-    <div>
-      <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Produtos</h1>
+    <div class="min-w-0">
+      <h1 class="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl dark:text-slate-100">Produtos</h1>
       <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Encontre e gerencie seus produtos</p>
     </div>
 
-    <div class="lg:hidden">
+    <div class="min-w-0 lg:hidden">
       <ProductSearch
         input-id="product-search-mobile"
         :model-value="search"
@@ -65,37 +65,41 @@ function selectCategory(category: CategoryFilter): void {
       />
     </div>
 
-    <div class="grid gap-3 sm:grid-cols-2 lg:hidden">
-      <div class="space-y-1.5">
-        <label class="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400" for="category-mobile">
-          Categoria
-        </label>
-        <Select
-          input-id="category-mobile"
-          :model-value="selectedCategory"
-          :options="categoryOptions"
-          option-label="label"
-          option-value="value"
-          class="w-full"
-          @update:model-value="selectCategory"
-        />
+    <div class="flex min-w-0 flex-col gap-3 sm:flex-row sm:flex-wrap lg:hidden">
+      <div class="min-w-0 flex-1 basis-full sm:basis-[calc(50%-0.375rem)]">
+        <div class="min-w-0 space-y-1.5">
+          <label class="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400" for="category-mobile">
+            Categoria
+          </label>
+          <Select
+            input-id="category-mobile"
+            :model-value="selectedCategory"
+            :options="categoryOptions"
+            option-label="label"
+            option-value="value"
+            class="w-full"
+            @update:model-value="selectCategory"
+          />
+        </div>
       </div>
 
-      <ProductSort
-        variant="select"
-        input-id="sort-mobile"
-        :model-value="sortOrder"
-        @update:model-value="emit('update:sortOrder', $event)"
-      />
+      <div class="min-w-0 flex-1 basis-full sm:basis-[calc(50%-0.375rem)]">
+        <ProductSort
+          variant="select"
+          input-id="sort-mobile"
+          :model-value="sortOrder"
+          @update:model-value="emit('update:sortOrder', $event)"
+        />
+      </div>
     </div>
 
-    <section class="hidden space-y-3 lg:block" aria-labelledby="categories-heading">
+    <section class="hidden min-w-0 space-y-3 lg:block" aria-labelledby="categories-heading">
       <h2 id="categories-heading" class="text-sm font-semibold text-slate-900 dark:text-slate-100">Categorias</h2>
       <ul class="space-y-1">
         <li>
           <button
             type="button"
-            class="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm outline-none transition focus-visible:ring-2 focus-visible:ring-violet-500"
+            class="flex w-full min-w-0 items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-left text-sm outline-none transition focus-visible:ring-2 focus-visible:ring-violet-500"
             :class="
               selectedCategory === ALL_CATEGORIES
                 ? 'bg-violet-50 font-medium text-violet-700 dark:bg-violet-950/50 dark:text-violet-300'
@@ -104,9 +108,9 @@ function selectCategory(category: CategoryFilter): void {
             :aria-pressed="selectedCategory === ALL_CATEGORIES"
             @click="selectCategory(ALL_CATEGORIES)"
           >
-            <span>Todas</span>
+            <span class="min-w-0 break-words">Todas</span>
             <span
-              class="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+              class="shrink-0 rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300"
               :aria-label="`${totalCount} produtos`"
             >
               {{ totalCount }}
@@ -116,7 +120,7 @@ function selectCategory(category: CategoryFilter): void {
         <li v-for="category in categories" :key="category">
           <button
             type="button"
-            class="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm capitalize outline-none transition focus-visible:ring-2 focus-visible:ring-violet-500"
+            class="flex w-full min-w-0 items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-left text-sm capitalize outline-none transition focus-visible:ring-2 focus-visible:ring-violet-500"
             :class="
               selectedCategory === category
                 ? 'bg-violet-50 font-medium text-violet-700 dark:bg-violet-950/50 dark:text-violet-300'
@@ -125,9 +129,9 @@ function selectCategory(category: CategoryFilter): void {
             :aria-pressed="selectedCategory === category"
             @click="selectCategory(category)"
           >
-            <span>{{ category }}</span>
+            <span class="min-w-0 break-words">{{ category }}</span>
             <span
-              class="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+              class="shrink-0 rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300"
               :aria-label="`${categoryCounts.get(category) ?? 0} produtos`"
             >
               {{ categoryCounts.get(category) ?? 0 }}
@@ -137,7 +141,7 @@ function selectCategory(category: CategoryFilter): void {
       </ul>
     </section>
 
-    <div class="hidden lg:block">
+    <div class="hidden min-w-0 lg:block">
       <ProductSort
         variant="radiogroup"
         :model-value="sortOrder"

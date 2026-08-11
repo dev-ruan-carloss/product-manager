@@ -14,11 +14,11 @@ defineEmits<{
 
 <template>
   <div
-    class="grid auto-rows-fr grid-cols-1 items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+    class="grid auto-rows-fr grid-cols-[repeat(auto-fill,minmax(min(100%,14rem),1fr))] items-stretch gap-3 sm:gap-4"
     role="list"
     aria-label="Lista de produtos"
   >
-    <div v-for="product in products" :key="product.id" class="h-full min-h-0" role="listitem">
+    <div v-for="product in products" :key="product.id" class="h-full min-w-0" role="listitem">
       <ProductCard
         :product="product"
         :favorited="isFavorite(product.id)"

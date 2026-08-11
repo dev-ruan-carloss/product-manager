@@ -109,9 +109,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:py-8">
-    <nav class="mb-4 text-sm text-slate-400 dark:text-slate-500" aria-label="Trilha de navegação">
-      <ol class="flex flex-wrap items-center gap-1.5">
+  <div class="mx-auto max-w-7xl px-2.5 py-3 sm:px-6 sm:py-6 lg:py-8">
+    <nav class="mb-3 text-sm text-slate-400 dark:text-slate-500" aria-label="Trilha de navegação">
+      <ol class="flex min-w-0 flex-wrap items-center gap-1.5">
         <li>
           <RouterLink
             to="/produtos"
@@ -130,7 +130,7 @@ onMounted(() => {
           </RouterLink>
         </li>
         <li aria-hidden="true">/</li>
-        <li v-if="product" class="min-w-0 truncate text-slate-500 dark:text-slate-400">
+        <li v-if="product" class="min-w-0 max-w-full break-words text-slate-500 dark:text-slate-400">
           <RouterLink
             :to="{ name: 'produto-detalhes', params: { id: product.id } }"
             class="rounded-sm outline-none hover:text-slate-600 focus-visible:ring-2 focus-visible:ring-violet-500 dark:hover:text-slate-300"
@@ -144,8 +144,8 @@ onMounted(() => {
       </ol>
     </nav>
 
-    <header class="mb-6 space-y-1 sm:mb-8">
-      <h1 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-100">Editar Produto</h1>
+    <header class="mb-3 min-w-0 space-y-1 sm:mb-6">
+      <h1 class="break-words text-xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-100">Editar Produto</h1>
       <p class="text-sm text-slate-500 sm:text-base dark:text-slate-400">
         Atualize as informações do produto abaixo.
       </p>
@@ -159,19 +159,19 @@ onMounted(() => {
       class="space-y-6"
     >
       <p class="sr-only">Carregando produto para edição.</p>
-      <div class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_20rem]">
-        <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 dark:border-slate-700 dark:bg-slate-950">
+      <div class="grid min-w-0 gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(16rem,20rem)]">
+        <div class="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 dark:border-slate-700 dark:bg-slate-950">
           <Skeleton width="12rem" height="1.5rem" class="mb-5" />
-          <div class="grid gap-5 sm:grid-cols-2">
+          <div class="grid gap-5 md:grid-cols-2">
             <Skeleton width="100%" height="2.75rem" />
             <Skeleton width="100%" height="2.75rem" />
             <Skeleton width="100%" height="2.75rem" />
             <Skeleton width="100%" height="2.75rem" />
-            <Skeleton width="100%" height="8rem" class="sm:col-span-2" />
+            <Skeleton width="100%" height="8rem" class="md:col-span-2" />
           </div>
         </div>
-        <div class="space-y-4">
-          <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-950">
+        <div class="min-w-0 space-y-4">
+          <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5 dark:border-slate-700 dark:bg-slate-950">
             <Skeleton width="8rem" height="1.25rem" class="mb-4" />
             <Skeleton width="100%" height="10rem" class="mb-4" />
             <Skeleton width="90%" height="1rem" class="mb-2" />

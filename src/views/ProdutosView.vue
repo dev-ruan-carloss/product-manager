@@ -42,8 +42,8 @@ function isFavorite(productId: number): boolean {
 </script>
 
 <template>
-  <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:py-8">
-    <div class="grid gap-6 lg:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[300px_minmax(0,1fr)]">
+  <div class="mx-auto max-w-7xl px-2.5 py-3 sm:px-6 sm:py-6 lg:py-8">
+    <div class="grid min-w-0 gap-3 sm:gap-5 lg:grid-cols-[minmax(0,16rem)_minmax(0,1fr)] lg:gap-6 xl:grid-cols-[minmax(0,18rem)_minmax(0,1fr)]">
       <ProductFilters
         v-model:search="searchInput"
         v-model:selected-category="selectedCategory"
@@ -52,8 +52,8 @@ function isFavorite(productId: number): boolean {
         :products="products"
       />
 
-      <section class="min-w-0 space-y-5" aria-label="Catálogo de produtos">
-        <div class="hidden lg:block">
+      <section class="min-w-0 space-y-3 sm:space-y-5" aria-label="Catálogo de produtos">
+        <div class="hidden min-w-0 lg:block">
           <ProductSearch v-model="searchInput" input-id="product-search-desktop" />
         </div>
 
