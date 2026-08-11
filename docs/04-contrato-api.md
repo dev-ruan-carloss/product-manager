@@ -418,9 +418,9 @@ Critérios do projeto:
 |---|---|
 | menor preço | implementado |
 | maior preço | implementado |
-| nome crescente (A–Z) | pendente |
-| nome decrescente (Z–A) | pendente |
-| avaliação (crescente / decrescente) | pendente |
+| nome crescente (A–Z) | implementado |
+| nome decrescente (Z–A) | implementado |
+| avaliação (crescente / decrescente) | implementado (`rate`, depois `count` no empate) |
 
 A ordenação não deverá modificar os dados originais retornados pela API.
 

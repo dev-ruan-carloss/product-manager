@@ -191,7 +191,8 @@ Implementar a listagem principal de produtos e os componentes reutilizáveis nec
 - [x] Implementar debounce.
 - [x] Implementar filtro por categoria.
 - [x] Implementar ordenação por preço.
-- [ ] Implementar ordenação por nome (A–Z / Z–A) — requisito pendente (não concluído na Fase 4).
+- [x] Implementar ordenação por nome (A–Z / Z–A).
+- [x] Implementar ordenação por avaliação.
 - [x] Implementar paginação.
 - [x] Integrar favoritar/desfavoritar na listagem via store existente.
 
@@ -219,11 +220,7 @@ Usuário consegue navegar pelo catálogo e encontrar produtos utilizando os cont
 
 ### Pendência conhecida (fora do fechamento da Fase 4)
 
-- [ ] Ordenação por nome (A–Z / Z–A) — requisito do projeto ainda não implementado na tela.
-- [ ] Ordenação por avaliação — critério previsto na documentação, ainda não implementado.
-- [ ] Componente `ProductSort` — previsto na arquitetura/UI; ordenação por preço hoje está em `ProductFilters`.
-
-Esses itens **não** devem ser tratados como fora de escopo só por estarem pendentes.
+Itens de ordenação por nome, por avaliação e o componente `ProductSort` foram concluídos posteriormente (ver decisão técnica correspondente).
 
 **Observação:** `GET /products/category/:category` **não** é pendência. O endpoint existe na FakeStoreAPI, porém **não é utilizado** e **não é obrigatório**. O filtro por categoria (RF-003) está **CONCLUÍDO** via `GET /products` + filtragem no frontend.
 
@@ -1022,7 +1019,8 @@ A implementação será considerada concluída quando:
 - [x] Busca estiver funcionando com debounce.
 - [x] Filtro por categoria estiver funcionando.
 - [x] Ordenação por preço estiver funcionando.
-- [ ] Ordenação por nome (A–Z / Z–A) estiver funcionando.
+- [x] Ordenação por nome (A–Z / Z–A) estiver funcionando.
+- [x] Ordenação por avaliação estiver funcionando.
 - [x] Paginação estiver funcionando.
 - [x] Favoritos estiverem gerenciados com Pinia.
 - [x] Favoritos estiverem persistidos em localStorage.
@@ -1079,7 +1077,7 @@ Resumo do acompanhamento:
 | Fundação | concluída |
 | API + tipos | concluída |
 | Favoritos (estado/persistência) | concluída |
-| Catálogo | concluída (filtro por categoria concluído no frontend; ordenação por nome ainda pendente) |
+| Catálogo | concluída (filtro por categoria, ordenação por preço/nome/avaliação e `ProductSort`) |
 | Detalhes | concluída |
 | Favoritos UI | concluída |
 | Criação | concluída |

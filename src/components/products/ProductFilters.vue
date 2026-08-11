@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import RadioButton from 'primevue/radiobutton'
 import Select from 'primevue/select'
 
 import ProductSearch from '@/components/products/ProductSearch.vue'
+import ProductSort from '@/components/products/ProductSort.vue'
 import type { Category } from '@/types/category'
-import { ALL_CATEGORIES, type CategoryFilter, type PriceSortOrder } from '@/types/catalog'
+import { ALL_CATEGORIES, type CatalogSortOrder, type CategoryFilter } from '@/types/catalog'
 import type { Product } from '@/types/product'
 
 const props = defineProps<{
   search: string
   selectedCategory: CategoryFilter
-  sortOrder: PriceSortOrder
+  sortOrder: CatalogSortOrder
   categories: Category[]
   products: readonly Product[]
 }>()
@@ -19,7 +19,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   'update:search': [value: string]
   'update:selectedCategory': [value: CategoryFilter]
-  'update:sortOrder': [value: PriceSortOrder]
+  'update:sortOrder': [value: CatalogSortOrder]
 }>()
 
 const categoryCounts = computed(() => {
@@ -41,11 +41,6 @@ const categoryOptions = computed(() => [
     value: category,
   })),
 ])
-
-const sortOptions: Array<{ label: string; value: PriceSortOrder }> = [
-  { label: 'Menor preço', value: 'asc' },
-  { label: 'Maior preço', value: 'desc' },
-]
 
 function selectCategory(category: CategoryFilter): void {
   emit('update:selectedCategory', category)
@@ -86,20 +81,12 @@ function selectCategory(category: CategoryFilter): void {
         />
       </div>
 
-      <div class="space-y-1.5">
-        <label class="text-xs font-medium uppercase tracking-wide text-slate-500" for="sort-mobile">
-          Ordenação
-        </label>
-        <Select
-          input-id="sort-mobile"
-          :model-value="sortOrder"
-          :options="sortOptions"
-          option-label="label"
-          option-value="value"
-          class="w-full"
-          @update:model-value="emit('update:sortOrder', $event)"
-        />
-      </div>
+      <ProductSort
+        variant="select"
+        input-id="sort-mobile"
+        :model-value="sortOrder"
+        @update:model-value="emit('update:sortOrder', $event)"
+      />
     </div>
 
     <section class="hidden space-y-3 lg:block" aria-labelledby="categories-heading">
@@ -150,24 +137,12 @@ function selectCategory(category: CategoryFilter): void {
       </ul>
     </section>
 
-    <section class="hidden space-y-3 lg:block" aria-labelledby="sort-heading">
-      <h2 id="sort-heading" class="text-sm font-semibold text-slate-900">Ordenação</h2>
-      <div class="space-y-3" role="radiogroup" aria-labelledby="sort-heading">
-        <label
-          v-for="option in sortOptions"
-          :key="option.value"
-          class="flex cursor-pointer items-center gap-2.5 text-sm text-slate-700"
-        >
-          <RadioButton
-            :input-id="`sort-${option.value}`"
-            name="price-sort"
-            :value="option.value"
-            :model-value="sortOrder"
-            @update:model-value="emit('update:sortOrder', $event)"
-          />
-          <span>{{ option.label }}</span>
-        </label>
-      </div>
-    </section>
+    <div class="hidden lg:block">
+      <ProductSort
+        variant="radiogroup"
+        :model-value="sortOrder"
+        @update:model-value="emit('update:sortOrder', $event)"
+      />
+    </div>
   </aside>
 </template>

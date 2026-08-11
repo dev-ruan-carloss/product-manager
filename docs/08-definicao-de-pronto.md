@@ -102,8 +102,10 @@ A listagem será considerada pronta quando:
 - [x] Filtro por categoria estiver funcionando.
 - [x] Ordenação por menor preço estiver funcionando.
 - [x] Ordenação por maior preço estiver funcionando.
-- [ ] Ordenação por nome A–Z estiver funcionando.
-- [ ] Ordenação por nome Z–A estiver funcionando.
+- [x] Ordenação por nome A–Z estiver funcionando.
+- [x] Ordenação por nome Z–A estiver funcionando.
+- [x] Ordenação por avaliação (maior → menor) estiver funcionando (`rate`, depois `count`).
+- [x] Ordenação por avaliação (menor → maior) estiver funcionando (`rate`, depois `count`).
 - [x] Paginação estiver funcionando.
 - [x] ProductCard estiver sendo reutilizado.
 - [x] Favoritos funcionarem dentro dos cards.

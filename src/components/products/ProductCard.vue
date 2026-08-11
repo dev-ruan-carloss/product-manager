@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import StarFillIcon from '@primevue/icons/starfill'
-import StarIcon from '@primevue/icons/star'
 
 import FavoriteButton from '@/components/FavoriteButton.vue'
 import type { Product } from '@/types/product'
@@ -24,8 +23,6 @@ const ratingLabel = computed(
   () =>
     `Avaliação ${props.product.rating.rate.toFixed(1)} de 5, com ${props.product.rating.count} avaliações`,
 )
-
-const filledStars = computed(() => Math.round(props.product.rating.rate))
 
 function onImageError(): void {
   imageFailed.value = true
@@ -78,15 +75,9 @@ function onImageError(): void {
           {{ product.category }}
         </p>
 
-        <div class="mt-auto flex h-5 items-center gap-1" :aria-label="ratingLabel">
-          <span class="flex items-center gap-0.5 text-amber-400" aria-hidden="true">
-            <component
-              :is="index <= filledStars ? StarFillIcon : StarIcon"
-              v-for="index in 5"
-              :key="index"
-              class="h-3.5 w-3.5 shrink-0"
-            />
-          </span>
+        <div class="flex h-5 items-center gap-1" :aria-label="ratingLabel">
+          <StarFillIcon class="h-3.5 w-3.5 shrink-0 text-amber-400" aria-hidden="true" />
+          <span class="text-xs font-medium text-slate-700">{{ product.rating.rate.toFixed(1) }}</span>
           <span class="text-xs text-slate-500">({{ product.rating.count }})</span>
         </div>
       </div>

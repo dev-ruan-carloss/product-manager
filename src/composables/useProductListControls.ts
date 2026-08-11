@@ -4,20 +4,55 @@ import { useDebouncedRef } from '@/composables/useDebouncedRef'
 import {
   ALL_CATEGORIES,
   DEFAULT_ITEMS_PER_PAGE,
+  DEFAULT_SORT_ORDER,
+  type CatalogSortOrder,
   type CategoryFilter,
-  type PriceSortOrder,
 } from '@/types/catalog'
 import type { Product } from '@/types/product'
 
+const titleCollator = new Intl.Collator('pt', { sensitivity: 'base' })
+
 function normalizeSearchTerm(value: string): string {
   return value.trim().toLowerCase()
+}
+
+/**
+ * Ordenação por avaliação:
+ * 1) prioridade: `rating.rate` (nota real em estrelas);
+ * 2) empate de nota: `rating.count` (pessoas que avaliaram).
+ */
+function compareByRating(a: Product, b: Product, direction: 'asc' | 'desc'): number {
+  const rateDiff = a.rating.rate - b.rating.rate
+  if (rateDiff !== 0) {
+    return direction === 'asc' ? rateDiff : -rateDiff
+  }
+
+  const countDiff = a.rating.count - b.rating.count
+  return direction === 'asc' ? countDiff : -countDiff
+}
+
+function compareProducts(a: Product, b: Product, sortOrder: CatalogSortOrder): number {
+  switch (sortOrder) {
+    case 'price-asc':
+      return a.price - b.price
+    case 'price-desc':
+      return b.price - a.price
+    case 'name-asc':
+      return titleCollator.compare(a.title, b.title)
+    case 'name-desc':
+      return titleCollator.compare(b.title, a.title)
+    case 'rating-asc':
+      return compareByRating(a, b, 'asc')
+    case 'rating-desc':
+      return compareByRating(a, b, 'desc')
+  }
 }
 
 export function useProductListControls(products: Ref<readonly Product[]>) {
   const searchInput = ref('')
   const debouncedSearchInput = useDebouncedRef(searchInput, 300)
   const selectedCategory = ref<CategoryFilter>(ALL_CATEGORIES)
-  const sortOrder = ref<PriceSortOrder>('asc')
+  const sortOrder = ref<CatalogSortOrder>(DEFAULT_SORT_ORDER)
   const currentPage = ref(1)
   const itemsPerPage = ref(DEFAULT_ITEMS_PER_PAGE)
 
@@ -31,15 +66,7 @@ export function useProductListControls(products: Ref<readonly Product[]>) {
       return matchesSearch && matchesCategory
     })
 
-    const sorted = [...filtered].sort((a, b) => {
-      if (sortOrder.value === 'asc') {
-        return a.price - b.price
-      }
-
-      return b.price - a.price
-    })
-
-    return sorted
+    return [...filtered].sort((a, b) => compareProducts(a, b, sortOrder.value))
   })
 
   const totalProducts = computed(() => filteredProducts.value.length)
@@ -78,7 +105,7 @@ export function useProductListControls(products: Ref<readonly Product[]>) {
   function clearFilters(): void {
     searchInput.value = ''
     selectedCategory.value = ALL_CATEGORIES
-    sortOrder.value = 'asc'
+    sortOrder.value = DEFAULT_SORT_ORDER
     currentPage.value = 1
   }
 

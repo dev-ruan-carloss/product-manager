@@ -1,4 +1,13 @@
-export type PriceSortOrder = 'asc' | 'desc'
+/** Critérios de ordenação do catálogo (campo + direção). */
+export type CatalogSortOrder =
+  | 'price-asc'
+  | 'price-desc'
+  | 'name-asc'
+  | 'name-desc'
+  | 'rating-asc'
+  | 'rating-desc'
+
+export const DEFAULT_SORT_ORDER: CatalogSortOrder = 'price-asc'
 
 /** String vazia representa todas as categorias. */
 export type CategoryFilter = string

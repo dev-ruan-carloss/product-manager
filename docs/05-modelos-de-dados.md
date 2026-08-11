@@ -418,18 +418,27 @@ Direções:
 
 ### Estado atual da implementação
 
-Hoje o catálogo utiliza em `src/types/catalog.ts`:
+O catálogo utiliza em `src/types/catalog.ts` o tipo unificado:
 
-    PriceSortOrder = 'asc' | 'desc'
+    CatalogSortOrder =
+      | 'price-asc'
+      | 'price-desc'
+      | 'name-asc'
+      | 'name-desc'
+      | 'rating-asc'
+      | 'rating-desc'
 
-aplicado somente ao campo `price`.
+Isso corresponde ao modelo conceitual `field` + `direction`:
 
-Pendências (requisitos / critérios ainda não implementados na tela):
+- `price` + `asc`/`desc` → `price-asc` / `price-desc`;
+- `title` (nome) + `asc`/`desc` → `name-asc` / `name-desc`;
+- `rating` + `asc`/`desc` → `rating-asc` / `rating-desc`.
 
-- ordenação por nome (`title` asc/desc);
-- ordenação por avaliação (`rating` asc/desc).
+A ordenação ocorre em `useProductListControls` sobre uma cópia da coleção filtrada (`[...filtered].sort`), sem mutar os dados originais da API.
 
-Quando forem implementados, o modelo de ordenação deverá ser expandido (por exemplo, unindo `field` + `direction`).
+- Nome: comparação case-insensitive e com acentuação via `Intl.Collator('pt', { sensitivity: 'base' })` sobre `product.title`.
+- Avaliação: prioridade em `product.rating.rate` (nota real); em empate de nota, desempate por `product.rating.count`. Em “maior avaliação”, maior `rate` e, no empate, maior `count`; em “menor avaliação”, o inverso.
+- Exibição de avaliação: uma estrela preenchida + nota (ex.: `4.8`), com quantidade de avaliações ao lado quando aplicável.
 
 ---
 
@@ -646,7 +655,7 @@ Estrutura implementada:
 - `category.ts` — tipo `Category` (`string`).
 - `api.ts` — `AppError`.
 - `productForm.ts` — `ProductFormData`, `EMPTY_PRODUCT_FORM`, `toProductFormData`.
-- `catalog.ts` — `PriceSortOrder`, `CategoryFilter`, constantes de paginação (ordenação por nome ainda pendente no modelo).
+- `catalog.ts` — `CatalogSortOrder`, `CategoryFilter`, constantes de paginação.
 
 ---
 
@@ -775,7 +784,7 @@ Os modelos de dados serão considerados definidos quando:
 - [ ] Estado de loading estiver definido.
 - [ ] Estado de pesquisa estiver definido.
 - [ ] Estado de filtro estiver definido.
-- [ ] Estado de ordenação estiver definido.
+- [x] Estado de ordenação estiver definido.
 - [ ] Paginação estiver definida.
 - [ ] Persistência local estiver definida.
 - [ ] Fonte de cada dado estiver documentada.

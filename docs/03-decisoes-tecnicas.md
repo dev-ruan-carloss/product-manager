@@ -836,6 +836,32 @@ O volume de dados é pequeno; uma única carga de produtos permite combinar busc
 
 ---
 
+## 35.6 — Ordenação unificada do catálogo (`CatalogSortOrder` + `ProductSort`)
+
+**Data:** 2026-08-11
+
+**Decisão:**
+
+- Expandir o modelo de ordenação de `PriceSortOrder` (`'asc' | 'desc'`) para `CatalogSortOrder` com valores explícitos: `price-asc`, `price-desc`, `name-asc`, `name-desc`, `rating-asc`, `rating-desc`.
+- Extrair a UI de seleção para `ProductSort.vue` (variantes `select` no mobile e `radiogroup` no desktop), mantendo a lógica em `useProductListControls`.
+- Ordenação por nome com `Intl.Collator('pt', { sensitivity: 'base' })` sobre `product.title`.
+- Ordenação por avaliação em dois níveis: prioridade `rating.rate` (nota real); em empate, `rating.count` (pessoas que avaliaram).
+- Exibição de avaliação: uma estrela preenchida (PrimeVue `StarFillIcon`) + nota numérica (ex.: `★ 4.8`), sem escala de 5 estrelas parciais.
+- Continuar ordenando localmente sobre cópia da coleção filtrada, sem novas chamadas à API e sem mutar os dados originais.
+
+**Motivo:**
+
+Alinhar tipagem e UI ao SDD (preço, nome e avaliação), evitar strings soltas e separar apresentação (`ProductSort`) da regra de ordenação (composable). A nota decimal fica explícita ao lado de uma única estrela, evitando ambiguidade visual da escala de 5 estrelas.
+
+**Impacto:**
+
+- RF-004 concluído para preço e nome; ordenação por avaliação também entregue conforme UI/API docs;
+- `ProductFilters` passa a compor `ProductSort`;
+- padrão de reset de página ao mudar ordenação permanece;
+- “Maior avaliação”: maior `rate` primeiro; no empate de nota, mais pessoas que avaliaram.
+
+---
+
 # 36. Critérios de Aceite
 
 As decisões técnicas serão consideradas definidas quando:
@@ -863,6 +889,6 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.5
+**Versão:** 1.11
 
 **Última atualização:** 2026-08-11

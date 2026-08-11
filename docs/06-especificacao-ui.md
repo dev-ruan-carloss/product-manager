@@ -123,7 +123,8 @@ A página deverá disponibilizar:
 - busca;
 - filtro por categoria;
 - ordenação por preço;
-- ordenação por nome (pendente);
+- ordenação por nome;
+- ordenação por avaliação;
 - paginação;
 - favoritos;
 - acesso aos detalhes.
@@ -142,7 +143,8 @@ A estrutura deverá seguir aproximadamente:
         ├── Busca
         ├── Categoria
         ├── Ordenação por preço
-        └── Ordenação por nome (pendente)
+        ├── Ordenação por nome
+        └── Ordenação por avaliação
         ↓
     Lista de produtos
         ↓
@@ -204,9 +206,10 @@ A ordenação deverá ocorrer no frontend quando necessário.
 
 ### Status
 
-- Ordenação por preço: implementada em `ProductFilters`.
-- Ordenação por nome: **pendente**.
-- Ordenação por avaliação: **pendente**.
+- Ordenação por preço: implementada via `ProductSort` em `ProductFilters`.
+- Ordenação por nome: implementada.
+- Ordenação por avaliação: implementada (prioridade `rating.rate`; empate por `rating.count`).
+- Exibição de avaliação: uma estrela preenchida + nota numérica (ex.: `★ 4.8`).
 
 Não deverão ser adicionados critérios de ordenação que não façam parte do escopo do desafio.
 
@@ -224,7 +227,7 @@ Fluxo:
         ↓
     Filtro por categoria
         ↓
-    Ordenação (preço / nome)
+    Ordenação (preço / nome / avaliação)
         ↓
     Paginação
         ↓
@@ -304,6 +307,8 @@ A avaliação deverá apresentar a nota do produto.
 Quando houver quantidade de avaliações disponível, ela também poderá ser apresentada.
 
 A utilização de estrelas deverá possuir informação acessível equivalente.
+
+A interface exibe uma estrela preenchida seguida da nota numérica (ex.: `4.8`).
 
 ---
 
@@ -796,9 +801,9 @@ A estrutura deverá considerar componentes reutilizáveis como:
 
 ### Status
 
-- Ordenação por preço: hoje integrada em `ProductFilters`.
-- `ProductSort` permanece previsto para a ordenação da listagem (nome / avaliação e/ou extração da ordenação atual); **ainda não existe como componente separado**.
-- Ordenação por nome e por avaliação: **pendentes**.
+- Ordenação por preço, nome e avaliação: apresentada por `ProductSort`, integrado em `ProductFilters`.
+- `ProductSort` existe em `src/components/products/ProductSort.vue` (variantes `select` e `radiogroup`).
+- A lógica de ordenação permanece em `useProductListControls`.
 
 A criação de novos componentes deverá ocorrer conforme necessidade real.
 
@@ -896,8 +901,8 @@ A interface será considerada adequada quando:
 - [x] Busca possui debounce.
 - [x] Filtro por categoria está disponível.
 - [x] Ordenação por preço está disponível.
-- [ ] Ordenação por nome (A–Z / Z–A) está disponível.
-- [ ] Ordenação por avaliação está disponível.
+- [x] Ordenação por nome (A–Z / Z–A) está disponível.
+- [x] Ordenação por avaliação está disponível.
 - [ ] Footer do layout está implementado.
 - [x] Paginação está disponível.
 - [x] ProductCard está implementado.

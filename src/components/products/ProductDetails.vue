@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import StarFillIcon from '@primevue/icons/starfill'
-import StarIcon from '@primevue/icons/star'
 
 import FavoriteButton from '@/components/FavoriteButton.vue'
 import type { Product } from '@/types/product'
@@ -24,8 +23,6 @@ const ratingLabel = computed(
   () =>
     `Avaliação ${props.product.rating.rate.toFixed(1)} de 5, com ${props.product.rating.count} avaliações`,
 )
-
-const filledStars = computed(() => Math.round(props.product.rating.rate))
 
 const favoriteActionLabel = computed(() =>
   props.favorited ? 'Remover dos favoritos' : 'Adicionar aos favoritos',
@@ -102,17 +99,10 @@ function onImageError(): void {
             {{ product.title }}
           </h1>
 
-          <div class="flex flex-wrap items-center gap-2" :aria-label="ratingLabel">
-            <span class="flex items-center gap-0.5 text-amber-400" aria-hidden="true">
-              <component
-                :is="index <= filledStars ? StarFillIcon : StarIcon"
-                v-for="index in 5"
-                :key="index"
-                class="h-4 w-4 shrink-0"
-              />
-            </span>
+          <div class="flex flex-wrap items-center gap-1.5" :aria-label="ratingLabel">
+            <StarFillIcon class="h-4 w-4 shrink-0 text-amber-400" aria-hidden="true" />
+            <span class="text-sm font-medium text-slate-700">{{ product.rating.rate.toFixed(1) }}</span>
             <span class="text-sm text-slate-500">
-              {{ product.rating.rate.toFixed(1) }}
               ({{ product.rating.count }}
               {{ product.rating.count === 1 ? 'avaliação' : 'avaliações' }})
             </span>

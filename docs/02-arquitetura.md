@@ -205,14 +205,14 @@ A pasta `components/` será responsável pelos componentes reutilizáveis da int
         ├── ProductGrid.vue
         ├── ProductFilters.vue
         ├── ProductSearch.vue
-        ├── ProductSort.vue          # previsto; ainda não criado
+        ├── ProductSort.vue
         ├── ProductPagination.vue
         ├── ProductDetails.vue
         └── ProductForm.vue
 
-A ordenação por preço está integrada em `ProductFilters`.
+A ordenação da listagem (preço, nome e avaliação) é apresentada por `ProductSort`, integrado em `ProductFilters`.
 
-`ProductSort` permanece previsto na arquitetura para a ordenação da listagem. Ordenações por nome e por avaliação estão **pendentes**.
+A lógica de ordenação permanece em `useProductListControls`, sobre a coleção carregada via `GET /products`.
 
 A estrutura poderá ser organizada em subpastas caso o número de componentes aumente significativamente.
 
@@ -433,7 +433,7 @@ Tipos principais:
 - `Category`;
 - `AppError`;
 - `ProductFormData`;
-- `PriceSortOrder` / `CategoryFilter` (catálogo; ordenação por nome ainda pendente).
+- `CatalogSortOrder` / `CategoryFilter` (catálogo: preço, nome e avaliação).
 
 Os tipos deverão representar os contratos utilizados pela aplicação.
 

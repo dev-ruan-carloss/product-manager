@@ -127,7 +127,8 @@ A aplicação deverá disponibilizar, no mínimo:
 ### Status de implementação
 
 - [x] Ordenação por preço (crescente e decrescente) — implementada.
-- [ ] Ordenação por nome (crescente e decrescente) — pendente.
+- [x] Ordenação por nome (crescente e decrescente) — implementada.
+- [x] Ordenação por avaliação (crescente e decrescente) — implementada (`rate` prioritário; `count` no empate).
 
 ---
 
@@ -714,7 +715,8 @@ O projeto será considerado funcionalmente concluído quando atender aos seguint
 - [x] Pesquisa utiliza debounce.
 - [x] Usuário consegue filtrar produtos por categoria.
 - [x] Usuário consegue ordenar produtos por preço.
-- [ ] Usuário consegue ordenar produtos por nome (A–Z / Z–A).
+- [x] Usuário consegue ordenar produtos por nome (A–Z / Z–A).
+- [x] Usuário consegue ordenar produtos por avaliação.
 - [x] Listagem possui paginação.
 - [x] Usuário consegue visualizar detalhes de um produto.
 - [x] Usuário consegue criar produtos.
