@@ -153,34 +153,52 @@ Estado de favoritos disponível globalmente, persistente e tipado, pronto para c
 
 Implementar a listagem principal de produtos e os componentes reutilizáveis necessários para o catálogo.
 
+### Status
+
+**Concluída e validada.**
+
 ### Componentes previstos
 
-- [ ] Header.
-- [ ] ProductCard.
-- [ ] ProductGrid.
-- [ ] FavoriteButton.
-- [ ] LoadingState.
-- [ ] EmptyState.
-- [ ] ErrorState.
-- [ ] Controles de paginação.
+- [x] Header.
+- [x] ProductCard.
+- [x] ProductGrid.
+- [x] FavoriteButton.
+- [x] LoadingState.
+- [x] EmptyState.
+- [x] ErrorState.
+- [x] Controles de paginação.
 
 ### Tarefas da listagem
 
-- [ ] Buscar produtos através da API.
-- [ ] Apresentar loading.
-- [ ] Apresentar produtos.
-- [ ] Apresentar estado vazio.
-- [ ] Apresentar estado de erro.
-- [ ] Implementar busca.
-- [ ] Implementar debounce.
-- [ ] Implementar filtro por categoria.
-- [ ] Implementar ordenação por preço.
-- [ ] Implementar paginação.
-- [ ] Integrar favoritar/desfavoritar na listagem via store existente.
+- [x] Buscar produtos através da API.
+- [x] Apresentar loading.
+- [x] Apresentar produtos.
+- [x] Apresentar estado vazio.
+- [x] Apresentar estado de erro.
+- [x] Implementar busca.
+- [x] Implementar debounce.
+- [x] Implementar filtro por categoria.
+- [x] Implementar ordenação por preço.
+- [x] Implementar paginação.
+- [x] Integrar favoritar/desfavoritar na listagem via store existente.
 
 PrimeVue deverá ser utilizado sempre que houver componente adequado.
 
 TailwindCSS deverá ser utilizado para composição e responsividade.
+
+### Validações da fase
+
+- [x] Rota `/produtos` funcional.
+- [x] Listagem de produtos via `productService`.
+- [x] Listagem de categorias.
+- [x] Reset da paginação ao alterar controles.
+- [x] Layout responsivo da listagem.
+- [x] Componentização da tela.
+- [x] Integração com PrimeVue.
+- [x] Integração com TailwindCSS.
+- [x] Validar TypeScript (type-check).
+- [x] Validar lint.
+- [x] Validar build.
 
 ### Resultado esperado
 
@@ -519,10 +537,10 @@ A implementação será considerada concluída quando:
 - [ ] Todos os requisitos do desafio estiverem implementados.
 - [ ] Todas as rotas estiverem funcionando com suas funcionalidades.
 - [x] Camada de API estiver implementada.
-- [ ] Busca estiver funcionando com debounce.
-- [ ] Filtro por categoria estiver funcionando.
-- [ ] Ordenação por preço estiver funcionando.
-- [ ] Paginação estiver funcionando.
+- [x] Busca estiver funcionando com debounce.
+- [x] Filtro por categoria estiver funcionando.
+- [x] Ordenação por preço estiver funcionando.
+- [x] Paginação estiver funcionando.
 - [x] Favoritos estiverem gerenciados com Pinia.
 - [x] Favoritos estiverem persistidos em localStorage.
 - [ ] Página de favoritos estiver funcionando.
@@ -578,7 +596,7 @@ Resumo do acompanhamento:
 | Fundação | concluída |
 | API + tipos | concluída |
 | Favoritos (estado/persistência) | concluída |
-| Catálogo | pendente |
+| Catálogo | concluída |
 | Detalhes | pendente |
 | Favoritos UI | pendente |
 | Criação | pendente |
@@ -589,7 +607,7 @@ Resumo do acompanhamento:
 
 ### Próxima fase
 
-**Fase 4 — Catálogo de produtos**
+**Fase 5 — Detalhes do produto**
 
 ---
 
