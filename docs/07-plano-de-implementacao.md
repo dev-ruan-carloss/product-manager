@@ -212,16 +212,84 @@ Usuário consegue navegar pelo catálogo e encontrar produtos utilizando os cont
 
 Implementar a visualização individual de um produto.
 
+### Status
+
+**CONCLUÍDA**
+
 ### Tarefas
 
-- [ ] Obter ID através da rota.
-- [ ] Buscar produto pela API.
-- [ ] Apresentar loading.
-- [ ] Apresentar dados completos.
-- [ ] Implementar favorito na página de detalhes.
-- [ ] Implementar acesso à edição.
-- [ ] Tratar produto inexistente.
-- [ ] Tratar erro da API.
+- [x] Obter ID através da rota.
+- [x] Tratar o parâmetro `id` de forma segura antes do consumo.
+- [x] Buscar produto pela API via `productService.getProductById`.
+- [x] Apresentar loading.
+- [x] Apresentar dados do produto (imagem, título, categoria, preço, descrição, avaliação e quantidade de avaliações).
+- [x] Implementar favoritar/desfavoritar na página de detalhes via `useFavoritesStore`.
+- [x] Reutilizar `FavoriteButton` e persistência existente da store.
+- [x] Implementar ação de voltar para `/produtos`.
+- [x] Tratar produto inexistente.
+- [x] Tratar erro da API com retry.
+- [x] Layout responsivo da tela de detalhes.
+- [x] Acessibilidade básica da tela de detalhes.
+- [ ] Implementar acesso à edição (adiado para a Fase 8 — Edição de produto).
+
+### Arquivos da implementação
+
+Criados:
+
+- `src/composables/useProductDetails.ts`
+- `src/utils/parseProductId.ts`
+- `src/components/products/ProductDetails.vue`
+
+Modificados:
+
+- `src/views/ProdutoDetalhesView.vue`
+
+### Componentes e utilitários reutilizados
+
+- `FavoriteButton`
+- `ErrorState`
+- `EmptyState`
+- `AppHeader` (via `DefaultLayout`)
+- `formatPrice`
+- Skeleton do PrimeVue para o estado de loading
+
+`LoadingState` do catálogo não foi reutilizado nesta fase (específico demais para o grid da listagem).
+
+### API utilizada
+
+`GET /products/:id` através de `productService.getProductById(id)`.
+
+### Referência visual
+
+A tela utilizou `public/detalhe-produtos.png` como referência visual, priorizando o SDD e o modelo `Product` quando houve conflito.
+
+### Validações da fase
+
+- [x] Rota `/produtos/:id` funcional.
+- [x] Leitura segura do parâmetro `id`.
+- [x] Busca individual via `productService`.
+- [x] Estados de loading, erro e produto não encontrado.
+- [x] Retry em caso de erro da API.
+- [x] Favoritar/desfavoritar com persistência na store.
+- [x] Formatação de preço via `formatPrice`.
+- [x] Layout responsivo.
+- [x] Acessibilidade básica.
+- [x] Validar TypeScript (type-check).
+- [x] Validar lint.
+- [x] Validar build.
+
+### Divergências registradas
+
+1. **Acesso à edição:** a UI/especificação e o planejamento da fase preveem acesso à edição, porém a edição não foi implementada nesta etapa e permanece para a Fase 8.
+2. **Modelo da FakeStoreAPI:** elementos da referência visual (galeria, estoque, tipo/material, reviews detalhadas e metadados adicionais) não foram implementados por não fazerem parte do modelo `Product` utilizado.
+3. **Preço:** a referência visual utiliza `$`, enquanto a aplicação utiliza `formatPrice` com padrão BRL, conforme o SDD.
+4. **Produto inexistente:** o contrato considera o cenário de `404`, porém a FakeStoreAPI pode retornar `200` com corpo vazio; a implementação trata ambos os cenários.
+
+Essas divergências não foram transformadas em novos requisitos.
+
+### Resultado esperado
+
+Usuário consegue abrir os detalhes de um produto, visualizar suas informações, favoritar/desfavoritar e retornar ao catálogo, com estados de loading, erro e não encontrado tratados.
 
 ---
 
@@ -544,7 +612,7 @@ A implementação será considerada concluída quando:
 - [x] Favoritos estiverem gerenciados com Pinia.
 - [x] Favoritos estiverem persistidos em localStorage.
 - [ ] Página de favoritos estiver funcionando.
-- [ ] Detalhes estiverem funcionando.
+- [x] Detalhes estiverem funcionando.
 - [ ] Criação estiver funcionando.
 - [ ] Edição estiver funcionando.
 - [ ] vee-validate estiver integrado aos formulários.
@@ -597,7 +665,7 @@ Resumo do acompanhamento:
 | API + tipos | concluída |
 | Favoritos (estado/persistência) | concluída |
 | Catálogo | concluída |
-| Detalhes | pendente |
+| Detalhes | concluída |
 | Favoritos UI | pendente |
 | Criação | pendente |
 | Edição | pendente |
@@ -607,7 +675,7 @@ Resumo do acompanhamento:
 
 ### Próxima fase
 
-**Fase 5 — Detalhes do produto**
+**Fase 6 — Página de Favoritos**
 
 ---
 
@@ -615,6 +683,6 @@ Resumo do acompanhamento:
 
 **Status:** Em andamento
 
-**Versão:** 1.1
+**Versão:** 1.2
 
 **Última atualização:** 2026-08-10
