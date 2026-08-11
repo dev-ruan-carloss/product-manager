@@ -862,6 +862,30 @@ Alinhar tipagem e UI ao SDD (preço, nome e avaliação), evitar strings soltas 
 
 ---
 
+## 35.7 — Footer estrutural no DefaultLayout
+
+**Data:** 2026-08-11
+
+**Decisão:**
+
+- Criar `AppFooter.vue` somente para apresentação do rodapé (sem lógica de negócio).
+- Integrar o Footer em `DefaultLayout.vue`, no mesmo padrão do `AppHeader`, para que todas as Views o recebam automaticamente.
+- Estrutura do layout: container `flex min-h-screen flex-col`, `<main class="flex-1">` com `RouterView`, Footer ao final — evita Footer no meio da tela em páginas com pouco conteúdo.
+- Navegação do Footer via `RouterLink` para `/produtos`, `/favoritos` e `/produtos/novo` (sem novas rotas e sem links externos).
+- Conteúdo limitado a identidade, descrição, navegação interna e copyright; sem redes sociais, contatos ou dados fictícios.
+- Classes de cor alinhadas ao Header (`slate` / `violet`) para futura adaptação a Dark Mode, sem implementar Dark Mode nesta entrega.
+
+**Motivo:**
+
+A especificação de UI prevê Footer na estrutura geral da aplicação. Centralizar no layout evita duplicação nas Views e mantém o rodapé como parte estrutural, coerente com o Header.
+
+**Impacto:**
+
+- Footer disponível em todas as rotas que usam `DefaultLayout`;
+- Fase 9 (responsividade/acessibilidade completa) e Dark Mode permanecem pendentes.
+
+---
+
 # 36. Critérios de Aceite
 
 As decisões técnicas serão consideradas definidas quando:
@@ -889,6 +913,6 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.11
+**Versão:** 1.12
 
 **Última atualização:** 2026-08-11

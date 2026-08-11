@@ -61,8 +61,8 @@ A aplicação deverá possuir uma estrutura semelhante a:
 
 ### Status do layout
 
-- Header, Main e Toast: implementados em `DefaultLayout`.
-- Footer: previsto na especificação; **ainda não implementado** (pendente).
+- Header, Main, Footer e Toast: implementados em `DefaultLayout`.
+- Footer: componente `AppFooter.vue`, integrado ao layout (não é adicionado por View).
 
 A navegação será controlada pelo Vue Router.
 
@@ -105,6 +105,25 @@ O cabeçalho deverá apresentar:
 - acesso à criação de produto.
 
 No mobile, a navegação deverá ser adaptada para o espaço disponível.
+
+---
+
+# 6.1 — Rodapé
+
+**Status:** **CONCLUÍDO**
+
+O rodapé é parte estrutural do layout (`AppFooter` em `DefaultLayout`) e não deve ser incluído manualmente nas Views.
+
+Conteúdo:
+
+- identidade: `Product Management`;
+- descrição: `Catálogo de produtos • Favoritos • Gerenciamento`;
+- navegação interna via Vue Router: Produtos (`/produtos`), Favoritos (`/favoritos`), Novo produto (`/produtos/novo`);
+- copyright: `© 2026 Product Management`.
+
+Não inclui redes sociais, contatos, links externos ou dados fictícios.
+
+No desktop, os links de navegação podem aparecer em linha; no mobile, empilhados. O layout principal usa `min-h-screen` + `flex-1` no conteúdo para manter o rodapé ao final da viewport quando a página tem pouco conteúdo.
 
 ---
 
@@ -903,7 +922,7 @@ A interface será considerada adequada quando:
 - [x] Ordenação por preço está disponível.
 - [x] Ordenação por nome (A–Z / Z–A) está disponível.
 - [x] Ordenação por avaliação está disponível.
-- [ ] Footer do layout está implementado.
+- [x] Footer do layout está implementado.
 - [x] Paginação está disponível.
 - [x] ProductCard está implementado.
 - [x] Favoritos funcionam.
@@ -933,6 +952,6 @@ A interface será considerada adequada quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.4
+**Versão:** 1.5
 
 **Última atualização:** 2026-08-11

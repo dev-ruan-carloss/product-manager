@@ -186,6 +186,7 @@ A interface será considerada pronta quando:
 - [x] TailwindCSS estiver sendo utilizado.
 - [x] Componentes reutilizáveis estiverem implementados.
 - [x] Layout estiver consistente.
+- [x] Footer estrutural estiver implementado no `DefaultLayout`.
 - [x] Estados de interação estiverem definidos.
 - [x] Loading estiver visualmente adequado.
 - [x] Erros forem compreensíveis.
@@ -378,6 +379,6 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 
 **Status:** Em andamento
 
-**Versão:** 1.3
+**Versão:** 1.4
 
 **Última atualização:** 2026-08-11

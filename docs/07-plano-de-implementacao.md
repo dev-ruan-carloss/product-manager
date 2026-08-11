@@ -172,6 +172,7 @@ Implementar a listagem principal de produtos e os componentes reutilizáveis nec
 ### Componentes previstos
 
 - [x] Header.
+- [x] Footer (estrutural via `AppFooter` + `DefaultLayout`; concluído após o fechamento inicial da fase).
 - [x] ProductCard.
 - [x] ProductGrid.
 - [x] FavoriteButton.
@@ -1082,6 +1083,7 @@ Resumo do acompanhamento:
 | Favoritos UI | concluída |
 | Criação | concluída |
 | Edição | concluída |
+| Footer estrutural (`AppFooter` + `DefaultLayout`) | concluída |
 | Responsividade/acessibilidade | pendente |
 | QA | pendente |
 | Entrega | pendente |
@@ -1096,6 +1098,6 @@ Resumo do acompanhamento:
 
 **Status:** Em andamento
 
-**Versão:** 1.7
+**Versão:** 1.8
 
 **Última atualização:** 2026-08-11

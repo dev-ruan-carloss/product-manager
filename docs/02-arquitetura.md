@@ -196,6 +196,7 @@ A pasta `components/` será responsável pelos componentes reutilizáveis da int
 
     src/components/
     ├── AppHeader.vue
+    ├── AppFooter.vue
     ├── FavoriteButton.vue
     ├── LoadingState.vue
     ├── ErrorState.vue
@@ -838,6 +839,6 @@ A arquitetura será considerada adequada quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.2
+**Versão:** 1.3
 
 **Última atualização:** 2026-08-11
