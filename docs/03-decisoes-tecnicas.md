@@ -882,7 +882,36 @@ A especificação de UI prevê Footer na estrutura geral da aplicação. Central
 **Impacto:**
 
 - Footer disponível em todas as rotas que usam `DefaultLayout`;
-- Fase 9 (responsividade/acessibilidade completa) e Dark Mode permanecem pendentes.
+- Fase 9 (responsividade/acessibilidade completa) permanece pendente.
+
+---
+
+## 35.8 — Tema global Light/Dark Mode
+
+**Data:** 2026-08-11
+
+**Decisão:**
+
+- Centralizar o tema em `themeStore` (Pinia), no mesmo padrão de persistência dos favoritos.
+- Tipar o modo com `ThemeMode = 'light' | 'dark'` em `src/types/theme.ts`.
+- Persistir em `localStorage` com a chave `product-management:theme` (separada dos favoritos).
+- Resolução inicial: preferência salva → `prefers-color-scheme` do SO → Light Mode como fallback.
+- Não gravar no `localStorage` apenas por detectar o tema do sistema; gravar somente após ação explícita do usuário (`setTheme` / `toggleTheme`).
+- Integrar TailwindCSS v4 com `@custom-variant dark (&:where(.dark, .dark *));` e classe `.dark` no `<html>`.
+- Configurar PrimeVue (`darkModeSelector: '.dark'`) para respeitar o mesmo seletor global.
+- Controle de alternância em `ThemeToggle.vue`, reutilizado pelo `AppHeader`.
+- Script inline em `index.html` para aplicar o tema antes do bundle Vue (evitar flash).
+- Preservar o Light Mode atual como referência visual; Dark Mode adapta superfícies, textos, bordas e estados sem alterar lógica de negócio.
+
+**Motivo:**
+
+O tema é estado global persistente compartilhado por Header, Footer, layout, páginas e componentes PrimeVue. Uma store Pinia + classe CSS global evita estados locais duplicados e mantém Tailwind e PrimeVue alinhados.
+
+**Impacto:**
+
+- Light Mode permanece visualmente consistente com o layout existente;
+- Dark Mode disponível em todas as rotas do `DefaultLayout`;
+- Fase 9 (responsividade/acessibilidade completa) e QA final permanecem pendentes.
 
 ---
 
@@ -913,6 +942,6 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.12
+**Versão:** 1.13
 
 **Última atualização:** 2026-08-11

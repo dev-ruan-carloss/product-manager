@@ -22,7 +22,7 @@ withDefaults(
       <div
         v-for="index in rows"
         :key="index"
-        class="overflow-hidden rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
+        class="overflow-hidden rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-700 dark:bg-slate-950"
       >
         <Skeleton width="100%" height="12rem" class="mb-4" />
         <Skeleton width="85%" height="1rem" class="mb-2" />

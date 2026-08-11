@@ -215,6 +215,31 @@ A chave não deve ser repetida em outras partes do código.
 
 ---
 
+# 11.1 — Persistência do Tema
+
+O tema da interface é persistido no `localStorage`.
+
+Modelo tipado:
+
+    ThemeMode = 'light' | 'dark'
+
+Chave:
+
+    product-management:theme
+
+Centralizada na constante `THEME_STORAGE_KEY` em `src/types/theme.ts`.
+
+Não reutilizar a chave dos favoritos.
+
+Resolução inicial (sem valor salvo válido):
+
+1. preferência do sistema operacional (`prefers-color-scheme`);
+2. Light Mode como fallback.
+
+A preferência somente é gravada após ação explícita do usuário.
+
+---
+
 # 12. Modelo de Criação
 
 O modelo utilizado para criação de produto será diferente do modelo completo retornado pela API quando necessário.
@@ -565,6 +590,7 @@ A origem de cada informação deverá ser clara.
 | Criação de produto | API |
 | Atualização de produto | API |
 | Favoritos | `localStorage` |
+| Tema (Light/Dark) | `localStorage` |
 | Pesquisa | Estado da interface |
 | Filtro | Estado da interface |
 | Ordenação | Estado da interface |
@@ -607,7 +633,8 @@ Somente dados necessários para manter preferências do usuário deverão ser pe
 Inicialmente:
 
     localStorage
-        └── favoritos
+        ├── favoritos (`product-management:favorites`)
+        └── tema (`product-management:theme`)
 
 Não deverão ser persistidos automaticamente:
 
@@ -797,6 +824,6 @@ Os modelos de dados serão considerados definidos quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.4
+**Versão:** 1.5
 
 **Última atualização:** 2026-08-11

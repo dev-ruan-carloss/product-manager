@@ -12,8 +12,8 @@ defineEmits<{
 <template>
   <button
     type="button"
-    class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-slate-400 shadow-sm outline-none transition hover:bg-white hover:text-violet-600 focus-visible:ring-2 focus-visible:ring-violet-500 disabled:cursor-not-allowed disabled:opacity-50"
-    :class="favorited ? 'text-violet-600' : ''"
+    class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-slate-400 shadow-sm outline-none transition hover:bg-white hover:text-violet-600 focus-visible:ring-2 focus-visible:ring-violet-500 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-800/90 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-violet-400"
+    :class="favorited ? 'text-violet-600 dark:text-violet-400' : ''"
     :aria-pressed="favorited"
     :aria-label="favorited ? 'Remover dos favoritos' : 'Adicionar aos favoritos'"
     :disabled="disabled"

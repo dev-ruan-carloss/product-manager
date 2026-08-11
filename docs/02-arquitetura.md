@@ -392,9 +392,13 @@ A solução escolhida para gerenciamento de estado será definida no documento `
 Estrutura prevista:
 
     src/stores/
-    └── favoritesStore.ts
+    ├── favoritesStore.ts
+    └── themeStore.ts
 
-Inicialmente, o principal candidato a estado global é o gerenciamento de favoritos.
+Estados globais implementados:
+
+- favoritos (`favoritesStore`);
+- tema Light/Dark (`themeStore`).
 
 ---
 
@@ -412,6 +416,19 @@ O store não deverá ser utilizado para armazenar indiscriminadamente todos os e
 
 ---
 
+## 10.2 — Theme Store
+
+O store de tema é responsável por:
+
+- manter o modo atual (`light` | `dark`);
+- aplicar a classe `.dark` no `<html>`;
+- persistir a preferência em `localStorage` (`product-management:theme`);
+- alternar o tema sob ação explícita do usuário.
+
+A resolução inicial segue: preferência salva → preferência do sistema operacional → Light Mode.
+
+---
+
 # 11. Types
 
 A pasta `types/` concentrará os tipos TypeScript compartilhados.
@@ -423,7 +440,8 @@ Estrutura implementada:
     ├── category.ts
     ├── api.ts
     ├── productForm.ts
-    └── catalog.ts
+    ├── catalog.ts
+    └── theme.ts
 
 Tipos principais:
 
@@ -839,6 +857,6 @@ A arquitetura será considerada adequada quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.3
+**Versão:** 1.4
 
 **Última atualização:** 2026-08-11

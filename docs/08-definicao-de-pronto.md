@@ -187,6 +187,9 @@ A interface será considerada pronta quando:
 - [x] Componentes reutilizáveis estiverem implementados.
 - [x] Layout estiver consistente.
 - [x] Footer estrutural estiver implementado no `DefaultLayout`.
+- [x] Tema Light/Dark Mode estiver implementado globalmente.
+- [x] Preferência de tema persistir em `localStorage`.
+- [x] Controle de tema estiver disponível no Header.
 - [x] Estados de interação estiverem definidos.
 - [x] Loading estiver visualmente adequado.
 - [x] Erros forem compreensíveis.
@@ -379,6 +382,6 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 
 **Status:** Em andamento
 
-**Versão:** 1.4
+**Versão:** 1.5
 
 **Última atualização:** 2026-08-11

@@ -786,6 +786,14 @@ Usuário consegue abrir `/produtos/:id/editar` a partir dos detalhes, carregar o
 
 Garantir funcionamento adequado a partir de 360px e atender critérios básicos de acessibilidade.
 
+### Tema (concluído fora do escopo completo desta fase)
+
+- [x] Implementar Light/Dark Mode global.
+- [x] Persistência do tema em `localStorage`.
+- [x] Controle de tema no Header (`ThemeToggle`).
+- [x] Compatibilidade PrimeVue + TailwindCSS com seletor `.dark`.
+- [x] Adaptar páginas existentes sem alterar lógica de negócio.
+
 ### Responsividade
 
 - [ ] Validar 360px.
@@ -1084,6 +1092,7 @@ Resumo do acompanhamento:
 | Criação | concluída |
 | Edição | concluída |
 | Footer estrutural (`AppFooter` + `DefaultLayout`) | concluída |
+| Tema Light/Dark Mode (`themeStore` + `ThemeToggle`) | concluída |
 | Responsividade/acessibilidade | pendente |
 | QA | pendente |
 | Entrega | pendente |
@@ -1098,6 +1107,6 @@ Resumo do acompanhamento:
 
 **Status:** Em andamento
 
-**Versão:** 1.8
+**Versão:** 1.9
 
 **Última atualização:** 2026-08-11

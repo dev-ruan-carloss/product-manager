@@ -49,12 +49,12 @@ function selectCategory(category: CategoryFilter): void {
 
 <template>
   <aside
-    class="flex flex-col gap-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm lg:sticky lg:top-6 lg:self-start"
+    class="flex flex-col gap-6 rounded-xl border border-slate-200 bg-white p-5 shadow-sm lg:sticky lg:top-6 lg:self-start dark:border-slate-700 dark:bg-slate-950"
     aria-label="Filtros de produtos"
   >
     <div>
-      <h1 class="text-2xl font-bold tracking-tight text-slate-900">Produtos</h1>
-      <p class="mt-1 text-sm text-slate-500">Encontre e gerencie seus produtos</p>
+      <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Produtos</h1>
+      <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Encontre e gerencie seus produtos</p>
     </div>
 
     <div class="lg:hidden">
@@ -67,7 +67,7 @@ function selectCategory(category: CategoryFilter): void {
 
     <div class="grid gap-3 sm:grid-cols-2 lg:hidden">
       <div class="space-y-1.5">
-        <label class="text-xs font-medium uppercase tracking-wide text-slate-500" for="category-mobile">
+        <label class="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400" for="category-mobile">
           Categoria
         </label>
         <Select
@@ -90,7 +90,7 @@ function selectCategory(category: CategoryFilter): void {
     </div>
 
     <section class="hidden space-y-3 lg:block" aria-labelledby="categories-heading">
-      <h2 id="categories-heading" class="text-sm font-semibold text-slate-900">Categorias</h2>
+      <h2 id="categories-heading" class="text-sm font-semibold text-slate-900 dark:text-slate-100">Categorias</h2>
       <ul class="space-y-1">
         <li>
           <button
@@ -98,15 +98,15 @@ function selectCategory(category: CategoryFilter): void {
             class="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm outline-none transition focus-visible:ring-2 focus-visible:ring-violet-500"
             :class="
               selectedCategory === ALL_CATEGORIES
-                ? 'bg-violet-50 font-medium text-violet-700'
-                : 'text-slate-700 hover:bg-slate-50'
+                ? 'bg-violet-50 font-medium text-violet-700 dark:bg-violet-950/50 dark:text-violet-300'
+                : 'text-slate-700 hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-800'
             "
             :aria-pressed="selectedCategory === ALL_CATEGORIES"
             @click="selectCategory(ALL_CATEGORIES)"
           >
             <span>Todas</span>
             <span
-              class="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600"
+              class="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300"
               :aria-label="`${totalCount} produtos`"
             >
               {{ totalCount }}
@@ -119,15 +119,15 @@ function selectCategory(category: CategoryFilter): void {
             class="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm capitalize outline-none transition focus-visible:ring-2 focus-visible:ring-violet-500"
             :class="
               selectedCategory === category
-                ? 'bg-violet-50 font-medium text-violet-700'
-                : 'text-slate-700 hover:bg-slate-50'
+                ? 'bg-violet-50 font-medium text-violet-700 dark:bg-violet-950/50 dark:text-violet-300'
+                : 'text-slate-700 hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-800'
             "
             :aria-pressed="selectedCategory === category"
             @click="selectCategory(category)"
           >
             <span>{{ category }}</span>
             <span
-              class="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600"
+              class="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300"
               :aria-label="`${categoryCounts.get(category) ?? 0} produtos`"
             >
               {{ categoryCounts.get(category) ?? 0 }}

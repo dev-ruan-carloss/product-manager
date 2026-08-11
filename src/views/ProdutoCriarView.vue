@@ -75,12 +75,12 @@ onMounted(() => {
 
 <template>
   <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:py-8">
-    <nav class="mb-4 text-sm text-slate-400" aria-label="Trilha de navegação">
+    <nav class="mb-4 text-sm text-slate-400 dark:text-slate-500" aria-label="Trilha de navegação">
       <ol class="flex flex-wrap items-center gap-1.5">
         <li>
           <RouterLink
             to="/produtos"
-            class="rounded-sm outline-none hover:text-slate-600 focus-visible:ring-2 focus-visible:ring-violet-500"
+            class="rounded-sm outline-none hover:text-slate-600 focus-visible:ring-2 focus-visible:ring-violet-500 dark:hover:text-slate-300"
           >
             Início
           </RouterLink>
@@ -89,19 +89,19 @@ onMounted(() => {
         <li>
           <RouterLink
             to="/produtos"
-            class="rounded-sm outline-none hover:text-slate-600 focus-visible:ring-2 focus-visible:ring-violet-500"
+            class="rounded-sm outline-none hover:text-slate-600 focus-visible:ring-2 focus-visible:ring-violet-500 dark:hover:text-slate-300"
           >
             Produtos
           </RouterLink>
         </li>
         <li aria-hidden="true">/</li>
-        <li class="text-slate-500" aria-current="page">Novo Produto</li>
+        <li class="text-slate-500 dark:text-slate-400" aria-current="page">Novo Produto</li>
       </ol>
     </nav>
 
     <header class="mb-6 space-y-1 sm:mb-8">
-      <h1 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Novo Produto</h1>
-      <p class="text-sm text-slate-500 sm:text-base">
+      <h1 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-100">Novo Produto</h1>
+      <p class="text-sm text-slate-500 sm:text-base dark:text-slate-400">
         Preencha os dados abaixo para cadastrar um novo produto.
       </p>
     </header>

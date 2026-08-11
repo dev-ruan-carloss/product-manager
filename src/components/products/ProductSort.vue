@@ -27,7 +27,7 @@ const sortOptions: Array<{ label: string; value: CatalogSortOrder }> = [
 <template>
   <div v-if="variant === 'select'" class="space-y-1.5">
     <label
-      class="text-xs font-medium uppercase tracking-wide text-slate-500"
+      class="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400"
       :for="inputId ?? 'product-sort'"
     >
       Ordenação
@@ -44,12 +44,12 @@ const sortOptions: Array<{ label: string; value: CatalogSortOrder }> = [
   </div>
 
   <section v-else class="space-y-3" aria-labelledby="sort-heading">
-    <h2 id="sort-heading" class="text-sm font-semibold text-slate-900">Ordenação</h2>
+    <h2 id="sort-heading" class="text-sm font-semibold text-slate-900 dark:text-slate-100">Ordenação</h2>
     <div class="space-y-3" role="radiogroup" aria-labelledby="sort-heading">
       <label
         v-for="option in sortOptions"
         :key="option.value"
-        class="flex cursor-pointer items-center gap-2.5 text-sm text-slate-700"
+        class="flex cursor-pointer items-center gap-2.5 text-sm text-slate-700 dark:text-slate-200"
       >
         <RadioButton
           :input-id="`sort-${option.value}`"

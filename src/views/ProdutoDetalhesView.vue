@@ -49,7 +49,7 @@ function goToCatalog(): void {
     <div class="mb-6 flex flex-wrap items-center gap-3 text-sm">
       <button
         type="button"
-        class="inline-flex min-h-10 items-center gap-1.5 rounded-md px-1 py-1 font-medium text-slate-600 outline-none transition hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-violet-500"
+        class="inline-flex min-h-10 items-center gap-1.5 rounded-md px-1 py-1 font-medium text-slate-600 outline-none transition hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-violet-500 dark:text-slate-300 dark:hover:text-slate-100"
         @click="goToCatalog"
       >
         <svg
@@ -65,18 +65,18 @@ function goToCatalog(): void {
         Voltar
       </button>
 
-      <nav class="min-w-0 text-slate-400" aria-label="Trilha de navegação">
+      <nav class="min-w-0 text-slate-400 dark:text-slate-500" aria-label="Trilha de navegação">
         <ol class="flex flex-wrap items-center gap-1.5">
           <li>
             <RouterLink
               to="/produtos"
-              class="rounded-sm outline-none hover:text-slate-600 focus-visible:ring-2 focus-visible:ring-violet-500"
+              class="rounded-sm outline-none hover:text-slate-600 focus-visible:ring-2 focus-visible:ring-violet-500 dark:hover:text-slate-300"
             >
               Produtos
             </RouterLink>
           </li>
           <li aria-hidden="true">/</li>
-          <li class="min-w-0 truncate text-slate-500" aria-current="page">
+          <li class="min-w-0 truncate text-slate-500 dark:text-slate-400" aria-current="page">
             <template v-if="product">{{ product.title }}</template>
             <template v-else>Detalhes</template>
           </li>
@@ -89,7 +89,7 @@ function goToCatalog(): void {
       role="status"
       aria-live="polite"
       aria-busy="true"
-      class="overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
+      class="overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8 dark:border-slate-700 dark:bg-slate-950"
     >
       <p class="sr-only">Carregando detalhes do produto.</p>
       <div class="grid gap-8 lg:grid-cols-2">

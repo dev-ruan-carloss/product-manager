@@ -124,18 +124,18 @@ function onCancel(): void {
   <form class="space-y-6" novalidate @submit="onSubmit">
     <div class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_20rem]">
       <section
-        class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6"
+        class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 dark:border-slate-700 dark:bg-slate-950"
         aria-labelledby="product-form-heading"
       >
-        <h2 id="product-form-heading" class="text-lg font-semibold text-slate-900">
+        <h2 id="product-form-heading" class="text-lg font-semibold text-slate-900 dark:text-slate-100">
           Informações do produto
         </h2>
 
         <div class="mt-5 grid gap-5 sm:grid-cols-2">
           <div class="space-y-1.5 sm:col-span-1">
-            <label for="product-title" class="block text-sm font-medium text-slate-700">
+            <label for="product-title" class="block text-sm font-medium text-slate-700 dark:text-slate-200">
               Título do produto
-              <span class="text-red-600" aria-hidden="true">*</span>
+              <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
             </label>
             <InputText
               id="product-title"
@@ -152,13 +152,13 @@ function onCancel(): void {
               "
               autocomplete="off"
             />
-            <p id="product-title-help" class="text-xs text-slate-500">
+            <p id="product-title-help" class="text-xs text-slate-500 dark:text-slate-400">
               Digite um título claro e descritivo.
             </p>
             <p
               v-if="errors.title"
               id="product-title-error"
-              class="text-sm text-red-600"
+              class="text-sm text-red-600 dark:text-red-400"
               role="alert"
             >
               {{ errors.title }}
@@ -166,9 +166,9 @@ function onCancel(): void {
           </div>
 
           <div class="space-y-1.5 sm:col-span-1">
-            <label for="product-category" class="block text-sm font-medium text-slate-700">
+            <label for="product-category" class="block text-sm font-medium text-slate-700 dark:text-slate-200">
               Categoria
-              <span class="text-red-600" aria-hidden="true">*</span>
+              <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
             </label>
             <Select
               v-model="category"
@@ -189,20 +189,20 @@ function onCancel(): void {
                   : 'product-category-help'
               "
             />
-            <p id="product-category-help" class="text-xs text-slate-500">
+            <p id="product-category-help" class="text-xs text-slate-500 dark:text-slate-400">
               Escolha a categoria do produto.
             </p>
             <p
               v-if="errors.category"
               id="product-category-error"
-              class="text-sm text-red-600"
+              class="text-sm text-red-600 dark:text-red-400"
               role="alert"
             >
               {{ errors.category }}
             </p>
             <p
               v-else-if="categories.length === 0 && !categoriesLoading"
-              class="text-sm text-amber-700"
+              class="text-sm text-amber-700 dark:text-amber-300"
             >
               Não foi possível carregar as categorias.
               <button
@@ -216,9 +216,9 @@ function onCancel(): void {
           </div>
 
           <div class="space-y-1.5 sm:col-span-1">
-            <label for="product-price" class="block text-sm font-medium text-slate-700">
+            <label for="product-price" class="block text-sm font-medium text-slate-700 dark:text-slate-200">
               Preço
-              <span class="text-red-600" aria-hidden="true">*</span>
+              <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
             </label>
             <InputNumber
               v-model="price"
@@ -238,11 +238,11 @@ function onCancel(): void {
                 errors.price ? 'product-price-error product-price-help' : 'product-price-help'
               "
             />
-            <p id="product-price-help" class="text-xs text-slate-500">Informe o preço do produto.</p>
+            <p id="product-price-help" class="text-xs text-slate-500 dark:text-slate-400">Informe o preço do produto.</p>
             <p
               v-if="errors.price"
               id="product-price-error"
-              class="text-sm text-red-600"
+              class="text-sm text-red-600 dark:text-red-400"
               role="alert"
             >
               {{ errors.price }}
@@ -250,9 +250,9 @@ function onCancel(): void {
           </div>
 
           <div class="space-y-1.5 sm:col-span-1">
-            <label for="product-image" class="block text-sm font-medium text-slate-700">
+            <label for="product-image" class="block text-sm font-medium text-slate-700 dark:text-slate-200">
               URL da imagem
-              <span class="text-red-600" aria-hidden="true">*</span>
+              <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
             </label>
             <InputText
               id="product-image"
@@ -269,13 +269,13 @@ function onCancel(): void {
               "
               autocomplete="off"
             />
-            <p id="product-image-help" class="text-xs text-slate-500">
+            <p id="product-image-help" class="text-xs text-slate-500 dark:text-slate-400">
               Cole o link da imagem do produto.
             </p>
             <p
               v-if="errors.image"
               id="product-image-error"
-              class="text-sm text-red-600"
+              class="text-sm text-red-600 dark:text-red-400"
               role="alert"
             >
               {{ errors.image }}
@@ -283,9 +283,9 @@ function onCancel(): void {
           </div>
 
           <div class="space-y-1.5 sm:col-span-2">
-            <label for="product-description" class="block text-sm font-medium text-slate-700">
+            <label for="product-description" class="block text-sm font-medium text-slate-700 dark:text-slate-200">
               Descrição
-              <span class="text-red-600" aria-hidden="true">*</span>
+              <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
             </label>
             <Textarea
               id="product-description"
@@ -304,13 +304,13 @@ function onCancel(): void {
                   : 'product-description-help'
               "
             />
-            <p id="product-description-help" class="text-xs text-slate-500">
+            <p id="product-description-help" class="text-xs text-slate-500 dark:text-slate-400">
               Informe uma descrição clara do produto.
             </p>
             <p
               v-if="errors.description"
               id="product-description-error"
-              class="text-sm text-red-600"
+              class="text-sm text-red-600 dark:text-red-400"
               role="alert"
             >
               {{ errors.description }}
@@ -321,16 +321,16 @@ function onCancel(): void {
 
       <aside class="space-y-4 xl:sticky xl:top-6 xl:self-start">
         <section
-          class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
+          class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-950"
           aria-labelledby="product-preview-heading"
         >
-          <h2 id="product-preview-heading" class="text-base font-semibold text-slate-900">
+          <h2 id="product-preview-heading" class="text-base font-semibold text-slate-900 dark:text-slate-100">
             Prévia do produto
           </h2>
 
-          <div class="mt-4 overflow-hidden rounded-lg border border-slate-200">
+          <div class="mt-4 overflow-hidden rounded-lg border border-slate-200 dark:border-slate-700">
             <div
-              class="flex h-40 items-center justify-center border-b border-dashed border-slate-200 bg-slate-50 px-4"
+              class="flex h-40 items-center justify-center border-b border-dashed border-slate-200 bg-slate-50 px-4 dark:border-slate-700 dark:bg-slate-800"
             >
               <img
                 v-if="previewImage && !previewImageFailed"
@@ -339,21 +339,21 @@ function onCancel(): void {
                 class="max-h-36 max-w-full object-contain"
                 @error="onPreviewImageError"
               />
-              <p v-else class="px-2 text-center text-xs text-slate-400">
+              <p v-else class="px-2 text-center text-xs text-slate-400 dark:text-slate-500">
                 Imagem do produto. Será carregada da URL informada.
               </p>
             </div>
 
             <div class="space-y-2 p-4">
-              <p class="line-clamp-2 text-sm font-semibold text-slate-900">{{ previewTitle }}</p>
-              <p class="text-xs capitalize text-violet-700">{{ previewCategory }}</p>
-              <p class="text-base font-bold text-violet-700">{{ previewPrice }}</p>
+              <p class="line-clamp-2 text-sm font-semibold text-slate-900 dark:text-slate-100">{{ previewTitle }}</p>
+              <p class="text-xs capitalize text-violet-700 dark:text-violet-300">{{ previewCategory }}</p>
+              <p class="text-base font-bold text-violet-700 dark:text-violet-300">{{ previewPrice }}</p>
             </div>
           </div>
         </section>
 
         <section
-          class="rounded-xl border border-violet-100 bg-violet-50/60 p-5"
+          class="rounded-xl border border-violet-100 bg-violet-50/60 p-5 dark:border-violet-900/60 dark:bg-violet-950/30"
           aria-labelledby="product-tips-heading"
         >
           <div class="flex items-center gap-2">
@@ -369,23 +369,23 @@ function onCancel(): void {
                 />
               </svg>
             </span>
-            <h2 id="product-tips-heading" class="text-base font-semibold text-slate-900">Dicas</h2>
+            <h2 id="product-tips-heading" class="text-base font-semibold text-slate-900 dark:text-slate-100">Dicas</h2>
           </div>
-          <ul class="mt-3 space-y-2 text-sm text-slate-600">
+          <ul class="mt-3 space-y-2 text-sm text-slate-600 dark:text-slate-300">
             <li class="flex gap-2">
-              <span class="mt-0.5 text-emerald-600" aria-hidden="true">✓</span>
+              <span class="mt-0.5 text-emerald-600 dark:text-emerald-400" aria-hidden="true">✓</span>
               Use um título objetivo e descritivo.
             </li>
             <li class="flex gap-2">
-              <span class="mt-0.5 text-emerald-600" aria-hidden="true">✓</span>
+              <span class="mt-0.5 text-emerald-600 dark:text-emerald-400" aria-hidden="true">✓</span>
               Cole uma URL de imagem válida.
             </li>
             <li class="flex gap-2">
-              <span class="mt-0.5 text-emerald-600" aria-hidden="true">✓</span>
+              <span class="mt-0.5 text-emerald-600 dark:text-emerald-400" aria-hidden="true">✓</span>
               A descrição deve ser clara e completa.
             </li>
             <li class="flex gap-2">
-              <span class="mt-0.5 text-emerald-600" aria-hidden="true">✓</span>
+              <span class="mt-0.5 text-emerald-600 dark:text-emerald-400" aria-hidden="true">✓</span>
               Revise os dados antes de salvar.
             </li>
           </ul>
@@ -394,7 +394,7 @@ function onCancel(): void {
     </div>
 
     <div
-      class="flex flex-col-reverse gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-5"
+      class="flex flex-col-reverse gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-5 dark:border-slate-700 dark:bg-slate-950"
     >
       <Button
         type="button"

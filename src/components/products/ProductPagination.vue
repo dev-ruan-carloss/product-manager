@@ -42,9 +42,9 @@ function onItemsPerPageChange(value: number): void {
 <template>
   <div
     v-if="showPagination"
-    class="flex flex-col gap-4 border-t border-slate-200 pt-4 sm:flex-row sm:items-center sm:justify-between"
+    class="flex flex-col gap-4 border-t border-slate-200 pt-4 sm:flex-row sm:items-center sm:justify-between dark:border-slate-700"
   >
-    <p class="text-sm text-slate-500" aria-live="polite">
+    <p class="text-sm text-slate-500 dark:text-slate-400" aria-live="polite">
       Mostrando {{ rangeStart }} a {{ rangeEnd }} de {{ totalProducts }} produtos
     </p>
 

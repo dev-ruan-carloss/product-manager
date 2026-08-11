@@ -5,6 +5,27 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Product Manager</title>
+    <!-- Aplica o tema antes do bundle Vue para evitar flash no carregamento. -->
+    <script>
+      ;(function () {
+        try {
+          var key = 'product-management:theme'
+          var saved = localStorage.getItem(key)
+          var theme =
+            saved === 'light' || saved === 'dark'
+              ? saved
+              : window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light'
+          if (theme === 'dark') {
+            document.documentElement.classList.add('dark')
+          }
+          document.documentElement.style.colorScheme = theme
+        } catch (e) {
+          /* ignore */
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="app"></div>

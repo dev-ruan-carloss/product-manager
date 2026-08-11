@@ -36,7 +36,8 @@ app.use(PrimeVue, {
   theme: {
     preset: AppPreset,
     options: {
-      darkModeSelector: false,
+      // Alinhado à classe `.dark` no <html>, gerenciada pela themeStore.
+      darkModeSelector: '.dark',
     },
   },
 })

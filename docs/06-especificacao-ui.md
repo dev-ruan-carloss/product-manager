@@ -102,9 +102,18 @@ O cabeçalho deverá apresentar:
 - identificação da aplicação;
 - acesso aos produtos;
 - acesso aos favoritos;
-- acesso à criação de produto.
+- acesso à criação de produto;
+- controle de alternância entre Light Mode e Dark Mode.
 
 No mobile, a navegação deverá ser adaptada para o espaço disponível.
+
+O controle de tema (`ThemeToggle`) deve:
+
+- permanecer no Header global;
+- possuir área de toque adequada;
+- ser acessível por teclado;
+- possuir `aria-label` e estado acessível (`aria-pressed`);
+- indicar visualmente o tema atual.
 
 ---
 
@@ -124,6 +133,28 @@ Conteúdo:
 Não inclui redes sociais, contatos, links externos ou dados fictícios.
 
 No desktop, os links de navegação podem aparecer em linha; no mobile, empilhados. O layout principal usa `min-h-screen` + `flex-1` no conteúdo para manter o rodapé ao final da viewport quando a página tem pouco conteúdo.
+
+---
+
+# 6.2 — Tema (Light / Dark Mode)
+
+**Status:** **CONCLUÍDO**
+
+A aplicação possui tema global com:
+
+- Light Mode (referência visual existente, preservada);
+- Dark Mode (adaptação global de superfícies, textos, bordas e estados).
+
+Regras:
+
+- estado centralizado em `themeStore` (Pinia);
+- persistência em `localStorage` com chave `product-management:theme`;
+- resolução inicial: preferência salva → preferência do sistema → Light Mode;
+- TailwindCSS utiliza a variante `dark:` com classe `.dark` no `<html>`;
+- PrimeVue utiliza `darkModeSelector: '.dark'`;
+- o tema se aplica a Header, Footer, layout, catálogo, detalhes, formulários, favoritos, loading, erro, vazio e Toast.
+
+Não deve existir estado de tema independente por tela.
 
 ---
 
@@ -805,6 +836,8 @@ Regras mínimas:
 A estrutura deverá considerar componentes reutilizáveis como:
 
     AppHeader
+    ThemeToggle
+    AppFooter
     ProductCard
     ProductGrid
     ProductSearch
@@ -823,6 +856,7 @@ A estrutura deverá considerar componentes reutilizáveis como:
 - Ordenação por preço, nome e avaliação: apresentada por `ProductSort`, integrado em `ProductFilters`.
 - `ProductSort` existe em `src/components/products/ProductSort.vue` (variantes `select` e `radiogroup`).
 - A lógica de ordenação permanece em `useProductListControls`.
+- Tema Light/Dark: `ThemeToggle` no Header; estado em `themeStore`.
 
 A criação de novos componentes deverá ocorrer conforme necessidade real.
 
@@ -923,6 +957,7 @@ A interface será considerada adequada quando:
 - [x] Ordenação por nome (A–Z / Z–A) está disponível.
 - [x] Ordenação por avaliação está disponível.
 - [x] Footer do layout está implementado.
+- [x] Tema Light/Dark Mode está implementado e persistido.
 - [x] Paginação está disponível.
 - [x] ProductCard está implementado.
 - [x] Favoritos funcionam.
@@ -952,6 +987,6 @@ A interface será considerada adequada quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.5
+**Versão:** 1.6
 
 **Última atualização:** 2026-08-11

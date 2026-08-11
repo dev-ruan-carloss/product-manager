@@ -1,5 +1,8 @@
 @import 'tailwindcss';
 
+/* Dark Mode controlado por classe `.dark` no <html> (não só prefers-color-scheme). */
+@custom-variant dark (&:where(.dark, .dark *));
+
 html,
 body,
 #app {
@@ -17,11 +20,23 @@ body {
     sans-serif;
   background-color: #f8fafc;
   color: #0f172a;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+html.dark body {
+  background-color: #0f172a;
+  color: #f1f5f9;
 }
 
 :focus-visible {
   outline: 2px solid #7c3aed;
   outline-offset: 2px;
+}
+
+html.dark :focus-visible {
+  outline-color: #a78bfa;
 }
 
 .sr-only {

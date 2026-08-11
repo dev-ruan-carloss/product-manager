@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import Button from 'primevue/button'
 import PlusIcon from '@primevue/icons/plus'
 
+import ThemeToggle from '@/components/ThemeToggle.vue'
 import { useFavoritesStore } from '@/stores/favoritesStore'
 
 const route = useRoute()
@@ -19,13 +20,13 @@ const isFavoritesActive = computed(() => route.name === 'favoritos')
 </script>
 
 <template>
-  <header class="border-b border-slate-200 bg-white">
+  <header class="border-b border-slate-200 bg-white transition-colors duration-150 dark:border-slate-800 dark:bg-slate-950">
     <div
       class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6"
     >
       <RouterLink
         to="/produtos"
-        class="flex items-center gap-2 rounded-md text-slate-900 outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
+        class="flex items-center gap-2 rounded-md text-slate-900 outline-none focus-visible:ring-2 focus-visible:ring-violet-500 dark:text-slate-100"
         aria-label="Product Management — ir para produtos"
       >
         <span
@@ -47,13 +48,17 @@ const isFavoritesActive = computed(() => route.name === 'favoritos')
         <RouterLink
           to="/produtos"
           class="relative pb-1 text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
-          :class="isProductsActive ? 'text-violet-700' : 'text-slate-500 hover:text-slate-800'"
+          :class="
+            isProductsActive
+              ? 'text-violet-700 dark:text-violet-300'
+              : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+          "
           :aria-current="isProductsActive ? 'page' : undefined"
         >
           Produtos
           <span
             v-if="isProductsActive"
-            class="absolute inset-x-0 -bottom-0.5 h-0.5 rounded-full bg-violet-600"
+            class="absolute inset-x-0 -bottom-0.5 h-0.5 rounded-full bg-violet-600 dark:bg-violet-400"
             aria-hidden="true"
           />
         </RouterLink>
@@ -61,7 +66,11 @@ const isFavoritesActive = computed(() => route.name === 'favoritos')
         <RouterLink
           to="/favoritos"
           class="relative inline-flex items-center gap-1.5 pb-1 text-sm font-medium outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
-          :class="isFavoritesActive ? 'text-violet-700' : 'text-slate-500 hover:text-slate-800'"
+          :class="
+            isFavoritesActive
+              ? 'text-violet-700 dark:text-violet-300'
+              : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+          "
           :aria-current="isFavoritesActive ? 'page' : undefined"
         >
           <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
@@ -74,16 +83,18 @@ const isFavoritesActive = computed(() => route.name === 'favoritos')
           Favoritos
           <span
             v-if="isFavoritesActive"
-            class="absolute inset-x-0 -bottom-0.5 h-0.5 rounded-full bg-violet-600"
+            class="absolute inset-x-0 -bottom-0.5 h-0.5 rounded-full bg-violet-600 dark:bg-violet-400"
             aria-hidden="true"
           />
         </RouterLink>
       </nav>
 
       <div class="flex items-center gap-2 sm:gap-3">
+        <ThemeToggle />
+
         <RouterLink
           to="/favoritos"
-          class="relative inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-600 outline-none hover:bg-slate-100 focus-visible:ring-2 focus-visible:ring-violet-500"
+          class="relative inline-flex h-10 w-10 items-center justify-center rounded-full text-slate-600 outline-none hover:bg-slate-100 focus-visible:ring-2 focus-visible:ring-violet-500 dark:text-slate-300 dark:hover:bg-slate-800"
           :aria-label="`Favoritos (${favoritesCount})`"
         >
           <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
