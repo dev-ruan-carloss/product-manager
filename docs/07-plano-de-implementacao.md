@@ -91,6 +91,7 @@ Estrutura inicial esperada:
     src/
     ├── assets/
     ├── components/
+    ├── config/
     ├── layouts/
     ├── router/
     ├── services/

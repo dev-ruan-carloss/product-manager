@@ -721,6 +721,30 @@ Para cada alteração, deverão ser considerados:
 
 ---
 
+## 35.1 — Localização do cliente HTTP
+
+**Data:** 2026-08-10
+
+**Decisão anterior:**
+
+O cliente Axios ficava em `src/services/api.ts`, junto dos services de domínio.
+
+**Nova decisão:**
+
+O cliente Axios passa a ficar em `src/config/api.ts`.
+
+**Motivo:**
+
+Separar configuração de infraestrutura da camada de services, que permanece responsável apenas pelas operações de domínio sobre a API.
+
+**Impacto:**
+
+- estrutura de pastas atualizada em `02-arquitetura.md`;
+- contrato da API atualizado em `04-contrato-api.md`;
+- services importam o cliente a partir de `@/config/api`.
+
+---
+
 # 36. Critérios de Aceite
 
 As decisões técnicas serão consideradas definidas quando:

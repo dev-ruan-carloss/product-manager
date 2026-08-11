@@ -45,7 +45,7 @@ Exemplo conceitual:
 
     API_BASE_URL
         ↓
-    api.ts
+    config/api.ts
         ↓
     productService.ts
     categoryService.ts
@@ -60,7 +60,7 @@ A comunicação será realizada utilizando Axios.
 
 A configuração deverá ser centralizada em:
 
-`src/services/api.ts`
+`src/config/api.ts`
 
 O cliente HTTP deverá concentrar:
 

@@ -85,6 +85,7 @@ Cada tipo de informação deverá possuir um local principal responsável por su
 
 Exemplos:
 
+- cliente HTTP → config;
 - API → services;
 - estado global → stores;
 - lógica reutilizável → composables;
@@ -117,6 +118,7 @@ A estrutura planejada para o projeto será:
     │   ├── assets/
     │   ├── components/
     │   ├── composables/
+    │   ├── config/
     │   ├── layouts/
     │   ├── router/
     │   ├── services/
@@ -325,16 +327,14 @@ A implementação final dependerá da estratégia de gerenciamento de estado def
 
 ---
 
-# 8. Services
+# 8. Config
 
-A pasta `services/` será responsável pela comunicação com recursos externos, principalmente a Fake Store API.
+A pasta `config/` será responsável por configurações de infraestrutura da aplicação.
 
 Estrutura inicial prevista:
 
-    src/services/
-    ├── api.ts
-    ├── productService.ts
-    └── categoryService.ts
+    src/config/
+    └── api.ts
 
 ---
 
@@ -347,11 +347,26 @@ Deverá concentrar configurações comuns como:
 - URL base;
 - headers;
 - configurações do cliente;
-- tratamento comum de requisições quando aplicável.
+- tratamento comum de requisições quando aplicável;
+- tratamento comum de erros quando aplicável.
+
+Os services deverão utilizar o cliente configurado em `config/api.ts` em vez de criar instâncias independentes.
 
 ---
 
-## 8.2 — productService.ts
+# 9. Services
+
+A pasta `services/` será responsável pela comunicação com recursos externos, principalmente a Fake Store API.
+
+Estrutura inicial prevista:
+
+    src/services/
+    ├── productService.ts
+    └── categoryService.ts
+
+---
+
+## 9.1 — productService.ts
 
 Responsável pelas operações relacionadas a produtos.
 
@@ -366,7 +381,7 @@ O service deverá abstrair os detalhes da comunicação HTTP das camadas superio
 
 ---
 
-## 8.3 — categoryService.ts
+## 9.2 — categoryService.ts
 
 Responsável pelas operações relacionadas às categorias.
 
@@ -378,7 +393,7 @@ Caso a API disponibilize categorias através de outro recurso, a implementação
 
 ---
 
-# 9. Stores
+# 10. Stores
 
 A pasta `stores/` será utilizada para estados que precisam ser compartilhados entre diferentes partes da aplicação.
 
@@ -393,7 +408,7 @@ Inicialmente, o principal candidato a estado global é o gerenciamento de favori
 
 ---
 
-## 9.1 — Favorites Store
+## 10.1 — Favorites Store
 
 O store de favoritos poderá ser responsável por:
 
@@ -407,7 +422,7 @@ O store não deverá ser utilizado para armazenar indiscriminadamente todos os e
 
 ---
 
-# 10. Types
+# 11. Types
 
 A pasta `types/` concentrará os tipos TypeScript compartilhados.
 
@@ -429,7 +444,7 @@ Os tipos deverão representar os contratos utilizados pela aplicação.
 
 ---
 
-# 11. Router
+# 12. Router
 
 A pasta `router/` será responsável pela configuração das rotas da aplicação.
 
@@ -451,7 +466,7 @@ A estrutura final das URLs deverá ser definida considerando a experiência de n
 
 ---
 
-# 12. Utils
+# 13. Utils
 
 A pasta `utils/` será utilizada para funções auxiliares puras e reutilizáveis que não pertençam especificamente a uma feature.
 
@@ -468,7 +483,7 @@ Não deverão ser utilizados como uma pasta genérica para colocar qualquer cód
 
 ---
 
-# 13. Assets
+# 14. Assets
 
 A pasta `assets/` armazenará recursos utilizados pela aplicação.
 
@@ -483,7 +498,7 @@ A organização poderá ser ajustada conforme os recursos visuais utilizados.
 
 ---
 
-# 14. Fluxo de Dados
+# 15. Fluxo de Dados
 
 O fluxo principal de obtenção de produtos seguirá uma estrutura semelhante a:
 
@@ -513,7 +528,7 @@ Exemplo:
 
 ---
 
-# 15. Fluxo de Favoritos
+# 16. Fluxo de Favoritos
 
 O fluxo de favoritos será independente da API quando possível, pois a persistência deverá ocorrer localmente.
 
@@ -537,7 +552,7 @@ Quando o usuário favoritar um produto:
 
 ---
 
-# 16. Fluxo de Criação e Edição
+# 17. Fluxo de Criação e Edição
 
 O fluxo de criação será:
 
@@ -575,7 +590,7 @@ O fluxo de edição seguirá estrutura semelhante:
 
 ---
 
-# 17. Responsabilidade por Camada
+# 18. Responsabilidade por Camada
 
 | Camada | Responsabilidade |
 |---|---|
@@ -583,6 +598,7 @@ O fluxo de edição seguirá estrutura semelhante:
 | `components` | Apresentação e interação da interface |
 | `composables` | Lógica reutilizável relacionada à interface |
 | `stores` | Estado compartilhado entre diferentes áreas |
+| `config` | Configurações de infraestrutura, incluindo o cliente HTTP |
 | `services` | Comunicação com API e recursos externos |
 | `types` | Contratos e tipos TypeScript |
 | `router` | Configuração da navegação |
@@ -591,7 +607,7 @@ O fluxo de edição seguirá estrutura semelhante:
 
 ---
 
-# 18. Regras de Dependência
+# 19. Regras de Dependência
 
 As dependências entre camadas deverão seguir algumas regras.
 
@@ -647,6 +663,7 @@ Não devem se tornar depósitos genéricos de toda a lógica da aplicação.
 
 Services podem:
 
+- utilizar o cliente HTTP configurado em `config`;
 - realizar requisições HTTP;
 - transformar respostas quando necessário;
 - lidar com detalhes específicos da API.
@@ -655,7 +672,7 @@ Services não devem conhecer componentes ou elementos da interface.
 
 ---
 
-# 19. Tratamento de Estados Assíncronos
+# 20. Tratamento de Estados Assíncronos
 
 As operações assíncronas deverão possuir estados previsíveis.
 
@@ -685,7 +702,7 @@ A representação exata desses estados será definida durante a implementação.
 
 ---
 
-# 20. Tratamento de Erros
+# 21. Tratamento de Erros
 
 Os erros deverão ser tratados em níveis apropriados.
 
@@ -705,7 +722,7 @@ A interface não deverá apresentar diretamente mensagens técnicas desnecessár
 
 ---
 
-# 21. Formulários
+# 22. Formulários
 
 A responsabilidade pelos formulários será dividida entre:
 
@@ -725,7 +742,7 @@ A comunicação com a API será realizada fora do componente visual.
 
 ---
 
-# 22. Responsividade
+# 23. Responsividade
 
 A arquitetura dos componentes deverá permitir adaptação para diferentes tamanhos de tela.
 
@@ -735,7 +752,7 @@ Os componentes não deverão possuir lógica de negócio diferente apenas porque
 
 ---
 
-# 23. Acessibilidade
+# 24. Acessibilidade
 
 A arquitetura deverá favorecer componentes semanticamente corretos.
 
@@ -751,7 +768,7 @@ Responsabilidades incluem:
 
 ---
 
-# 24. Testabilidade
+# 25. Testabilidade
 
 A arquitetura deverá permitir que as principais regras sejam testadas de forma isolada.
 
@@ -767,7 +784,7 @@ A estratégia completa de testes será definida posteriormente nas decisões té
 
 ---
 
-# 25. Princípios para Uso de IA
+# 26. Princípios para Uso de IA
 
 A implementação poderá utilizar ferramentas de inteligência artificial como apoio ao desenvolvimento.
 
@@ -785,7 +802,7 @@ O agente de desenvolvimento deverá consultar a documentação do projeto antes 
 
 ---
 
-# 26. Evolução da Arquitetura
+# 27. Evolução da Arquitetura
 
 A arquitetura apresentada neste documento representa a estrutura planejada inicialmente.
 
@@ -801,13 +818,14 @@ O objetivo não é criar uma arquitetura excessivamente complexa, mas estabelece
 
 ---
 
-# 27. Critérios de Aceite da Arquitetura
+# 28. Critérios de Aceite da Arquitetura
 
 A arquitetura será considerada adequada quando:
 
 - [ ] Views representarem páginas e fluxos.
 - [ ] Components concentrarem apresentação e interação.
 - [ ] Composables concentrarem lógica reutilizável.
+- [ ] Config concentrar configurações de infraestrutura, incluindo o cliente HTTP.
 - [ ] Services concentrarem comunicação com a API.
 - [ ] Stores forem utilizados somente para estado compartilhado.
 - [ ] Types concentrarem contratos TypeScript compartilhados.
@@ -821,7 +839,7 @@ A arquitetura será considerada adequada quando:
 
 ---
 
-# 28. Status do Documento
+# 29. Status do Documento
 
 **Status:** Em definição
 
