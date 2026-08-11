@@ -170,13 +170,21 @@ O debounce deverá ser aplicado antes da atualização dos resultados.
 
 Deverá existir filtro por categoria.
 
-As categorias deverão ser obtidas através da API.
+**Status:** **CONCLUÍDO**
+
+As categorias deverão ser obtidas através da API (`GET /products/categories`).
 
 O usuário deverá possuir uma opção equivalente a:
 
 `Todas as categorias`
 
 Quando uma categoria for selecionada, somente produtos daquela categoria deverão ser apresentados.
+
+### Como o filtro é atendido
+
+A FakeStoreAPI disponibiliza `GET /products/category/:category`, porém a aplicação não utiliza esse endpoint. O requisito de filtro por categoria é atendido através do carregamento do catálogo via `GET /products` e filtragem dos produtos no frontend (`useProductListControls`, comparando `product.category`).
+
+Classificação de `GET /products/category/:category`: **disponível na API, porém não utilizado e não obrigatório** — não é pendência de implementação.
 
 ---
 
@@ -920,6 +928,6 @@ A interface será considerada adequada quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.3
+**Versão:** 1.4
 
 **Última atualização:** 2026-08-11

@@ -318,7 +318,7 @@ O objetivo é evitar que a aplicação execute operações desnecessárias a cad
 
 ## 7.3 — useProductListControls / useFavoriteProducts / useProductDetails
 
-- `useProductListControls` — busca, filtro, ordenação e paginação locais sobre a coleção carregada.
+- `useProductListControls` — busca, filtro por categoria, ordenação e paginação locais sobre a coleção carregada via `GET /products` (não utiliza `GET /products/category/:category`).
 - `useProductDetails` — carregamento de um produto por ID (detalhes e edição).
 - `useFavoriteProducts` — resolve IDs favoritos em produtos via `getProducts()` + filtro.
 
@@ -838,6 +838,6 @@ A arquitetura será considerada adequada quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.1
+**Versão:** 1.2
 
 **Última atualização:** 2026-08-11

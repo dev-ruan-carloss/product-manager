@@ -385,6 +385,14 @@ Quando houver categoria:
 
     category = "electronics"
 
+### Origem dos dados e filtro
+
+- Produtos: `GET /products` via `productService.getProducts()`.
+- Categorias: `GET /products/categories` via `productService.getCategories()`.
+- Filtro: aplicado no frontend em `useProductListControls` (comparação com `product.category`).
+
+A FakeStoreAPI disponibiliza `GET /products/category/:category`, porém a aplicação não utiliza esse endpoint. Classificação: **disponível na API, porém não utilizado e não obrigatório** — não é pendência.
+
 ---
 
 # 21. Estado de Ordenação
@@ -780,6 +788,6 @@ Os modelos de dados serão considerados definidos quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.3
+**Versão:** 1.4
 
 **Última atualização:** 2026-08-11

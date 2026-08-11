@@ -821,16 +821,18 @@ Alinhar a edição ao padrão da criação e ao SDD (Toast + página apropriada)
 
 - Não criar `categoryService` separado; `getCategories()` vive em `productService`.
 - Filtro por categoria e pesquisa textual ocorrem no frontend após `GET /products`.
-- O endpoint `GET /products/category/:category` da Fake Store API **não** é utilizado pela aplicação.
+- A FakeStoreAPI disponibiliza `GET /products/category/:category`, porém a aplicação não utiliza esse endpoint. O requisito de filtro por categoria é atendido através do carregamento do catálogo via `GET /products` e filtragem dos produtos no frontend.
+- Classificação de `GET /products/category/:category`: **disponível na API, porém não utilizado e não obrigatório** — não é pendência de implementação.
 
 **Motivo:**
 
-O volume de dados é pequeno; uma única carga de produtos permite combinar busca, categoria, ordenação e paginação localmente sem requisições adicionais por filtro. O endpoint de categorias (`/products/categories`) permanece no mesmo service de domínio.
+O volume de dados é pequeno; uma única carga de produtos permite combinar busca, categoria, ordenação e paginação localmente sem requisições adicionais por filtro. O endpoint de categorias (`/products/categories`) permanece no mesmo service de domínio. O endpoint por categoria da FakeStoreAPI não é requisito da prova.
 
 **Impacto:**
 
 - contrato da API e arquitetura alinhados ao código;
-- listagem usa `useProductsCatalog` + `useProductListControls`.
+- listagem usa `useProductsCatalog` + `useProductListControls`;
+- RF-003 (filtro por categoria) permanece **CONCLUÍDO** sem consumir `GET /products/category/:category`.
 
 ---
 
@@ -861,6 +863,6 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.4
+**Versão:** 1.5
 
 **Última atualização:** 2026-08-11

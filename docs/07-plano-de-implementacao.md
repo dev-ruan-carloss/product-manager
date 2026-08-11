@@ -225,6 +225,8 @@ Usuário consegue navegar pelo catálogo e encontrar produtos utilizando os cont
 
 Esses itens **não** devem ser tratados como fora de escopo só por estarem pendentes.
 
+**Observação:** `GET /products/category/:category` **não** é pendência. O endpoint existe na FakeStoreAPI, porém **não é utilizado** e **não é obrigatório**. O filtro por categoria (RF-003) está **CONCLUÍDO** via `GET /products` + filtragem no frontend.
+
 ---
 
 # 7. Fase 5 — Detalhes do produto
@@ -1077,7 +1079,7 @@ Resumo do acompanhamento:
 | Fundação | concluída |
 | API + tipos | concluída |
 | Favoritos (estado/persistência) | concluída |
-| Catálogo | concluída (ordenação por nome ainda pendente) |
+| Catálogo | concluída (filtro por categoria concluído no frontend; ordenação por nome ainda pendente) |
 | Detalhes | concluída |
 | Favoritos UI | concluída |
 | Criação | concluída |
@@ -1096,6 +1098,6 @@ Resumo do acompanhamento:
 
 **Status:** Em andamento
 
-**Versão:** 1.6
+**Versão:** 1.7
 
 **Última atualização:** 2026-08-11

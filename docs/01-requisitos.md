@@ -87,6 +87,8 @@ As categorias disponíveis deverão ser obtidas através da API.
 
 A interface deverá disponibilizar uma opção para retornar à visualização de todas as categorias.
 
+O requisito é o **filtro por categoria**, e não o consumo do endpoint `GET /products/category/:category` da FakeStoreAPI. Esse endpoint existe na API, porém **não é obrigatório** e **não é utilizado** pela aplicação: o catálogo é carregado via `GET /products` e a filtragem ocorre no frontend.
+
 ### Critérios de aceite
 
 - As categorias devem ser carregadas através da API.
@@ -94,6 +96,11 @@ A interface deverá disponibilizar uma opção para retornar à visualização d
 - A listagem deve apresentar somente produtos correspondentes à categoria selecionada.
 - Deve existir uma opção equivalente a "Todas" ou similar.
 - Ao selecionar a opção de todas as categorias, a listagem deve retornar aos produtos sem o filtro de categoria.
+
+### Status de implementação
+
+- [x] Filtro por categoria — **CONCLUÍDO** (frontend após `GET /products` + `GET /products/categories`).
+- `GET /products/category/:category` — disponível na API, porém não utilizado e não obrigatório (não é pendência).
 
 ---
 
@@ -845,6 +852,6 @@ Dessa forma, os requisitos permanecem independentes das decisões de implementa�
 
 **Status:** Em andamento
 
-**Versão:** 1.1
+**Versão:** 1.2
 
 **Última atualização:** 2026-08-11

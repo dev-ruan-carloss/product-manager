@@ -315,13 +315,19 @@ A resposta deverá ser representada através de um tipo apropriado.
 
 # 11. Filtragem por Categoria
 
-A Fake Store API disponibiliza o endpoint:
+A FakeStoreAPI disponibiliza `GET /products/category/:category`, porém a aplicação não utiliza esse endpoint. O requisito de filtro por categoria é atendido através do carregamento do catálogo via `GET /products` e filtragem dos produtos no frontend.
 
-### Método
+### Classificação deste endpoint
+
+**Disponível na API, porém não utilizado e não obrigatório.**
+
+Esse endpoint **não** é requisito funcional da prova e **não** constitui pendência de implementação.
+
+### Método (disponível na FakeStoreAPI)
 
 `GET`
 
-### Endpoint
+### Endpoint (disponível na FakeStoreAPI)
 
 `/products/category/:category`
 
@@ -341,7 +347,18 @@ Exemplo conceitual:
 
 `/products/category/electronics`
 
-**Decisão de implementação:** a aplicação **não** utiliza esse endpoint. Após `GET /products`, o filtro por categoria é aplicado no frontend (`useProductListControls`), em combinação com busca, ordenação e paginação locais.
+### Fluxo adotado pela aplicação
+
+    GET /products
+    GET /products/categories
+          ↓
+    Frontend (`useProductListControls`)
+          ↓
+    Filtro por `product.category`
+          ↓
+    Produtos filtrados
+
+O filtro por categoria (RF-003) permanece **CONCLUÍDO** com essa abordagem.
 
 ---
 
@@ -756,7 +773,7 @@ A implementação deverá seguir as seguintes regras:
 |---|---|---|---|
 | Produtos | `GET` | `/products` | Listar produtos (base para filtro/pesquisa/paginação locais) |
 | Produto | `GET` | `/products/:id` | Buscar produto |
-| Produtos por categoria | `GET` | `/products/category/:category` | Disponível na API; **não usado** pela app (filtro local) |
+| Produtos por categoria | `GET` | `/products/category/:category` | Disponível na API, porém **não utilizado** e **não obrigatório** (filtro no frontend) |
 | Categorias | `GET` | `/products/categories` | Listar categorias |
 | Produto | `POST` | `/products` | Criar produto |
 | Produto | `PUT` | `/products/:id` | Atualizar produto |
@@ -788,6 +805,6 @@ O contrato da API será considerado documentado quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.1
+**Versão:** 1.2
 
 **Última atualização:** 2026-08-11
