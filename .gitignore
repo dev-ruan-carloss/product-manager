@@ -1,9 +1,10 @@
-﻿# cspell:words vite
+# cspell:words vite
 # Dependencies
 node_modules/
 
 # Build
 dist/
+dist-ssr/
 build/
 
 # Environment
@@ -12,15 +13,19 @@ build/
 !.env.example
 
 # Logs
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
+yarn-error.log*
 pnpm-debug.log*
+lerna-debug.log*
 
 # Cache
 .cache/
 .vite/
 coverage/
+*.local
 
 # OS
 .DS_Store
@@ -31,3 +36,8 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
