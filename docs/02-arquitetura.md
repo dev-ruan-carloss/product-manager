@@ -192,21 +192,27 @@ Os nomes poderão ser ajustados conforme a convenção adotada no projeto.
 
 A pasta `components/` será responsável pelos componentes reutilizáveis da interface.
 
-Exemplos:
+### Estrutura prevista
 
     src/components/
     ├── AppHeader.vue
-    ├── ProductCard.vue
-    ├── ProductGrid.vue
-    ├── ProductFilters.vue
-    ├── ProductSearch.vue
-    ├── ProductSort.vue
-    ├── ProductPagination.vue
-    ├── ProductForm.vue
     ├── FavoriteButton.vue
     ├── LoadingState.vue
     ├── ErrorState.vue
-    └── EmptyState.vue
+    ├── EmptyState.vue
+    └── products/
+        ├── ProductCard.vue
+        ├── ProductGrid.vue
+        ├── ProductFilters.vue
+        ├── ProductSearch.vue
+        ├── ProductSort.vue          # previsto; ainda não criado
+        ├── ProductPagination.vue
+        ├── ProductDetails.vue
+        └── ProductForm.vue
+
+A ordenação por preço está integrada em `ProductFilters`.
+
+`ProductSort` permanece previsto na arquitetura para a ordenação da listagem. Ordenações por nome e por avaliação estão **pendentes**.
 
 A estrutura poderá ser organizada em subpastas caso o número de componentes aumente significativamente.
 
@@ -277,11 +283,11 @@ A pasta `composables/` será responsável por lógica reutilizável relacionada 
 Exemplos possíveis:
 
     src/composables/
-    ├── useProducts.ts
-    ├── useProductFilters.ts
-    ├── useDebounce.ts
-    ├── useFavorites.ts
-    └── useProductForm.ts
+    ├── useProductsCatalog.ts
+    ├── useProductListControls.ts
+    ├── useDebouncedRef.ts
+    ├── useProductDetails.ts
+    └── useFavoriteProducts.ts
 
 Nem todos esses composables precisarão necessariamente existir.
 
@@ -289,41 +295,34 @@ Eles deverão ser criados quando houver uma necessidade real de reutilização o
 
 ---
 
-## 7.1 — useProducts
+## 7.1 — useProductsCatalog
 
-Poderá centralizar lógica relacionada ao carregamento e manipulação dos produtos.
+Centraliza o carregamento do catálogo (produtos e categorias) via `productService`.
 
-Responsabilidades possíveis:
+Responsabilidades:
 
-- carregar produtos;
+- carregar produtos e categorias;
 - controlar estado de carregamento;
 - controlar erros;
-- disponibilizar produtos;
-- executar operações relacionadas à listagem.
+- disponibilizar dados para a listagem.
 
 ---
 
-## 7.2 — useDebounce
+## 7.2 — useDebouncedRef
 
-Poderá encapsular a lógica de debounce utilizada na pesquisa.
+Encapsula a lógica de debounce utilizada na pesquisa (delay padrão: 300ms).
 
 O objetivo é evitar que a aplicação execute operações desnecessárias a cada alteração imediata do campo de pesquisa.
 
 ---
 
-## 7.3 — useFavorites
+## 7.3 — useProductListControls / useFavoriteProducts / useProductDetails
 
-Poderá encapsular comportamentos relacionados aos favoritos.
+- `useProductListControls` — busca, filtro, ordenação e paginação locais sobre a coleção carregada.
+- `useProductDetails` — carregamento de um produto por ID (detalhes e edição).
+- `useFavoriteProducts` — resolve IDs favoritos em produtos via `getProducts()` + filtro.
 
-Responsabilidades possíveis:
-
-- verificar se um produto está favoritado;
-- favoritar;
-- desfavoritar;
-- recuperar favoritos;
-- persistir favoritos.
-
-A implementação final dependerá da estratégia de gerenciamento de estado definida nas decisões técnicas.
+A store Pinia (`useFavoritesStore`) permanece a fonte de verdade dos IDs favoritos.
 
 ---
 
@@ -358,38 +357,28 @@ Os services deverão utilizar o cliente configurado em `config/api.ts` em vez de
 
 A pasta `services/` será responsável pela comunicação com recursos externos, principalmente a Fake Store API.
 
-Estrutura inicial prevista:
+Estrutura implementada (com consolidação de categorias):
 
     src/services/
-    ├── productService.ts
-    └── categoryService.ts
+    └── productService.ts
+
+Observação: a arquitetura inicial previa também um `categoryService.ts`. A decisão adotada foi concentrar `getCategories()` em `productService` (ver `03-decisoes-tecnicas.md` §35.5). Isso não remove o requisito de listar/filtrar categorias.
 
 ---
 
 ## 9.1 — productService.ts
 
-Responsável pelas operações relacionadas a produtos.
+Responsável pelas operações relacionadas a produtos e categorias.
 
-Exemplos:
+Métodos:
 
 - `getProducts()`;
 - `getProductById()`;
+- `getCategories()`;
 - `createProduct()`;
 - `updateProduct()`.
 
 O service deverá abstrair os detalhes da comunicação HTTP das camadas superiores.
-
----
-
-## 9.2 — categoryService.ts
-
-Responsável pelas operações relacionadas às categorias.
-
-Exemplo:
-
-- `getCategories()`.
-
-Caso a API disponibilize categorias através de outro recurso, a implementação deverá respeitar o contrato real da API.
 
 ---
 
@@ -426,19 +415,25 @@ O store não deverá ser utilizado para armazenar indiscriminadamente todos os e
 
 A pasta `types/` concentrará os tipos TypeScript compartilhados.
 
-Estrutura prevista:
+Estrutura implementada:
 
     src/types/
     ├── product.ts
     ├── category.ts
-    └── api.ts
+    ├── api.ts
+    ├── productForm.ts
+    └── catalog.ts
 
-Tipos previstos:
+Tipos principais:
 
 - `Product`;
 - `ProductRating`;
 - `ProductCreatePayload`;
-- `ProductUpdatePayload`.
+- `ProductUpdatePayload`;
+- `Category`;
+- `AppError`;
+- `ProductFormData`;
+- `PriceSortOrder` / `CategoryFilter` (catálogo; ordenação por nome ainda pendente).
 
 Os tipos deverão representar os contratos utilizados pela aplicação.
 
@@ -453,16 +448,16 @@ Estrutura:
     src/router/
     └── index.ts
 
-Rotas previstas:
+Rotas implementadas:
 
-- `/`;
+- `/` → redireciona para `/produtos`;
 - `/produtos`;
+- `/produtos/novo` (declarada antes de `/produtos/:id`);
+- `/produtos/:id/editar` (declarada antes de `/produtos/:id`);
 - `/produtos/:id`;
-- `/favoritos`;
-- `/produtos/novo`;
-- `/produtos/:id/editar`.
+- `/favoritos`.
 
-A estrutura final das URLs deverá ser definida considerando a experiência de navegação e a organização do projeto.
+A ordem das rotas com segmentos estáticos (`novo`, `editar`) antes do parâmetro dinâmico `:id` evita ambiguidade no matching.
 
 ---
 
@@ -470,12 +465,12 @@ A estrutura final das URLs deverá ser definida considerando a experiência de n
 
 A pasta `utils/` será utilizada para funções auxiliares puras e reutilizáveis que não pertençam especificamente a uma feature.
 
-Exemplos possíveis:
+Exemplos implementados:
 
     src/utils/
-    ├── formatters.ts
-    ├── validators.ts
-    └── storage.ts
+    ├── formatPrice.ts
+    ├── parseProductId.ts
+    └── productFormSchema.ts
 
 Esses arquivos somente deverão existir quando houver uma necessidade real.
 
@@ -841,6 +836,8 @@ A arquitetura será considerada adequada quando:
 
 # 29. Status do Documento
 
-**Status:** Em definição
+**Status:** Em andamento
 
-**Versão:** 1.0
+**Versão:** 1.1
+
+**Última atualização:** 2026-08-11

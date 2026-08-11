@@ -18,7 +18,7 @@ O sistema deverá contemplar as seguintes funcionalidades principais:
 - Pesquisa de produtos por título.
 - Debounce na pesquisa.
 - Filtro de produtos por categoria.
-- Ordenação de produtos por preço.
+- Ordenação de produtos (preço e nome).
 - Paginação da listagem.
 - Visualização dos detalhes de um produto.
 - Criação de produtos.
@@ -97,21 +97,30 @@ A interface deverá disponibilizar uma opção para retornar à visualização d
 
 ---
 
-## RF-004 — Ordenação por preço
+## RF-004 — Ordenação da listagem
 
-O usuário deve poder ordenar os produtos com base no preço.
+O usuário deve poder ordenar os produtos na listagem.
 
 A aplicação deverá disponibilizar, no mínimo:
 
 - preço crescente;
-- preço decrescente.
+- preço decrescente;
+- nome crescente (A–Z);
+- nome decrescente (Z–A).
 
 ### Critérios de aceite
 
 - O usuário deve conseguir selecionar a ordenação.
-- A ordenação crescente deve apresentar o menor preço primeiro.
-- A ordenação decrescente deve apresentar o maior preço primeiro.
+- A ordenação por preço crescente deve apresentar o menor preço primeiro.
+- A ordenação por preço decrescente deve apresentar o maior preço primeiro.
+- A ordenação por nome crescente deve apresentar os títulos em ordem alfabética A–Z.
+- A ordenação por nome decrescente deve apresentar os títulos em ordem alfabética Z–A.
 - A ordenação deve funcionar em conjunto com a pesquisa e o filtro de categoria.
+
+### Status de implementação
+
+- [x] Ordenação por preço (crescente e decrescente) — implementada.
+- [ ] Ordenação por nome (crescente e decrescente) — pendente.
 
 ---
 
@@ -625,7 +634,7 @@ O usuário deve poder:
 
 1. pesquisar por um termo;
 2. selecionar uma categoria;
-3. ordenar os resultados por preço.
+3. ordenar os resultados (preço ou nome).
 
 A aplicação deverá manter todos os critérios ativos simultaneamente.
 
@@ -692,30 +701,31 @@ Novas funcionalidades poderão ser consideradas posteriormente, desde que não c
 
 O projeto será considerado funcionalmente concluído quando atender aos seguintes critérios:
 
-- [ ] Produtos podem ser carregados através da API.
-- [ ] Produtos são apresentados em uma interface organizada.
-- [ ] Usuário consegue pesquisar produtos.
-- [ ] Pesquisa utiliza debounce.
-- [ ] Usuário consegue filtrar produtos por categoria.
-- [ ] Usuário consegue ordenar produtos por preço.
-- [ ] Listagem possui paginação.
-- [ ] Usuário consegue visualizar detalhes de um produto.
-- [ ] Usuário consegue criar produtos.
-- [ ] Usuário consegue editar produtos.
-- [ ] Formulários possuem validação.
-- [ ] Produtos podem ser favoritados.
-- [ ] Produtos podem ser desfavoritados.
-- [ ] Favoritos são persistidos no `localStorage`.
-- [ ] Existe uma página de favoritos.
-- [ ] Estados de carregamento são tratados.
-- [ ] Estados de erro são tratados.
-- [ ] Estados vazios são tratados.
-- [ ] Estados sem resultados são tratados.
-- [ ] Navegação entre as áreas funciona corretamente.
+- [x] Produtos podem ser carregados através da API.
+- [x] Produtos são apresentados em uma interface organizada.
+- [x] Usuário consegue pesquisar produtos.
+- [x] Pesquisa utiliza debounce.
+- [x] Usuário consegue filtrar produtos por categoria.
+- [x] Usuário consegue ordenar produtos por preço.
+- [ ] Usuário consegue ordenar produtos por nome (A–Z / Z–A).
+- [x] Listagem possui paginação.
+- [x] Usuário consegue visualizar detalhes de um produto.
+- [x] Usuário consegue criar produtos.
+- [x] Usuário consegue editar produtos.
+- [x] Formulários possuem validação.
+- [x] Produtos podem ser favoritados.
+- [x] Produtos podem ser desfavoritados.
+- [x] Favoritos são persistidos no `localStorage`.
+- [x] Existe uma página de favoritos.
+- [x] Estados de carregamento são tratados.
+- [x] Estados de erro são tratados.
+- [x] Estados vazios são tratados.
+- [x] Estados sem resultados são tratados.
+- [x] Navegação entre as áreas funciona corretamente.
 - [ ] Interface é responsiva.
 - [ ] Requisitos básicos de acessibilidade são atendidos.
-- [ ] TypeScript é utilizado de forma consistente.
-- [ ] A separação de responsabilidades é respeitada.
+- [x] TypeScript é utilizado de forma consistente.
+- [x] A separação de responsabilidades é respeitada.
 
 ---
 
@@ -833,8 +843,8 @@ Dessa forma, os requisitos permanecem independentes das decisões de implementa�
 
 ## Status do Documento
 
-**Status:** Em definição
+**Status:** Em andamento
 
-**Versão:** 1.0
+**Versão:** 1.1
 
-**Última atualização:** 2026-08-10
+**Última atualização:** 2026-08-11

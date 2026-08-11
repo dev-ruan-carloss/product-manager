@@ -48,9 +48,10 @@ Exemplo conceitual:
     config/api.ts
         ↓
     productService.ts
-    categoryService.ts
 
 Caso a URL seja configurada através de variável de ambiente, ela deverá ser definida em arquivo apropriado para o ambiente de execução.
+
+A variável utilizada é `VITE_API_BASE_URL` (ver `.env.example`).
 
 ---
 
@@ -314,7 +315,7 @@ A resposta deverá ser representada através de um tipo apropriado.
 
 # 11. Filtragem por Categoria
 
-Caso seja necessário realizar filtragem diretamente pela API, poderá ser utilizado o endpoint de produtos por categoria disponibilizado pela API.
+A Fake Store API disponibiliza o endpoint:
 
 ### Método
 
@@ -340,7 +341,7 @@ Exemplo conceitual:
 
 `/products/category/electronics`
 
-A utilização desse endpoint deverá ser definida durante a implementação de acordo com a estratégia de filtragem escolhida.
+**Decisão de implementação:** a aplicação **não** utiliza esse endpoint. Após `GET /products`, o filtro por categoria é aplicado no frontend (`useProductListControls`), em combinação com busca, ordenação e paginação locais.
 
 ---
 
@@ -394,13 +395,15 @@ A solução deverá ser simples e suficiente para o volume de dados do projeto.
 
 A ordenação poderá ser realizada no frontend.
 
-Exemplos de critérios:
+Critérios do projeto:
 
-- menor preço;
-- maior preço;
-- nome crescente;
-- nome decrescente;
-- avaliação.
+| Critério | Status |
+|---|---|
+| menor preço | implementado |
+| maior preço | implementado |
+| nome crescente (A–Z) | pendente |
+| nome decrescente (Z–A) | pendente |
+| avaliação (crescente / decrescente) | pendente |
 
 A ordenação não deverá modificar os dados originais retornados pela API.
 
@@ -602,7 +605,7 @@ Os composables poderão utilizar os services para controlar fluxos da interface.
 
 Exemplo:
 
-    useProducts
+    useProductsCatalog
         ↓
     productService
         ↓
@@ -612,10 +615,9 @@ O composable poderá controlar:
 
 - loading;
 - erro;
-- dados;
-- filtros;
-- ordenação;
-- paginação.
+- dados.
+
+Filtros, ordenação e paginação locais ficam em `useProductListControls`.
 
 ---
 
@@ -752,9 +754,9 @@ A implementação deverá seguir as seguintes regras:
 
 | Recurso | Método | Endpoint | Uso |
 |---|---|---|---|
-| Produtos | `GET` | `/products` | Listar produtos |
+| Produtos | `GET` | `/products` | Listar produtos (base para filtro/pesquisa/paginação locais) |
 | Produto | `GET` | `/products/:id` | Buscar produto |
-| Produtos por categoria | `GET` | `/products/category/:category` | Filtrar por categoria |
+| Produtos por categoria | `GET` | `/products/category/:category` | Disponível na API; **não usado** pela app (filtro local) |
 | Categorias | `GET` | `/products/categories` | Listar categorias |
 | Produto | `POST` | `/products` | Criar produto |
 | Produto | `PUT` | `/products/:id` | Atualizar produto |
@@ -784,6 +786,8 @@ O contrato da API será considerado documentado quando:
 
 # 35. Status do Documento
 
-**Status:** Em definição
+**Status:** Em andamento
 
-**Versão:** 1.0
+**Versão:** 1.1
+
+**Última atualização:** 2026-08-11

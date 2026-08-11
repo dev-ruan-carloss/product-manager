@@ -195,8 +195,9 @@ Os services serão responsáveis pelas operações relacionadas aos recursos ext
 
 Exemplo:
 
-- `productService`;
-- `categoryService`.
+- `productService` (produtos e categorias).
+
+Não foi criado um `categoryService` separado: `getCategories()` permanece em `productService`, pois o endpoint `/products/categories` pertence ao recurso de produtos da Fake Store API.
 
 ## Justificativa
 
@@ -216,25 +217,13 @@ Isso também facilita:
 
 ## Decisão
 
-Utilizar uma biblioteca de componentes de interface compatível com Vue 3 para acelerar a construção da interface e manter consistência visual.
+Utilizar **PrimeVue** como biblioteca de componentes de interface.
 
-A biblioteca escolhida deverá ser definida antes da implementação da camada visual.
+## Justificativa
 
-## Critérios para escolha
+PrimeVue é compatível com Vue 3 e TypeScript, oferece componentes de formulário, feedback (Toast, Skeleton) e navegação, e atende aos critérios de consistência visual e acessibilidade básica do projeto.
 
-A biblioteca deverá possuir:
-
-- compatibilidade com Vue 3;
-- boa documentação;
-- suporte a TypeScript;
-- componentes responsivos;
-- componentes de formulário;
-- componentes de feedback;
-- componentes de navegação;
-- acessibilidade adequada;
-- manutenção ativa.
-
-A escolha definitiva será registrada neste documento antes da implementação da interface.
+TailwindCSS complementa o PrimeVue na composição de layout, espaçamento e responsividade.
 
 ---
 
@@ -242,14 +231,9 @@ A escolha definitiva será registrada neste documento antes da implementação d
 
 ## Decisão
 
-Utilizar uma biblioteca de validação de formulários compatível com Vue 3 e TypeScript.
+Utilizar **vee-validate** com **Yup** (`@vee-validate/yup`) para validação dos formulários.
 
-A solução escolhida deverá permitir separar:
-
-- estado do formulário;
-- regras de validação;
-- mensagens de erro;
-- envio dos dados.
+O schema Yup permanece centralizado em `src/utils/productFormSchema.ts` e é reutilizado por criação e edição.
 
 ## Justificativa
 
@@ -312,10 +296,11 @@ Utilizar composables para lógica reutilizável relacionada ao comportamento da 
 
 Exemplos possíveis:
 
-- `useProducts`;
-- `useFavorites`;
-- `useDebounce`;
-- `useProductForm`.
+- `useProductsCatalog`;
+- `useProductListControls`;
+- `useDebouncedRef`;
+- `useProductDetails`;
+- `useFavoriteProducts`.
 
 ## Justificativa
 
@@ -339,7 +324,7 @@ A pesquisa não deve executar uma operação imediatamente a cada caractere digi
 
 O debounce reduz operações desnecessárias e melhora a experiência do usuário.
 
-O tempo de debounce deverá ser definido durante a implementação com base no comportamento da aplicação.
+O tempo de debounce adotado é **300ms**, via `useDebouncedRef` em `useProductListControls`.
 
 ---
 
@@ -828,6 +813,27 @@ Alinhar a edição ao padrão da criação e ao SDD (Toast + página apropriada)
 
 ---
 
+## 35.5 — Categorias no productService e filtro no frontend
+
+**Data:** 2026-08-11
+
+**Decisão:**
+
+- Não criar `categoryService` separado; `getCategories()` vive em `productService`.
+- Filtro por categoria e pesquisa textual ocorrem no frontend após `GET /products`.
+- O endpoint `GET /products/category/:category` da Fake Store API **não** é utilizado pela aplicação.
+
+**Motivo:**
+
+O volume de dados é pequeno; uma única carga de produtos permite combinar busca, categoria, ordenação e paginação localmente sem requisições adicionais por filtro. O endpoint de categorias (`/products/categories`) permanece no mesmo service de domínio.
+
+**Impacto:**
+
+- contrato da API e arquitetura alinhados ao código;
+- listagem usa `useProductsCatalog` + `useProductListControls`.
+
+---
+
 # 36. Critérios de Aceite
 
 As decisões técnicas serão consideradas definidas quando:
@@ -855,6 +861,6 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.3
+**Versão:** 1.4
 
-**Última atualização:** 2026-08-10
+**Última atualização:** 2026-08-11

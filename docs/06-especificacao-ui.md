@@ -56,7 +56,13 @@ A aplicação deverá possuir uma estrutura semelhante a:
     ├── Header
     ├── Main
     │   └── View atual
+    ├── Toast (feedback global)
     └── Footer
+
+### Status do layout
+
+- Header, Main e Toast: implementados em `DefaultLayout`.
+- Footer: previsto na especificação; **ainda não implementado** (pendente).
 
 A navegação será controlada pelo Vue Router.
 
@@ -117,6 +123,7 @@ A página deverá disponibilizar:
 - busca;
 - filtro por categoria;
 - ordenação por preço;
+- ordenação por nome (pendente);
 - paginação;
 - favoritos;
 - acesso aos detalhes.
@@ -134,7 +141,8 @@ A estrutura deverá seguir aproximadamente:
     Área de filtros
         ├── Busca
         ├── Categoria
-        └── Ordenação por preço
+        ├── Ordenação por preço
+        └── Ordenação por nome (pendente)
         ↓
     Lista de produtos
         ↓
@@ -172,16 +180,25 @@ Quando uma categoria for selecionada, somente produtos daquela categoria deverã
 
 ---
 
-# 11. Ordenação por Preço
+# 11. Ordenação
 
-A interface deverá permitir ordenar os produtos por preço.
+A interface deverá permitir ordenar os produtos.
 
-Opções obrigatórias:
+### Opções obrigatórias / previstas
 
 - menor preço;
-- maior preço.
+- maior preço;
+- nome A–Z;
+- nome Z–A;
+- avaliação (crescente / decrescente).
 
 A ordenação deverá ocorrer no frontend quando necessário.
+
+### Status
+
+- Ordenação por preço: implementada em `ProductFilters`.
+- Ordenação por nome: **pendente**.
+- Ordenação por avaliação: **pendente**.
 
 Não deverão ser adicionados critérios de ordenação que não façam parte do escopo do desafio.
 
@@ -199,7 +216,7 @@ Fluxo:
         ↓
     Filtro por categoria
         ↓
-    Ordenação por preço
+    Ordenação (preço / nome)
         ↓
     Paginação
         ↓
@@ -646,8 +663,10 @@ Caso o produto não seja encontrado:
 Após atualização:
 
 - apresentar Toast de sucesso;
-- atualizar os dados exibidos;
+- atualizar os dados exibidos quando permanecer na tela do produto;
 - retornar para uma página apropriada.
+
+**Comportamento atual implementado:** Toast de sucesso e navegação para `/produtos` (decisão registrada na Fase 8).
 
 Mensagem sugerida:
 
@@ -760,11 +779,18 @@ A estrutura deverá considerar componentes reutilizáveis como:
     ProductFilters
     ProductSort
     ProductPagination
+    ProductDetails
     FavoriteButton
     ProductForm
     LoadingState
     EmptyState
     ErrorState
+
+### Status
+
+- Ordenação por preço: hoje integrada em `ProductFilters`.
+- `ProductSort` permanece previsto para a ordenação da listagem (nome / avaliação e/ou extração da ordenação atual); **ainda não existe como componente separado**.
+- Ordenação por nome e por avaliação: **pendentes**.
 
 A criação de novos componentes deverá ocorrer conforme necessidade real.
 
@@ -857,18 +883,21 @@ A lista deverá utilizar paginação.
 
 A interface será considerada adequada quando:
 
-- [ ] Produtos podem ser listados.
-- [ ] Busca está disponível.
-- [ ] Busca possui debounce.
-- [ ] Filtro por categoria está disponível.
-- [ ] Ordenação por preço está disponível.
-- [ ] Paginação está disponível.
-- [ ] ProductCard está implementado.
-- [ ] Favoritos funcionam.
-- [ ] Favoritos utilizam Pinia.
-- [ ] Favoritos persistem em localStorage.
-- [ ] Página de detalhes está implementada.
-- [ ] Página de favoritos está implementada.
+- [x] Produtos podem ser listados.
+- [x] Busca está disponível.
+- [x] Busca possui debounce.
+- [x] Filtro por categoria está disponível.
+- [x] Ordenação por preço está disponível.
+- [ ] Ordenação por nome (A–Z / Z–A) está disponível.
+- [ ] Ordenação por avaliação está disponível.
+- [ ] Footer do layout está implementado.
+- [x] Paginação está disponível.
+- [x] ProductCard está implementado.
+- [x] Favoritos funcionam.
+- [x] Favoritos utilizam Pinia.
+- [x] Favoritos persistem em localStorage.
+- [x] Página de detalhes está implementada.
+- [x] Página de favoritos está implementada.
 - [x] Criação de produto está implementada.
 - [x] Edição de produto está implementada.
 - [x] Formulários utilizam vee-validate.
@@ -876,19 +905,21 @@ A interface será considerada adequada quando:
 - [x] POST está integrado.
 - [x] PUT está integrado.
 - [x] Toasts de sucesso e erro estão implementados.
-- [ ] Estados de loading estão implementados.
-- [ ] Estados de erro estão implementados.
-- [ ] Estados vazios estão implementados.
+- [x] Estados de loading estão implementados.
+- [x] Estados de erro estão implementados.
+- [x] Estados vazios estão implementados.
 - [ ] Interface é responsiva a partir de 360px.
-- [ ] Componentes PrimeVue são utilizados.
-- [ ] TailwindCSS é utilizado para estilização e layout.
+- [x] Componentes PrimeVue são utilizados.
+- [x] TailwindCSS é utilizado para estilização e layout.
 - [ ] Interface possui navegação acessível por teclado.
-- [ ] Componentes reutilizáveis foram priorizados.
+- [x] Componentes reutilizáveis foram priorizados.
 
 ---
 
 # 57. Status do Documento
 
-**Status:** Em definição
+**Status:** Em andamento
 
-**Versão:** 1.2
+**Versão:** 1.3
+
+**Última atualização:** 2026-08-11

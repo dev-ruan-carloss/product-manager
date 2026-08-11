@@ -205,15 +205,13 @@ Armazenar apenas o ID mantém o estado simples.
 
 # 11. Chave de Persistência
 
-A aplicação deverá utilizar uma chave única para os favoritos.
-
-Exemplo conceitual:
+A aplicação utiliza a chave:
 
     product-management:favorites
 
-O nome definitivo deverá ser definido durante a implementação.
+Centralizada na constante `FAVORITES_STORAGE_KEY` em `src/stores/favoritesStore.ts`.
 
-A chave deverá ser centralizada para evitar sua repetição em diferentes partes do código.
+A chave não deve ser repetida em outras partes do código.
 
 ---
 
@@ -375,13 +373,13 @@ O valor digitado pelo usuário não deverá modificar os dados originais recebid
 
 O filtro de categoria será representado pela categoria selecionada.
 
-Estrutura conceitual:
+Estrutura implementada (`CategoryFilter` em `src/types/catalog.ts`):
 
-    category: string | null
+    category: string
 
-Quando nenhum filtro estiver selecionado:
+Quando nenhum filtro estiver selecionado (todas as categorias):
 
-    category = null
+    category = ''  // constante ALL_CATEGORIES
 
 Quando houver categoria:
 
@@ -393,24 +391,37 @@ Quando houver categoria:
 
 A ordenação deverá ser representada por uma estrutura controlada.
 
-Exemplo conceitual:
+Modelo conceitual do projeto:
 
     ProductSort
     ├── field
     └── direction
 
-Possíveis campos:
+Campos previstos:
 
-- `title`;
-- `price`;
-- `rating`.
+- `price` — ordenação por preço;
+- `title` — ordenação por nome (título);
+- `rating` — ordenação por avaliação.
 
-Possíveis direções:
+Direções:
 
 - `asc`;
 - `desc`.
 
-A implementação poderá utilizar uma união de tipos para limitar valores válidos.
+### Estado atual da implementação
+
+Hoje o catálogo utiliza em `src/types/catalog.ts`:
+
+    PriceSortOrder = 'asc' | 'desc'
+
+aplicado somente ao campo `price`.
+
+Pendências (requisitos / critérios ainda não implementados na tela):
+
+- ordenação por nome (`title` asc/desc);
+- ordenação por avaliação (`rating` asc/desc).
+
+Quando forem implementados, o modelo de ordenação deverá ser expandido (por exemplo, unindo `field` + `direction`).
 
 ---
 
@@ -614,18 +625,20 @@ Esses dados não deverão ser persistidos sem uma necessidade específica.
 
 Os modelos principais deverão ser organizados em arquivos específicos.
 
-Estrutura prevista:
+Estrutura implementada:
 
     src/types/
     ├── product.ts
     ├── category.ts
-    └── api.ts
+    ├── api.ts
+    ├── productForm.ts
+    └── catalog.ts
 
-O arquivo `product.ts` deverá concentrar os tipos relacionados a produtos.
-
-O arquivo `category.ts` poderá concentrar tipos relacionados a categorias quando houver necessidade.
-
-O arquivo `api.ts` poderá concentrar tipos genéricos relacionados às respostas da API.
+- `product.ts` — `Product`, `ProductRating`, payloads de criação/atualização.
+- `category.ts` — tipo `Category` (`string`).
+- `api.ts` — `AppError`.
+- `productForm.ts` — `ProductFormData`, `EMPTY_PRODUCT_FORM`, `toProductFormData`.
+- `catalog.ts` — `PriceSortOrder`, `CategoryFilter`, constantes de paginação (ordenação por nome ainda pendente no modelo).
 
 ---
 
@@ -765,6 +778,8 @@ Os modelos de dados serão considerados definidos quando:
 
 # 43. Status do Documento
 
-**Status:** Em definição
+**Status:** Em andamento
 
-**Versão:** 1.2
+**Versão:** 1.3
+
+**Última atualização:** 2026-08-11

@@ -12,16 +12,16 @@ Uma tarefa somente será considerada pronta quando atender aos requisitos funcio
 
 Uma funcionalidade será considerada pronta quando:
 
-- [ ] Código estiver implementado.
-- [ ] Responsabilidade dos componentes estiver clara.
-- [ ] Não existir código duplicado desnecessário.
-- [ ] Não existirem imports não utilizados.
-- [ ] Não existirem componentes não utilizados.
-- [ ] Não existirem `any` desnecessários.
-- [ ] TypeScript strict estiver sendo respeitado.
-- [ ] Composition API estiver sendo utilizada.
-- [ ] `script setup` estiver sendo utilizado.
-- [ ] Nomes de componentes, funções e variáveis forem claros.
+- [x] Código estiver implementado.
+- [x] Responsabilidade dos componentes estiver clara.
+- [x] Não existir código duplicado desnecessário.
+- [x] Não existirem imports não utilizados.
+- [x] Não existirem componentes não utilizados.
+- [x] Não existirem `any` desnecessários.
+- [x] TypeScript strict estiver sendo respeitado.
+- [x] Composition API estiver sendo utilizada.
+- [x] `script setup` estiver sendo utilizado.
+- [x] Nomes de componentes, funções e variáveis forem claros.
 
 ---
 
@@ -29,12 +29,12 @@ Uma funcionalidade será considerada pronta quando:
 
 Cada funcionalidade deverá:
 
-- [ ] Atender ao requisito correspondente do desafio.
-- [ ] Possuir comportamento esperado em condições normais.
-- [ ] Possuir tratamento para situações de erro.
-- [ ] Possuir estado de carregamento quando houver operação assíncrona.
-- [ ] Possuir estado vazio quando aplicável.
-- [ ] Não introduzir funcionalidades fora do escopo sem justificativa.
+- [x] Atender ao requisito correspondente do desafio.
+- [x] Possuir comportamento esperado em condições normais.
+- [x] Possuir tratamento para situações de erro.
+- [x] Possuir estado de carregamento quando houver operação assíncrona.
+- [x] Possuir estado vazio quando aplicável.
+- [x] Não introduzir funcionalidades fora do escopo sem justificativa.
 
 ---
 
@@ -42,19 +42,19 @@ Cada funcionalidade deverá:
 
 As integrações deverão:
 
-- [ ] Utilizar Axios.
-- [ ] Utilizar a FakeStoreAPI definida no desafio.
-- [ ] Possuir services responsáveis pelas chamadas.
-- [ ] Possuir tipos para requisições e respostas quando aplicável.
-- [ ] Tratar erros de requisição.
-- [ ] Evitar chamadas duplicadas desnecessárias.
-- [ ] Utilizar os endpoints definidos no contrato da API.
+- [x] Utilizar Axios.
+- [x] Utilizar a FakeStoreAPI definida no desafio.
+- [x] Possuir services responsáveis pelas chamadas.
+- [x] Possuir tipos para requisições e respostas quando aplicável.
+- [x] Tratar erros de requisição.
+- [x] Evitar chamadas duplicadas desnecessárias.
+- [x] Utilizar os endpoints definidos no contrato da API.
 
 Operações obrigatórias deverão estar funcionando:
 
-- [ ] GET de produtos.
-- [ ] GET de produto por ID.
-- [ ] GET de categorias.
+- [x] GET de produtos.
+- [x] GET de produto por ID.
+- [x] GET de categorias.
 - [x] POST de produto.
 - [x] PUT de produto.
 
@@ -64,12 +64,12 @@ Operações obrigatórias deverão estar funcionando:
 
 O gerenciamento de estado deverá atender aos critérios:
 
-- [ ] Pinia utilizada para estado global necessário.
-- [ ] Favoritos gerenciados através de Pinia.
-- [ ] Favoritos persistidos em localStorage.
-- [ ] Estado local utilizado quando não houver necessidade de estado global.
-- [ ] Não existir store global desnecessária.
-- [ ] Estado permanecer consistente após navegação.
+- [x] Pinia utilizada para estado global necessário.
+- [x] Favoritos gerenciados através de Pinia.
+- [x] Favoritos persistidos em localStorage.
+- [x] Estado local utilizado quando não houver necessidade de estado global.
+- [x] Não existir store global desnecessária.
+- [x] Estado permanecer consistente após navegação.
 
 ---
 
@@ -77,15 +77,15 @@ O gerenciamento de estado deverá atender aos critérios:
 
 A funcionalidade de favoritos será considerada pronta quando:
 
-- [ ] Usuário conseguir favoritar um produto.
-- [ ] Usuário conseguir desfavoritar um produto.
-- [ ] Estado visual refletir a alteração imediatamente.
-- [ ] Favoritos forem armazenados no Pinia.
-- [ ] IDs dos favoritos forem persistidos no localStorage.
-- [ ] Estado for restaurado após recarregar a aplicação.
-- [ ] Página `/favoritos` estiver funcionando.
-- [ ] Produto removido dos favoritos desaparecer da página de favoritos.
-- [ ] Estado vazio estiver implementado.
+- [x] Usuário conseguir favoritar um produto.
+- [x] Usuário conseguir desfavoritar um produto.
+- [x] Estado visual refletir a alteração imediatamente.
+- [x] Favoritos forem armazenados no Pinia.
+- [x] IDs dos favoritos forem persistidos no localStorage.
+- [x] Estado for restaurado após recarregar a aplicação.
+- [x] Página `/favoritos` estiver funcionando.
+- [x] Produto removido dos favoritos desaparecer da página de favoritos.
+- [x] Estado vazio estiver implementado.
 
 ---
 
@@ -93,18 +93,20 @@ A funcionalidade de favoritos será considerada pronta quando:
 
 A listagem será considerada pronta quando:
 
-- [ ] Produtos forem carregados da API.
-- [ ] Loading estiver implementado.
-- [ ] Erro estiver implementado.
-- [ ] Estado vazio estiver implementado.
-- [ ] Busca estiver funcionando.
-- [ ] Debounce estiver funcionando.
-- [ ] Filtro por categoria estiver funcionando.
-- [ ] Ordenação por menor preço estiver funcionando.
-- [ ] Ordenação por maior preço estiver funcionando.
-- [ ] Paginação estiver funcionando.
-- [ ] ProductCard estiver sendo reutilizado.
-- [ ] Favoritos funcionarem dentro dos cards.
+- [x] Produtos forem carregados da API.
+- [x] Loading estiver implementado.
+- [x] Erro estiver implementado.
+- [x] Estado vazio estiver implementado.
+- [x] Busca estiver funcionando.
+- [x] Debounce estiver funcionando.
+- [x] Filtro por categoria estiver funcionando.
+- [x] Ordenação por menor preço estiver funcionando.
+- [x] Ordenação por maior preço estiver funcionando.
+- [ ] Ordenação por nome A–Z estiver funcionando.
+- [ ] Ordenação por nome Z–A estiver funcionando.
+- [x] Paginação estiver funcionando.
+- [x] ProductCard estiver sendo reutilizado.
+- [x] Favoritos funcionarem dentro dos cards.
 
 ---
 
@@ -112,15 +114,15 @@ A listagem será considerada pronta quando:
 
 A página de detalhes será considerada pronta quando:
 
-- [ ] Rota `/produtos/:id` estiver funcionando.
-- [ ] ID for obtido corretamente da rota.
-- [ ] Produto for carregado pela API.
-- [ ] Loading estiver implementado.
-- [ ] Dados completos forem apresentados.
-- [ ] Favorito estiver disponível.
+- [x] Rota `/produtos/:id` estiver funcionando.
+- [x] ID for obtido corretamente da rota.
+- [x] Produto for carregado pela API.
+- [x] Loading estiver implementado.
+- [x] Dados completos forem apresentados.
+- [x] Favorito estiver disponível.
 - [x] Acesso à edição estiver disponível.
-- [ ] Produto inexistente possuir tratamento adequado.
-- [ ] Erros da API forem tratados.
+- [x] Produto inexistente possuir tratamento adequado.
+- [x] Erros da API forem tratados.
 
 ---
 
@@ -178,15 +180,15 @@ A edição será considerada pronta quando:
 
 A interface será considerada pronta quando:
 
-- [ ] PrimeVue estiver sendo utilizado.
-- [ ] TailwindCSS estiver sendo utilizado.
-- [ ] Componentes reutilizáveis estiverem implementados.
-- [ ] Layout estiver consistente.
-- [ ] Estados de interação estiverem definidos.
-- [ ] Loading estiver visualmente adequado.
-- [ ] Erros forem compreensíveis.
-- [ ] Estados vazios forem compreensíveis.
-- [ ] Toasts estiverem funcionando.
+- [x] PrimeVue estiver sendo utilizado.
+- [x] TailwindCSS estiver sendo utilizado.
+- [x] Componentes reutilizáveis estiverem implementados.
+- [x] Layout estiver consistente.
+- [x] Estados de interação estiverem definidos.
+- [x] Loading estiver visualmente adequado.
+- [x] Erros forem compreensíveis.
+- [x] Estados vazios forem compreensíveis.
+- [x] Toasts estiverem funcionando.
 
 ---
 
@@ -254,6 +256,8 @@ Os principais fluxos deverão ser executados manualmente.
 - [ ] Categoria.
 - [ ] Menor preço.
 - [ ] Maior preço.
+- [ ] Nome A–Z.
+- [ ] Nome Z–A.
 - [ ] Paginação.
 
 ### Favoritos
@@ -293,16 +297,18 @@ Os principais fluxos deverão ser executados manualmente.
 O projeto será considerado documentado quando:
 
 - [ ] README estiver atualizado.
-- [ ] Requisitos estiverem documentados.
-- [ ] Arquitetura estiver documentada.
-- [ ] Decisões técnicas estiverem documentadas.
-- [ ] Contrato da API estiver documentado.
-- [ ] Modelos de dados estiverem documentados.
-- [ ] Especificação de UI estiver documentada.
-- [ ] Plano de implementação estiver documentado.
-- [ ] Definição de pronto estiver documentada.
+- [x] Requisitos estiverem documentados.
+- [x] Arquitetura estiver documentada.
+- [x] Decisões técnicas estiverem documentadas.
+- [x] Contrato da API estiver documentado.
+- [x] Modelos de dados estiverem documentados.
+- [x] Especificação de UI estiver documentada.
+- [x] Plano de implementação estiver documentado.
+- [x] Definição de pronto estiver documentada.
 
 A documentação não deverá contradizer o comportamento implementado.
+
+A atualização final do README e a verificação completa de consistência SDD × código permanecem na Fase 11.
 
 ---
 
@@ -368,6 +374,8 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 
 # 21. Status do Documento
 
-**Status:** Em definição
+**Status:** Em andamento
 
-**Versão:** 1.2
+**Versão:** 1.3
+
+**Última atualização:** 2026-08-11

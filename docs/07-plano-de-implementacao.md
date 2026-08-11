@@ -54,6 +54,10 @@ Ao concluir cada fase, a documentação SDD deverá ser atualizada conforme o pr
 
 Preparar a estrutura base da aplicação, dependências e infraestrutura mínima de navegação e estado.
 
+### Status
+
+**CONCLUÍDA**
+
 ### Tarefas
 
 - [x] Criar projeto Vue 3 com Vite.
@@ -88,6 +92,10 @@ Projeto iniciado e executando localmente, com rotas e infraestrutura configurada
 
 Centralizar a comunicação com a FakeStoreAPI e garantir tipagem consistente entre API, stores e componentes.
 
+### Status
+
+**CONCLUÍDA**
+
 ### Tarefas
 
 - [x] Criar instância Axios em `config/api.ts`.
@@ -120,6 +128,10 @@ Camada de API e contratos TypeScript prontos para consumo pelas próximas fases.
 ### Objetivo
 
 Implementar o gerenciamento global de favoritos com Pinia e persistência em `localStorage`.
+
+### Status
+
+**CONCLUÍDA**
 
 ### Store principal
 
@@ -155,7 +167,7 @@ Implementar a listagem principal de produtos e os componentes reutilizáveis nec
 
 ### Status
 
-**Concluída e validada.**
+**CONCLUÍDA**
 
 ### Componentes previstos
 
@@ -179,6 +191,7 @@ Implementar a listagem principal de produtos e os componentes reutilizáveis nec
 - [x] Implementar debounce.
 - [x] Implementar filtro por categoria.
 - [x] Implementar ordenação por preço.
+- [ ] Implementar ordenação por nome (A–Z / Z–A) — requisito pendente (não concluído na Fase 4).
 - [x] Implementar paginação.
 - [x] Integrar favoritar/desfavoritar na listagem via store existente.
 
@@ -203,6 +216,14 @@ TailwindCSS deverá ser utilizado para composição e responsividade.
 ### Resultado esperado
 
 Usuário consegue navegar pelo catálogo e encontrar produtos utilizando os controles definidos no desafio.
+
+### Pendência conhecida (fora do fechamento da Fase 4)
+
+- [ ] Ordenação por nome (A–Z / Z–A) — requisito do projeto ainda não implementado na tela.
+- [ ] Ordenação por avaliação — critério previsto na documentação, ainda não implementado.
+- [ ] Componente `ProductSort` — previsto na arquitetura/UI; ordenação por preço hoje está em `ProductFilters`.
+
+Esses itens **não** devem ser tratados como fora de escopo só por estarem pendentes.
 
 ---
 
@@ -741,7 +762,7 @@ Utilizada `public/editar-produto.png` como referência de hierarquia e layout. I
 
 ### Divergências registradas
 
-1. **Excluir produto:** presente no mockup; não implementado (fora do escopo desta fase / Fase 9+).
+1. **Excluir produto:** presente no mockup; **não implementado** e permanece como item pendente de decisão de escopo (não deve ser tratado como descartado automaticamente).
 2. **Editor rich text / limite de caracteres:** presentes no mockup; não exigidos pelo SDD.
 3. **Painel "Detalhes atuais" e rating na prévia:** presentes no mockup; não previstos na especificação de UI do formulário reutilizado.
 4. **Navegação pós-sucesso:** SDD pede "página apropriada"; decisão: `/produtos`, alinhada à Fase 7.
@@ -845,6 +866,8 @@ Consolidar qualidade técnica, estados de interface, testes manuais e, quando ap
 - [ ] Filtrar categoria.
 - [ ] Ordenar menor preço.
 - [ ] Ordenar maior preço.
+- [ ] Ordenar nome A–Z.
+- [ ] Ordenar nome Z–A.
 - [ ] Navegar pela paginação.
 
 #### Detalhes
@@ -997,18 +1020,19 @@ A implementação será considerada concluída quando:
 - [x] Busca estiver funcionando com debounce.
 - [x] Filtro por categoria estiver funcionando.
 - [x] Ordenação por preço estiver funcionando.
+- [ ] Ordenação por nome (A–Z / Z–A) estiver funcionando.
 - [x] Paginação estiver funcionando.
 - [x] Favoritos estiverem gerenciados com Pinia.
 - [x] Favoritos estiverem persistidos em localStorage.
 - [x] Página de favoritos estiver funcionando.
 - [x] Detalhes estiverem funcionando.
-- [ ] Criação estiver funcionando.
-- [ ] Edição estiver funcionando.
-- [ ] vee-validate estiver integrado aos formulários.
-- [ ] Yup estiver integrado aos formulários.
+- [x] Criação estiver funcionando.
+- [x] Edição estiver funcionando.
+- [x] vee-validate estiver integrado aos formulários.
+- [x] Yup estiver integrado aos formulários.
 - [x] PrimeVue estiver configurado no projeto.
 - [x] TailwindCSS estiver configurado no projeto.
-- [ ] Estados de loading, erro e vazio estiverem implementados nas telas.
+- [x] Estados de loading, erro e vazio estiverem implementados nas telas.
 - [ ] Responsividade estiver validada a partir de 360px.
 - [ ] Acessibilidade básica estiver validada.
 - [x] Lint estiver passando.
@@ -1053,7 +1077,7 @@ Resumo do acompanhamento:
 | Fundação | concluída |
 | API + tipos | concluída |
 | Favoritos (estado/persistência) | concluída |
-| Catálogo | concluída |
+| Catálogo | concluída (ordenação por nome ainda pendente) |
 | Detalhes | concluída |
 | Favoritos UI | concluída |
 | Criação | concluída |
@@ -1072,6 +1096,6 @@ Resumo do acompanhamento:
 
 **Status:** Em andamento
 
-**Versão:** 1.5
+**Versão:** 1.6
 
-**Última atualização:** 2026-08-10
+**Última atualização:** 2026-08-11
