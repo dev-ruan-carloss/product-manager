@@ -132,7 +132,7 @@ function onImageError(): void {
           </p>
         </section>
 
-        <div class="mt-auto border-t border-slate-100 pt-5">
+        <div class="mt-auto flex flex-col gap-3 border-t border-slate-100 pt-5 sm:flex-row sm:flex-wrap">
           <button
             type="button"
             class="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium outline-none transition focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 sm:w-auto"
@@ -160,6 +160,27 @@ function onImageError(): void {
             </svg>
             {{ favoriteActionLabel }}
           </button>
+
+          <RouterLink
+            :to="{ name: 'produto-editar', params: { id: product.id } }"
+            class="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 outline-none transition hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 sm:w-auto"
+          >
+            <svg
+              class="h-5 w-5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4 11.5-11.5Z"
+              />
+            </svg>
+            Editar produto
+          </RouterLink>
         </div>
       </div>
     </div>

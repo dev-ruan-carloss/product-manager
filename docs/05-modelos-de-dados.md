@@ -264,9 +264,13 @@ Estrutura implementada (`src/types/productForm.ts`):
     ├── category: string | undefined
     └── image: string
 
-Os campos `price` e `category` utilizam `undefined` enquanto estão vazios na interface, antes da validação e da montagem do `ProductCreatePayload`.
+Os campos `price` e `category` utilizam `undefined` enquanto estão vazios na interface, antes da validação e da montagem do `ProductCreatePayload` / `ProductUpdatePayload`.
 
-A separação entre `ProductFormData` e `ProductCreatePayload` evita acoplar o estado visual do formulário ao contrato de envio.
+Helper implementado:
+
+- `toProductFormData(product)` — mapeia `Product` → `ProductFormData` para pré-preencher o formulário na edição.
+
+A separação entre `ProductFormData` e os payloads de escrita evita acoplar o estado visual do formulário ao contrato de envio.
 
 ---
 
@@ -286,11 +290,11 @@ Exemplo:
       ↓
     Validação
       ↓
-    ProductCreatePayload
+    ProductCreatePayload | ProductUpdatePayload
       ↓
     API
 
-Essa separação permite que alterações na API tenham menor impacto sobre a interface.
+Essa separação permite que alterações na API tenham menor impacto sobre a interface. O mesmo `ProductForm` atende criação e edição.
 
 ---
 
@@ -763,4 +767,4 @@ Os modelos de dados serão considerados definidos quando:
 
 **Status:** Em definição
 
-**Versão:** 1.1
+**Versão:** 1.2

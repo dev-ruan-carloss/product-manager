@@ -21,11 +21,13 @@ const props = withDefaults(
     categoriesLoading?: boolean
     submitting?: boolean
     initialValues?: ProductFormData
+    submitLabel?: string
   }>(),
   {
     categoriesLoading: false,
     submitting: false,
     initialValues: undefined,
+    submitLabel: 'Salvar Produto',
   },
 )
 
@@ -410,7 +412,7 @@ function onCancel(): void {
 
       <Button
         type="submit"
-        label="Salvar Produto"
+        :label="submitLabel"
         severity="primary"
         class="w-full !border-violet-600 !bg-violet-600 hover:!bg-violet-700 sm:w-auto"
         :loading="submitting"

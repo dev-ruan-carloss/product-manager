@@ -800,7 +800,31 @@ A especificação de UI exige Toast de sucesso/erro e navegação para uma pági
 **Impacto:**
 
 - Fase 7 implementada com esse fluxo;
-- edição (Fase 8) poderá reutilizar o mesmo mecanismo de Toast.
+- edição (Fase 8) reutiliza o mesmo mecanismo de Toast.
+
+---
+
+## 35.4 — Feedback e navegação após edição
+
+**Data:** 2026-08-10
+
+**Decisão:**
+
+- Reutilizar `ToastService` / `Toast` já registrados na Fase 7.
+- Após atualização bem-sucedida: Toast **Produto atualizado com sucesso.** e navegação para `/produtos`.
+- Em erro de atualização: Toast **Não foi possível atualizar o produto.**, sem redirecionamento, preservando os dados.
+- Cancelar na edição retorna para `/produtos`.
+- Carregamento inicial reutiliza `useProductDetails` + `parseProductId`; formulário só monta após o produto válido.
+- `ProductForm` permanece único; prop `submitLabel` diferencia o texto do botão ("Salvar Produto" / "Salvar Alterações").
+
+**Motivo:**
+
+Alinhar a edição ao padrão da criação e ao SDD (Toast + página apropriada), evitando formulário/schema duplicados.
+
+**Impacto:**
+
+- Fase 8 concluída com esse fluxo;
+- criação permanece compatível.
 
 ---
 
@@ -831,6 +855,6 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.2
+**Versão:** 1.3
 
 **Última atualização:** 2026-08-10

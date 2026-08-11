@@ -870,11 +870,11 @@ A interface será considerada adequada quando:
 - [ ] Página de detalhes está implementada.
 - [ ] Página de favoritos está implementada.
 - [x] Criação de produto está implementada.
-- [ ] Edição de produto está implementada.
+- [x] Edição de produto está implementada.
 - [x] Formulários utilizam vee-validate.
 - [x] Validações utilizam Yup.
 - [x] POST está integrado.
-- [ ] PUT está integrado.
+- [x] PUT está integrado.
 - [x] Toasts de sucesso e erro estão implementados.
 - [ ] Estados de loading estão implementados.
 - [ ] Estados de erro estão implementados.
@@ -891,4 +891,4 @@ A interface será considerada adequada quando:
 
 **Status:** Em definição
 
-**Versão:** 1.1
+**Versão:** 1.2

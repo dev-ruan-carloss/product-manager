@@ -56,7 +56,7 @@ Operações obrigatórias deverão estar funcionando:
 - [ ] GET de produto por ID.
 - [ ] GET de categorias.
 - [x] POST de produto.
-- [ ] PUT de produto.
+- [x] PUT de produto.
 
 ---
 
@@ -118,7 +118,7 @@ A página de detalhes será considerada pronta quando:
 - [ ] Loading estiver implementado.
 - [ ] Dados completos forem apresentados.
 - [ ] Favorito estiver disponível.
-- [ ] Acesso à edição estiver disponível.
+- [x] Acesso à edição estiver disponível.
 - [ ] Produto inexistente possuir tratamento adequado.
 - [ ] Erros da API forem tratados.
 
@@ -161,16 +161,16 @@ A criação será considerada pronta quando:
 
 A edição será considerada pronta quando:
 
-- [ ] `/produtos/:id/editar` estiver funcionando.
-- [ ] Produto existente for carregado.
-- [ ] Formulário for preenchido com os dados atuais.
-- [ ] Validações estiverem funcionando.
-- [ ] PUT estiver integrado.
-- [ ] Loading estiver apresentado durante envio.
-- [ ] Toast de sucesso estiver funcionando.
-- [ ] Toast de erro estiver funcionando.
-- [ ] Produto inexistente possuir tratamento.
-- [ ] Usuário for direcionado após sucesso.
+- [x] `/produtos/:id/editar` estiver funcionando.
+- [x] Produto existente for carregado.
+- [x] Formulário for preenchido com os dados atuais.
+- [x] Validações estiverem funcionando.
+- [x] PUT estiver integrado.
+- [x] Loading estiver apresentado durante envio.
+- [x] Toast de sucesso estiver funcionando.
+- [x] Toast de erro estiver funcionando.
+- [x] Produto inexistente possuir tratamento.
+- [x] Usuário for direcionado após sucesso.
 
 ---
 
@@ -370,4 +370,4 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 
 **Status:** Em definição
 
-**Versão:** 1.1
+**Versão:** 1.2

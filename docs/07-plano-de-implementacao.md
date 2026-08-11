@@ -230,7 +230,7 @@ Implementar a visualização individual de um produto.
 - [x] Tratar erro da API com retry.
 - [x] Layout responsivo da tela de detalhes.
 - [x] Acessibilidade básica da tela de detalhes.
-- [ ] Implementar acesso à edição (adiado para a Fase 8 — Edição de produto).
+- [x] Implementar acesso à edição (concluído na Fase 8 — link "Editar produto" em `ProductDetails`).
 
 ### Arquivos da implementação
 
@@ -243,6 +243,7 @@ Criados:
 Modificados:
 
 - `src/views/ProdutoDetalhesView.vue`
+- `src/components/products/ProductDetails.vue` (ação de edição adicionada na Fase 8)
 
 ### Componentes e utilitários reutilizados
 
@@ -280,7 +281,7 @@ A tela utilizou `public/detalhe-produtos.png` como referência visual, priorizan
 
 ### Divergências registradas
 
-1. **Acesso à edição:** a UI/especificação e o planejamento da fase preveem acesso à edição, porém a edição não foi implementada nesta etapa e permanece para a Fase 8.
+1. **Acesso à edição:** adiado na Fase 4 e concluído na Fase 8 com o link "Editar produto" em `ProductDetails`.
 2. **Modelo da FakeStoreAPI:** elementos da referência visual (galeria, estoque, tipo/material, reviews detalhadas e metadados adicionais) não foram implementados por não fazerem parte do modelo `Product` utilizado.
 3. **Preço:** a referência visual utiliza `$`, enquanto a aplicação utiliza `formatPrice` com padrão BRL, conforme o SDD.
 4. **Produto inexistente:** o contrato considera o cenário de `404`, porém a FakeStoreAPI pode retornar `200` com corpo vazio; a implementação trata ambos os cenários.
@@ -289,7 +290,7 @@ Essas divergências não foram transformadas em novos requisitos.
 
 ### Resultado esperado
 
-Usuário consegue abrir os detalhes de um produto, visualizar suas informações, favoritar/desfavoritar e retornar ao catálogo, com estados de loading, erro e não encontrado tratados.
+Usuário consegue abrir os detalhes de um produto, visualizar suas informações, favoritar/desfavoritar e retornar ao catálogo, com estados de loading, erro e não encontrado tratados. Ação de edição disponível após a Fase 8.
 
 ---
 
@@ -611,7 +612,7 @@ Utilizada `public/cadastro-produtos.png` como referência de estrutura, hierarqu
 2. **Limite 10–1000 caracteres na descrição:** presente no mockup; não implementado (SDD exige apenas obrigatoriedade).
 3. **Preço em USD no mockup:** a aplicação mantém `formatPrice` em BRL, alinhado às telas existentes.
 4. **Navegação pós-sucesso:** SDD pede "página apropriada"; decisão de implementação: `/produtos`.
-5. **Edição:** não implementada nesta fase (permanece na Fase 8).
+5. **Edição:** concluída na Fase 8 com reuso do `ProductForm`.
 
 Essas divergências não foram transformadas em novos requisitos.
 
@@ -633,18 +634,128 @@ Usuário consegue abrir `/produtos/novo`, preencher o formulário, validar os ca
 
 Implementar o fluxo de edição em `/produtos/:id/editar`.
 
+### Status
+
+**CONCLUÍDA**
+
 ### Tarefas
 
-- [ ] Obter ID da rota.
-- [ ] Buscar produto.
-- [ ] Preencher ProductForm.
-- [ ] Permitir alteração.
-- [ ] Validar formulário.
-- [ ] Executar PUT.
-- [ ] Apresentar Toast de sucesso.
-- [ ] Apresentar Toast de erro.
-- [ ] Tratar produto inexistente.
-- [ ] Navegar após sucesso.
+- [x] Obter ID da rota.
+- [x] Buscar produto.
+- [x] Preencher ProductForm.
+- [x] Permitir alteração.
+- [x] Validar formulário.
+- [x] Executar PUT.
+- [x] Apresentar Toast de sucesso.
+- [x] Apresentar Toast de erro.
+- [x] Tratar produto inexistente.
+- [x] Navegar após sucesso.
+
+### Arquivos da implementação
+
+Criados / reescritos:
+
+- `src/views/ProdutoEditarView.vue`
+
+Modificados:
+
+- `src/components/products/ProductForm.vue` (prop `submitLabel` para reuso criação/edição)
+- `src/types/productForm.ts` (`toProductFormData`)
+- `src/components/products/ProductDetails.vue` (acesso à edição)
+
+### Componentes e utilitários reutilizados
+
+- `ProductForm`
+- `productFormSchema` (Yup + vee-validate)
+- `useProductDetails`
+- `parseProductId`
+- `productService.getProductById` / `updateProduct` / `getCategories`
+- `ErrorState` / `EmptyState`
+- Toast do PrimeVue (via `DefaultLayout`)
+- Skeleton do PrimeVue para loading do carregamento inicial
+
+### Carregamento do produto
+
+- ID obtido com `parseProductId(route.params.id)`.
+- Busca via `useProductDetails` → `productService.getProductById`.
+- Formulário **não** é exibido durante o loading (skeleton no lugar).
+- Após sucesso do GET, `toProductFormData` preenche `initialValues` e o `ProductForm` é montado com `:key="product.id"`.
+
+### Validação
+
+Reutiliza `src/utils/productFormSchema.ts` — mesmas regras da criação (RF-009). Sem schema duplicado.
+
+### Endpoints
+
+- `GET /products/:id` — carregamento inicial
+- `PUT /products/:id` — atualização via `productService.updateProduct`
+
+### Payload
+
+`ProductUpdatePayload`:
+
+```ts
+{
+  title: string
+  price: number
+  description: string
+  category: string
+  image: string
+}
+```
+
+PUT não é enviado quando o ID da rota é inválido (`productId === null`).
+
+### Loading
+
+- Carregamento inicial: skeleton com `aria-busy`.
+- Durante o PUT: botão "Salvar Alterações" em loading; campos e cancelar desabilitados; envio duplicado impedido por `isSubmitting`.
+
+### Tratamento de erro
+
+- ID inválido / produto inexistente / resposta inválida: `EmptyState` "Produto não encontrado." com retorno ao catálogo.
+- Falha de GET (exceto 404): `ErrorState` com retry.
+- Falha de PUT: Toast **Não foi possível atualizar o produto.**; dados preservados; sem redirecionamento.
+- Mensagens técnicas da API não são exibidas.
+
+### Tratamento de sucesso
+
+- Toast: **Produto atualizado com sucesso.**
+- Navegação para `/produtos` (mesma decisão da criação: Fake Store API simula escrita).
+
+### Cancelar
+
+Botão "Cancelar" navega para `/produtos`, sem envio.
+
+### Acesso à edição
+
+Link "Editar produto" na página de detalhes (`ProductDetails`) para `/produtos/:id/editar`.
+
+### Compatibilidade com a criação
+
+`/produtos/novo` permanece funcional: `ProductForm` com `submitLabel` padrão `"Salvar Produto"`, mesmo schema, mesmo POST e Toasts.
+
+### Referência visual
+
+Utilizada `public/editar-produto.png` como referência de hierarquia e layout. Itens só do mockup e fora do SDD **não** implementados (exclusão, rich text, painel "Detalhes atuais", contador 10–1000).
+
+### Divergências registradas
+
+1. **Excluir produto:** presente no mockup; não implementado (fora do escopo desta fase / Fase 9+).
+2. **Editor rich text / limite de caracteres:** presentes no mockup; não exigidos pelo SDD.
+3. **Painel "Detalhes atuais" e rating na prévia:** presentes no mockup; não previstos na especificação de UI do formulário reutilizado.
+4. **Navegação pós-sucesso:** SDD pede "página apropriada"; decisão: `/produtos`, alinhada à Fase 7.
+5. **Label do botão:** mockup usa "Salvar Alterações"; implementado via prop `submitLabel` (criação mantém "Salvar Produto").
+
+### Validações técnicas
+
+- [x] `npm run type-check`
+- [x] `npm run lint`
+- [x] `npm run build`
+
+### Resultado esperado
+
+Usuário consegue abrir `/produtos/:id/editar` a partir dos detalhes, carregar o produto, editar com validação, enviar PUT com feedback de loading/sucesso/erro e retornar ao catálogo após sucesso ou cancelamento, sem quebrar a criação.
 
 ---
 
@@ -946,14 +1057,14 @@ Resumo do acompanhamento:
 | Detalhes | concluída |
 | Favoritos UI | concluída |
 | Criação | concluída |
-| Edição | pendente |
+| Edição | concluída |
 | Responsividade/acessibilidade | pendente |
 | QA | pendente |
 | Entrega | pendente |
 
 ### Próxima fase
 
-**Fase 8 — Edição de produto**
+**Fase 9 — Responsividade e acessibilidade**
 
 ---
 
@@ -961,6 +1072,6 @@ Resumo do acompanhamento:
 
 **Status:** Em andamento
 
-**Versão:** 1.4
+**Versão:** 1.5
 
 **Última atualização:** 2026-08-10
