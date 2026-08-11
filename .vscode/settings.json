@@ -2,11 +2,11 @@
   "cSpell.language": "en,pt-BR",
   "cSpell.enabled": true,
   "cSpell.allowCompoundWords": true,
+  "cSpell.ignorePaths": [
+    "docs/**"
+  ],
   "cSpell.words": [
-    "API",
-    "APIs",
     "Axios",
-    "FakeStore",
     "FakeStoreAPI",
     "Pinia",
     "PrimeVue",
@@ -20,24 +20,16 @@
     "Yup",
     "vee-validate",
     "localStorage",
-    "composable",
-    "composables",
-    "frontend",
-    "backend",
-    "debounce",
-    "componentização",
-    "desfavoritar",
-    "desfavoritado",
-    "Tipar",
-    "tipar",
-    "criacao",
-    "edicao",
-    "documentacao"
+    "debounce"
   ],
   "files.encoding": "utf8",
   "files.autoGuessEncoding": true,
   "editor.formatOnSave": true,
-  "eslint.validate": ["javascript", "typescript", "vue"],
+  "eslint.validate": [
+    "javascript",
+    "typescript",
+    "vue"
+  ],
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true
 }

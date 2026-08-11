@@ -8,29 +8,25 @@ A implementação deverá seguir a sequência:
 
     Fundação
         ↓
-    Configuração
+    API + tipos
         ↓
-    Infraestrutura
+    Estado de favoritos
         ↓
-    API
+    Catálogo de produtos
         ↓
-    Estado
+    Detalhes do produto
         ↓
-    Componentes
+    Página de favoritos
         ↓
-    Listagem
+    Criação de produto
         ↓
-    Detalhes
+    Edição de produto
         ↓
-    Favoritos
+    Responsividade + acessibilidade
         ↓
-    Formulários
+    QA final
         ↓
-    Responsividade
-        ↓
-    Testes
-        ↓
-    Revisão final
+    Documentação e entrega
 
 ---
 
@@ -48,108 +44,82 @@ Cada etapa deverá:
 
 A implementação não deverá tentar construir todas as funcionalidades simultaneamente.
 
+Ao concluir cada fase, a documentação SDD deverá ser atualizada conforme o processo definido neste documento.
+
 ---
 
-# 3. Fase 1 — Inicialização do Projeto
+# 3. Fase 1 — Fundação do projeto
 
 ### Objetivo
 
-Preparar a estrutura base da aplicação.
+Preparar a estrutura base da aplicação, dependências e infraestrutura mínima de navegação e estado.
 
 ### Tarefas
 
-- [ ] Criar projeto Vue 3 com Vite.
-- [ ] Configurar TypeScript.
-- [ ] Habilitar TypeScript strict.
-- [ ] Configurar Composition API.
-- [ ] Configurar `script setup`.
-- [ ] Configurar Vue Router.
-- [ ] Configurar Pinia.
-- [ ] Instalar PrimeVue.
-- [ ] Configurar TailwindCSS.
-- [ ] Instalar Axios.
-- [ ] Instalar vee-validate.
-- [ ] Instalar Yup.
-- [ ] Configurar ESLint.
-- [ ] Configurar Prettier quando necessário.
-- [ ] Validar build inicial.
+- [x] Criar projeto Vue 3 com Vite.
+- [x] Configurar TypeScript.
+- [x] Habilitar TypeScript strict.
+- [x] Configurar Composition API.
+- [x] Configurar `script setup`.
+- [x] Criar organização inicial de pastas por responsabilidade.
+- [x] Configurar Vue Router.
+- [x] Associar rotas principais às Views iniciais.
+- [x] Configurar Pinia.
+- [x] Instalar PrimeVue.
+- [x] Configurar TailwindCSS.
+- [x] Instalar Axios.
+- [x] Instalar vee-validate.
+- [x] Instalar Yup.
+- [x] Configurar ESLint.
+- [x] Configurar Prettier quando necessário.
+- [x] Validar TypeScript.
+- [x] Validar lint.
+- [x] Validar build inicial.
 
 ### Resultado esperado
 
-Projeto iniciado e executando localmente sem funcionalidades de negócio.
+Projeto iniciado e executando localmente, com rotas e infraestrutura configuradas, ainda sem funcionalidades de negócio completas.
 
 ---
 
-# 4. Fase 2 — Estrutura de Pastas
+# 4. Fase 2 — API e tipos
 
 ### Objetivo
 
-Criar uma organização baseada em domínio e responsabilidade.
-
-Estrutura inicial esperada:
-
-    src/
-    ├── assets/
-    ├── components/
-    ├── config/
-    ├── layouts/
-    ├── router/
-    ├── services/
-    ├── stores/
-    ├── types/
-    ├── views/
-    ├── App.vue
-    └── main.ts
-
-A estrutura poderá ser refinada durante a implementação conforme a necessidade real.
-
----
-
-# 5. Fase 3 — Configuração da API
-
-### Objetivo
-
-Centralizar a comunicação com a FakeStoreAPI.
+Centralizar a comunicação com a FakeStoreAPI e garantir tipagem consistente entre API, stores e componentes.
 
 ### Tarefas
 
-- [ ] Criar instância Axios.
-- [ ] Configurar URL base.
-- [ ] Configurar tratamento básico de erros.
-- [ ] Criar serviço de produtos.
-- [ ] Criar métodos para listar produtos.
-- [ ] Criar método para buscar produto por ID.
-- [ ] Criar método para buscar categorias.
-- [ ] Criar método POST.
-- [ ] Criar método PUT.
-- [ ] Tipar respostas da API.
-- [ ] Evitar utilização de `any`.
+- [x] Criar instância Axios em `config/api.ts`.
+- [x] Configurar URL base.
+- [x] Configurar tratamento básico de erros.
+- [x] Criar serviço de produtos.
+- [x] Criar métodos para listar produtos.
+- [x] Criar método para buscar produto por ID.
+- [x] Criar método para buscar categorias.
+- [x] Criar método POST.
+- [x] Criar método PUT.
+- [x] Criar tipo `Product`.
+- [x] Criar tipo para avaliação.
+- [x] Criar tipo para categoria.
+- [x] Criar tipos para criação.
+- [x] Criar tipos para atualização.
+- [x] Criar tipos auxiliares necessários para a API.
+- [x] Tipar respostas da API.
+- [x] Evitar utilização de `any`.
+- [x] Garantir compatibilidade com TypeScript strict.
+
+### Resultado esperado
+
+Camada de API e contratos TypeScript prontos para consumo pelas próximas fases.
 
 ---
 
-# 6. Fase 4 — Tipos e Modelos
+# 5. Fase 3 — Estado de favoritos
 
 ### Objetivo
 
-Garantir tipagem consistente entre API, stores e componentes.
-
-### Tarefas
-
-- [ ] Criar tipo `Product`.
-- [ ] Criar tipo para avaliação.
-- [ ] Criar tipo para categoria.
-- [ ] Criar tipos para criação.
-- [ ] Criar tipos para atualização.
-- [ ] Criar tipos para estados necessários.
-- [ ] Garantir compatibilidade com TypeScript strict.
-
----
-
-# 7. Fase 5 — Pinia
-
-### Objetivo
-
-Implementar o gerenciamento de estado global necessário.
+Implementar o gerenciamento global de favoritos com Pinia e persistência em `localStorage`.
 
 ### Store principal
 
@@ -157,49 +127,33 @@ Implementar o gerenciamento de estado global necessário.
 
 ### Tarefas
 
-- [ ] Criar store de favoritos.
-- [ ] Armazenar IDs favoritos.
-- [ ] Implementar adicionar favorito.
-- [ ] Implementar remover favorito.
-- [ ] Implementar verificação de favorito.
-- [ ] Implementar contador.
-- [ ] Persistir em localStorage.
-- [ ] Restaurar estado ao iniciar a aplicação.
+- [x] Criar store de favoritos.
+- [x] Armazenar IDs favoritos.
+- [x] Implementar adicionar favorito.
+- [x] Implementar remover favorito.
+- [x] Implementar verificação de favorito.
+- [x] Implementar contador derivado do estado.
+- [x] Persistir em localStorage.
+- [x] Restaurar estado ao iniciar a store.
+- [x] Tratar conteúdo inválido no localStorage sem quebrar a aplicação.
 
 A store deverá permanecer focada exclusivamente no estado de favoritos.
 
----
+Esta fase **não** inclui componentes visuais nem a página `/favoritos`.
 
-# 8. Fase 6 — Vue Router
+### Resultado esperado
 
-### Objetivo
-
-Implementar a navegação principal.
-
-### Rotas
-
-- [ ] `/produtos`
-- [ ] `/produtos/:id`
-- [ ] `/produtos/novo`
-- [ ] `/produtos/:id/editar`
-- [ ] `/favoritos`
-
-### Tarefas
-
-- [ ] Configurar rotas.
-- [ ] Associar cada rota à sua View.
-- [ ] Configurar navegação entre páginas.
-- [ ] Validar parâmetros de rota.
+Estado de favoritos disponível globalmente, persistente e tipado, pronto para consumo pelas telas.
 
 ---
 
-# 9. Fase 7 — Componentes Base
+# 6. Fase 4 — Catálogo de produtos
 
 ### Objetivo
 
-Criar componentes reutilizáveis antes da construção das telas.
+Implementar a listagem principal de produtos e os componentes reutilizáveis necessários para o catálogo.
 
-### Componentes
+### Componentes previstos
 
 - [ ] Header.
 - [ ] ProductCard.
@@ -208,33 +162,25 @@ Criar componentes reutilizáveis antes da construção das telas.
 - [ ] LoadingState.
 - [ ] EmptyState.
 - [ ] ErrorState.
-- [ ] Paginação.
+- [ ] Controles de paginação.
 
-PrimeVue deverá ser utilizado sempre que houver componente adequado.
-
-TailwindCSS deverá ser utilizado para composição e responsividade.
-
----
-
-# 10. Fase 8 — Listagem de Produtos
-
-### Objetivo
-
-Implementar a funcionalidade principal da aplicação.
-
-### Tarefas
+### Tarefas da listagem
 
 - [ ] Buscar produtos através da API.
 - [ ] Apresentar loading.
 - [ ] Apresentar produtos.
 - [ ] Apresentar estado vazio.
 - [ ] Apresentar estado de erro.
-- [ ] Implementar ProductCard.
 - [ ] Implementar busca.
 - [ ] Implementar debounce.
 - [ ] Implementar filtro por categoria.
 - [ ] Implementar ordenação por preço.
 - [ ] Implementar paginação.
+- [ ] Integrar favoritar/desfavoritar na listagem via store existente.
+
+PrimeVue deverá ser utilizado sempre que houver componente adequado.
+
+TailwindCSS deverá ser utilizado para composição e responsividade.
 
 ### Resultado esperado
 
@@ -242,7 +188,7 @@ Usuário consegue navegar pelo catálogo e encontrar produtos utilizando os cont
 
 ---
 
-# 11. Fase 9 — Página de Detalhes
+# 7. Fase 5 — Detalhes do produto
 
 ### Objetivo
 
@@ -254,23 +200,23 @@ Implementar a visualização individual de um produto.
 - [ ] Buscar produto pela API.
 - [ ] Apresentar loading.
 - [ ] Apresentar dados completos.
-- [ ] Implementar favorito.
+- [ ] Implementar favorito na página de detalhes.
 - [ ] Implementar acesso à edição.
 - [ ] Tratar produto inexistente.
 - [ ] Tratar erro da API.
 
 ---
 
-# 12. Fase 10 — Favoritos
+# 8. Fase 6 — Página de favoritos
 
 ### Objetivo
 
-Implementar a experiência completa de favoritos.
+Implementar a experiência visual completa de favoritos.
 
 ### Tarefas
 
-- [ ] Criar página `/favoritos`.
-- [ ] Utilizar Pinia.
+- [ ] Implementar a página `/favoritos`.
+- [ ] Utilizar a store Pinia existente.
 - [ ] Recuperar IDs persistidos.
 - [ ] Obter dados necessários dos produtos.
 - [ ] Reutilizar ProductCard.
@@ -280,17 +226,17 @@ Implementar a experiência completa de favoritos.
 
 ---
 
-# 13. Fase 11 — Formulário de Produto
+# 9. Fase 7 — Criação de produto
 
 ### Objetivo
 
-Criar o formulário reutilizável para criação e edição.
+Implementar o formulário reutilizável e o fluxo de criação em `/produtos/novo`.
 
 ### Componente
 
 `ProductForm`
 
-### Tarefas
+### Tarefas do formulário
 
 - [ ] Criar estrutura do formulário.
 - [ ] Integrar vee-validate.
@@ -304,19 +250,9 @@ Criar o formulário reutilizável para criação e edição.
 - [ ] Implementar estado de envio.
 - [ ] Evitar múltiplos envios.
 
----
+### Tarefas da criação
 
-# 14. Fase 12 — Criação de Produto
-
-### Objetivo
-
-Implementar:
-
-`/produtos/novo`
-
-### Tarefas
-
-- [ ] Integrar ProductForm.
+- [ ] Integrar ProductForm em `/produtos/novo`.
 - [ ] Carregar categorias.
 - [ ] Validar formulário.
 - [ ] Executar POST.
@@ -327,13 +263,11 @@ Implementar:
 
 ---
 
-# 15. Fase 13 — Edição de Produto
+# 10. Fase 8 — Edição de produto
 
 ### Objetivo
 
-Implementar:
-
-`/produtos/:id/editar`
+Implementar o fluxo de edição em `/produtos/:id/editar`.
 
 ### Tarefas
 
@@ -350,13 +284,13 @@ Implementar:
 
 ---
 
-# 16. Fase 14 — Responsividade
+# 11. Fase 9 — Responsividade e acessibilidade
 
 ### Objetivo
 
-Garantir funcionamento adequado a partir de 360px.
+Garantir funcionamento adequado a partir de 360px e atender critérios básicos de acessibilidade.
 
-### Tarefas
+### Responsividade
 
 - [ ] Validar 360px.
 - [ ] Validar mobile.
@@ -369,11 +303,7 @@ Garantir funcionamento adequado a partir de 360px.
 - [ ] Validar áreas de toque.
 - [ ] Garantir ausência de overflow horizontal.
 
----
-
-# 17. Fase 15 — Acessibilidade
-
-### Tarefas
+### Acessibilidade
 
 - [ ] Validar labels dos campos.
 - [ ] Validar textos alternativos.
@@ -386,36 +316,36 @@ Garantir funcionamento adequado a partir de 360px.
 
 ---
 
-# 18. Fase 16 — Tratamento de Estados
+# 12. Fase 10 — QA final
 
-Todas as telas que realizam operações assíncronas deverão possuir os estados necessários.
+### Objetivo
 
-### Loading
+Consolidar qualidade técnica, estados de interface, testes manuais e, quando aplicável, testes automatizados.
+
+### Tratamento de estados
+
+#### Loading
 
 - [ ] Listagem.
 - [ ] Detalhes.
 - [ ] Edição.
 - [ ] Formulário.
 
-### Erro
+#### Erro
 
 - [ ] Listagem.
 - [ ] Detalhes.
 - [ ] Criação.
 - [ ] Edição.
 
-### Vazio
+#### Vazio
 
 - [ ] Resultados sem correspondência.
 - [ ] Favoritos vazios.
 
----
+### Revisão técnica
 
-# 19. Fase 17 — Revisão Técnica
-
-### Código
-
-- [ ] Remover `any`.
+- [ ] Remover `any` injustificado.
 - [ ] Verificar TypeScript strict.
 - [ ] Remover código duplicado.
 - [ ] Verificar responsabilidades dos componentes.
@@ -424,20 +354,15 @@ Todas as telas que realizam operações assíncronas deverão possuir os estados
 - [ ] Verificar imports.
 - [ ] Verificar nomes.
 - [ ] Verificar componentes não utilizados.
-
-### Qualidade
-
 - [ ] Executar lint.
 - [ ] Executar build.
 - [ ] Corrigir warnings relevantes.
 - [ ] Verificar console.
 - [ ] Verificar erros de runtime.
 
----
+### Testes manuais
 
-# 20. Fase 18 — Testes Manuais
-
-### Produtos
+#### Produtos
 
 - [ ] Listar produtos.
 - [ ] Pesquisar produto.
@@ -447,14 +372,14 @@ Todas as telas que realizam operações assíncronas deverão possuir os estados
 - [ ] Ordenar maior preço.
 - [ ] Navegar pela paginação.
 
-### Detalhes
+#### Detalhes
 
 - [ ] Abrir produto.
 - [ ] Produto inexistente.
 - [ ] Favoritar.
 - [ ] Desfavoritar.
 
-### Favoritos
+#### Favoritos
 
 - [ ] Adicionar favorito.
 - [ ] Remover favorito.
@@ -463,7 +388,7 @@ Todas as telas que realizam operações assíncronas deverão possuir os estados
 - [ ] Acessar `/favoritos`.
 - [ ] Validar estado vazio.
 
-### Criação
+#### Criação
 
 - [ ] Abrir formulário.
 - [ ] Validar campos vazios.
@@ -473,7 +398,7 @@ Todas as telas que realizam operações assíncronas deverão possuir os estados
 - [ ] Validar sucesso.
 - [ ] Validar erro.
 
-### Edição
+#### Edição
 
 - [ ] Abrir edição.
 - [ ] Carregar dados.
@@ -482,11 +407,7 @@ Todas as telas que realizam operações assíncronas deverão possuir os estados
 - [ ] Validar sucesso.
 - [ ] Validar erro.
 
----
-
-# 21. Fase 19 — Revisão Visual
-
-Verificar:
+### Revisão visual
 
 - [ ] Consistência dos componentes.
 - [ ] Espaçamentos.
@@ -501,9 +422,18 @@ Verificar:
 - [ ] Mensagens de erro.
 - [ ] Toasts.
 
+### Testes automatizados
+
+- [ ] Configurar Vitest e Vue Test Utils na fase de qualidade, quando necessário.
+- [ ] Cobrir regras críticas (stores, validações e fluxos relevantes).
+
 ---
 
-# 22. Fase 20 — Documentação Final
+# 13. Fase 11 — Documentação e entrega
+
+### Objetivo
+
+Consolidar a documentação final e garantir consistência entre código e SDD.
 
 ### README
 
@@ -522,11 +452,18 @@ O README deverá apresentar:
 
 ### Documentação SDD
 
-Os documentos deverão permanecer atualizados conforme decisões tomadas durante a implementação.
+- [ ] Requisitos consistentes com o código.
+- [ ] Arquitetura consistente com o código.
+- [ ] Decisões técnicas atualizadas.
+- [ ] Contrato da API consistente.
+- [ ] Modelos de dados consistentes.
+- [ ] Especificação de UI consistente.
+- [ ] Plano de implementação atualizado.
+- [ ] Definição de pronto atendida.
 
 ---
 
-# 23. Ordem dos Commits
+# 14. Ordem dos Commits
 
 Os commits deverão ser pequenos e relacionados a uma única responsabilidade.
 
@@ -546,7 +483,7 @@ Exemplos:
 
     feat: implementa detalhes do produto
 
-    feat: implementa favoritos
+    feat: implementa pagina de favoritos
 
     feat: implementa formulario de produto
 
@@ -560,7 +497,7 @@ Exemplos:
 
 ---
 
-# 24. Regra de Implementação
+# 15. Regra de Implementação
 
 Nenhuma funcionalidade deverá ser implementada sem que exista um requisito ou decisão correspondente na documentação.
 
@@ -575,38 +512,91 @@ Isso mantém a documentação e o código sincronizados.
 
 ---
 
-# 25. Critério de Conclusão
+# 16. Critério de Conclusão
 
 A implementação será considerada concluída quando:
 
 - [ ] Todos os requisitos do desafio estiverem implementados.
-- [ ] Todas as rotas estiverem funcionando.
-- [ ] API estiver integrada.
+- [ ] Todas as rotas estiverem funcionando com suas funcionalidades.
+- [x] Camada de API estiver implementada.
 - [ ] Busca estiver funcionando com debounce.
 - [ ] Filtro por categoria estiver funcionando.
 - [ ] Ordenação por preço estiver funcionando.
 - [ ] Paginação estiver funcionando.
-- [ ] Favoritos estiverem funcionando com Pinia.
-- [ ] Favoritos estiverem persistidos em localStorage.
+- [x] Favoritos estiverem gerenciados com Pinia.
+- [x] Favoritos estiverem persistidos em localStorage.
+- [ ] Página de favoritos estiver funcionando.
 - [ ] Detalhes estiverem funcionando.
 - [ ] Criação estiver funcionando.
 - [ ] Edição estiver funcionando.
-- [ ] vee-validate estiver integrado.
-- [ ] Yup estiver integrado.
-- [ ] PrimeVue estiver integrado.
-- [ ] TailwindCSS estiver integrado.
-- [ ] Estados de loading, erro e vazio estiverem implementados.
+- [ ] vee-validate estiver integrado aos formulários.
+- [ ] Yup estiver integrado aos formulários.
+- [x] PrimeVue estiver configurado no projeto.
+- [x] TailwindCSS estiver configurado no projeto.
+- [ ] Estados de loading, erro e vazio estiverem implementados nas telas.
 - [ ] Responsividade estiver validada a partir de 360px.
 - [ ] Acessibilidade básica estiver validada.
-- [ ] Lint estiver passando.
-- [ ] Build estiver passando.
+- [x] Lint estiver passando.
+- [x] Build estiver passando.
 - [ ] README estiver atualizado.
 - [ ] Documentação SDD estiver consistente com o código.
 
 ---
 
-# 26. Status do Documento
+# 17. Processo de atualização do SDD
 
-**Status:** Em definição
+A documentação em `docs/` deve refletir o **estado real do código**, e não apenas o planejamento futuro.
 
-**Versão:** 1.0
+Ao finalizar cada fase:
+
+1. Implementar a fase conforme o escopo definido.
+2. Executar as validações aplicáveis (TypeScript, lint, build e testes manuais relevantes).
+3. Confirmar que os critérios de `08-definicao-de-pronto.md` foram atendidos para o escopo da fase.
+4. Atualizar os checkboxes da fase correspondente neste documento (`07-plano-de-implementacao.md`).
+5. Registrar decisões arquiteturais novas em `03-decisoes-tecnicas.md`, somente quando existirem.
+6. Atualizar `04-contrato-api.md` somente quando houver alteração real no contrato.
+7. Atualizar `05-modelos-de-dados.md` somente quando houver alteração real nos modelos.
+8. Atualizar `06-especificacao-ui.md` somente quando houver alteração real na interface planejada.
+9. Não alterar documentação apenas para gerar atividade.
+10. Fazer o commit da implementação junto com as alterações documentais correspondentes quando fizer sentido.
+
+### Regras adicionais
+
+- Não marcar como concluído aquilo que apenas estiver planejado.
+- Não marcar funcionalidades visuais como concluídas sem implementação validada.
+- Não alterar requisitos, arquitetura ou contrato sem inconsistência comprovada ou decisão explícita.
+- Em caso de divergência entre código e SDD, priorizar alinhar a documentação ao comportamento real ou registrar a decisão técnica correspondente antes de continuar.
+
+---
+
+# 18. Estado atual do projeto
+
+Resumo do acompanhamento:
+
+| Área | Status |
+|---|---|
+| Fundação | concluída |
+| API + tipos | concluída |
+| Favoritos (estado/persistência) | concluída |
+| Catálogo | pendente |
+| Detalhes | pendente |
+| Favoritos UI | pendente |
+| Criação | pendente |
+| Edição | pendente |
+| Responsividade/acessibilidade | pendente |
+| QA | pendente |
+| Entrega | pendente |
+
+### Próxima fase
+
+**Fase 4 — Catálogo de produtos**
+
+---
+
+# 19. Status do Documento
+
+**Status:** Em andamento
+
+**Versão:** 1.1
+
+**Última atualização:** 2026-08-10

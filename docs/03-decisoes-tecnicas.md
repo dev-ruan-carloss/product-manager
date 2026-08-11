@@ -24,8 +24,7 @@ A aplicação será desenvolvida utilizando:
 - Axios;
 - biblioteca de componentes de interface;
 - biblioteca de validação de formulários;
-- Vitest;
-- Vue Test Utils;
+- Vitest e Vue Test Utils (previstos para a fase de qualidade/testes);
 - ESLint;
 - Prettier.
 
@@ -366,6 +365,12 @@ A implementação deverá ser mantida simples e preparada para uma futura migra�
 
 Utilizar Vitest como framework de testes e Vue Test Utils para testes de componentes Vue.
 
+Essa decisão define a **ferramenta pretendida** para testes automatizados. Ela **não exige** que Vitest e Vue Test Utils estejam instalados desde a fundação do projeto.
+
+A configuração da infraestrutura de testes automatizados deverá ocorrer na fase própria de qualidade/QA do plano de implementação, quando houver código de negócio suficiente para justificar a cobertura.
+
+Até lá, a validação das fases iniciais poderá ocorrer por inspeção, TypeScript, lint, build e testes manuais relevantes.
+
 ## Justificativa
 
 Vitest possui integração adequada com o ecossistema Vite.
@@ -373,6 +378,8 @@ Vitest possui integração adequada com o ecossistema Vite.
 Vue Test Utils fornece recursos específicos para montar e testar componentes Vue.
 
 A estratégia deverá priorizar testes que validem comportamento e regras importantes, evitando testes excessivamente acoplados à implementação interna.
+
+Adiar a instalação evita dependências ociosas nas fases em que ainda não há telas, formulários ou fluxos prontos para cobertura automatizada.
 
 ---
 
@@ -693,17 +700,19 @@ Antes de considerar uma funcionalidade concluída, deverão ser avaliados:
 
 # 34. Decisões Pendentes
 
-As seguintes decisões deverão ser definidas antes da implementação da interface:
+As seguintes decisões ainda precisam ser refinadas durante a implementação correspondente:
 
-- biblioteca de componentes visuais;
-- biblioteca de validação;
-- configuração final do ESLint;
-- configuração final do Prettier;
-- estratégia detalhada de testes;
-- estratégia de tratamento de erros da API;
-- estratégia de feedback ao usuário.
+- estratégia detalhada de testes automatizados (configuração do Vitest na fase de QA);
+- estratégia de feedback ao usuário (Toasts e mensagens finais de interface).
 
-Essas decisões deverão ser tomadas considerando o escopo real do projeto e não apenas popularidade das ferramentas.
+Itens já definidos na fundação e não mais pendentes:
+
+- biblioteca de componentes visuais: PrimeVue;
+- biblioteca de validação: vee-validate + Yup;
+- configuração de ESLint e Prettier;
+- tratamento básico de erros da API em `config/api.ts`.
+
+As decisões restantes deverão ser tomadas considerando o escopo real do projeto e não apenas popularidade das ferramentas.
 
 ---
 
@@ -745,6 +754,29 @@ Separar configuração de infraestrutura da camada de services, que permanece re
 
 ---
 
+## 35.2 — Momento de configuração do Vitest
+
+**Data:** 2026-08-10
+
+**Decisão anterior:**
+
+A stack listava Vitest e Vue Test Utils sem delimitar quando a infraestrutura deveria ser instalada, o que poderia ser interpretado como obrigatoriedade desde a fundação.
+
+**Nova decisão:**
+
+Vitest e Vue Test Utils permanecem como a solução de testes automatizados do projeto, porém sua instalação e configuração ocorrem na fase de qualidade/QA, e não como pré-requisito das fases iniciais.
+
+**Motivo:**
+
+O código atual ainda não possui infraestrutura de testes, e as fases já concluídas (fundação, API/tipos e store de favoritos) foram validadas por TypeScript, lint, build e inspeção. Exigir Vitest antes disso geraria inconsistência entre documentação e repositório sem benefício imediato.
+
+**Impacto:**
+
+- redação da seção de testes atualizada;
+- plano de implementação (`07-plano-de-implementacao.md`) passa a prever a configuração de testes na Fase 10 — QA final.
+
+---
+
 # 36. Critérios de Aceite
 
 As decisões técnicas serão consideradas definidas quando:
@@ -770,6 +802,8 @@ As decisões técnicas serão consideradas definidas quando:
 
 # 37. Status do Documento
 
-**Status:** Em definição
+**Status:** Em andamento
 
-**Versão:** 1.0
+**Versão:** 1.1
+
+**Última atualização:** 2026-08-10
