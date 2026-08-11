@@ -55,7 +55,7 @@ Operações obrigatórias deverão estar funcionando:
 - [ ] GET de produtos.
 - [ ] GET de produto por ID.
 - [ ] GET de categorias.
-- [ ] POST de produto.
+- [x] POST de produto.
 - [ ] PUT de produto.
 
 ---
@@ -128,16 +128,16 @@ A página de detalhes será considerada pronta quando:
 
 Os formulários serão considerados prontos quando:
 
-- [ ] `vee-validate` estiver integrado.
-- [ ] `Yup` estiver integrado.
-- [ ] Campos obrigatórios estiverem validados.
-- [ ] Preço aceitar somente valor válido.
-- [ ] Preço for maior que zero.
-- [ ] URL da imagem possuir validação.
-- [ ] Mensagens de erro forem apresentadas corretamente.
-- [ ] Estado de envio estiver implementado.
-- [ ] Múltiplos envios forem evitados.
-- [ ] Dados preenchidos forem preservados em caso de erro.
+- [x] `vee-validate` estiver integrado.
+- [x] `Yup` estiver integrado.
+- [x] Campos obrigatórios estiverem validados.
+- [x] Preço aceitar somente valor válido.
+- [x] Preço for maior que zero.
+- [x] URL da imagem possuir validação.
+- [x] Mensagens de erro forem apresentadas corretamente.
+- [x] Estado de envio estiver implementado.
+- [x] Múltiplos envios forem evitados.
+- [x] Dados preenchidos forem preservados em caso de erro.
 
 ---
 
@@ -145,15 +145,15 @@ Os formulários serão considerados prontos quando:
 
 A criação será considerada pronta quando:
 
-- [ ] `/produtos/novo` estiver funcionando.
-- [ ] Formulário estiver carregando categorias.
-- [ ] Validações estiverem funcionando.
-- [ ] POST estiver integrado.
-- [ ] Loading estiver apresentado durante envio.
-- [ ] Toast de sucesso estiver funcionando.
-- [ ] Toast de erro estiver funcionando.
-- [ ] Usuário for direcionado após sucesso.
-- [ ] Erro não apagar os dados preenchidos.
+- [x] `/produtos/novo` estiver funcionando.
+- [x] Formulário estiver carregando categorias.
+- [x] Validações estiverem funcionando.
+- [x] POST estiver integrado.
+- [x] Loading estiver apresentado durante envio.
+- [x] Toast de sucesso estiver funcionando.
+- [x] Toast de erro estiver funcionando.
+- [x] Usuário for direcionado após sucesso.
+- [x] Erro não apagar os dados preenchidos.
 
 ---
 
@@ -370,4 +370,4 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 
 **Status:** Em definição
 
-**Versão:** 1.0
+**Versão:** 1.1

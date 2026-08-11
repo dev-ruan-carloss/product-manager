@@ -581,10 +581,9 @@ Ao salvar:
 Após uma criação bem-sucedida:
 
 - apresentar Toast de sucesso através do PrimeVue;
-- atualizar o estado necessário;
-- navegar para uma página apropriada.
+- navegar para `/produtos`.
 
-Mensagem sugerida:
+Mensagem:
 
 **Produto criado com sucesso.**
 
@@ -870,13 +869,13 @@ A interface será considerada adequada quando:
 - [ ] Favoritos persistem em localStorage.
 - [ ] Página de detalhes está implementada.
 - [ ] Página de favoritos está implementada.
-- [ ] Criação de produto está implementada.
+- [x] Criação de produto está implementada.
 - [ ] Edição de produto está implementada.
-- [ ] Formulários utilizam vee-validate.
-- [ ] Validações utilizam Yup.
-- [ ] POST está integrado.
+- [x] Formulários utilizam vee-validate.
+- [x] Validações utilizam Yup.
+- [x] POST está integrado.
 - [ ] PUT está integrado.
-- [ ] Toasts de sucesso e erro estão implementados.
+- [x] Toasts de sucesso e erro estão implementados.
 - [ ] Estados de loading estão implementados.
 - [ ] Estados de erro estão implementados.
 - [ ] Estados vazios estão implementados.
@@ -892,4 +891,4 @@ A interface será considerada adequada quando:
 
 **Status:** Em definição
 
-**Versão:** 1.0
+**Versão:** 1.1

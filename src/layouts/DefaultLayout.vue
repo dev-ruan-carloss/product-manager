@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Toast from 'primevue/toast'
+
 import AppHeader from '@/components/AppHeader.vue'
 </script>
 
@@ -8,5 +10,6 @@ import AppHeader from '@/components/AppHeader.vue'
     <main>
       <RouterView />
     </main>
+    <Toast position="top-right" />
   </div>
 </template>

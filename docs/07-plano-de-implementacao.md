@@ -483,34 +483,147 @@ Usuário consegue visualizar os produtos favoritados, desfavoritar diretamente n
 
 Implementar o formulário reutilizável e o fluxo de criação em `/produtos/novo`.
 
+### Status
+
+**CONCLUÍDA**
+
 ### Componente
 
-`ProductForm`
+`ProductForm` (`src/components/products/ProductForm.vue`)
 
 ### Tarefas do formulário
 
-- [ ] Criar estrutura do formulário.
-- [ ] Integrar vee-validate.
-- [ ] Criar schema Yup.
-- [ ] Validar título.
-- [ ] Validar preço.
-- [ ] Validar descrição.
-- [ ] Validar categoria.
-- [ ] Validar URL da imagem.
-- [ ] Apresentar mensagens de erro.
-- [ ] Implementar estado de envio.
-- [ ] Evitar múltiplos envios.
+- [x] Criar estrutura do formulário.
+- [x] Integrar vee-validate.
+- [x] Criar schema Yup.
+- [x] Validar título.
+- [x] Validar preço.
+- [x] Validar descrição.
+- [x] Validar categoria.
+- [x] Validar URL da imagem.
+- [x] Apresentar mensagens de erro.
+- [x] Implementar estado de envio.
+- [x] Evitar múltiplos envios.
 
 ### Tarefas da criação
 
-- [ ] Integrar ProductForm em `/produtos/novo`.
-- [ ] Carregar categorias.
-- [ ] Validar formulário.
-- [ ] Executar POST.
-- [ ] Apresentar Toast de sucesso.
-- [ ] Apresentar Toast de erro.
-- [ ] Evitar perda dos dados em caso de erro.
-- [ ] Navegar após sucesso.
+- [x] Integrar ProductForm em `/produtos/novo`.
+- [x] Carregar categorias.
+- [x] Validar formulário.
+- [x] Executar POST.
+- [x] Apresentar Toast de sucesso.
+- [x] Apresentar Toast de erro.
+- [x] Evitar perda dos dados em caso de erro.
+- [x] Navegar após sucesso.
+
+### Arquivos da implementação
+
+Criados:
+
+- `src/components/products/ProductForm.vue`
+- `src/utils/productFormSchema.ts`
+- `src/types/productForm.ts`
+
+Modificados:
+
+- `src/views/ProdutoCriarView.vue`
+- `src/main.ts` (registro do `ToastService`)
+- `src/layouts/DefaultLayout.vue` (componente `Toast`)
+
+### Componentes reutilizados
+
+- `AppHeader`
+- `DefaultLayout`
+- PrimeVue: `InputText`, `InputNumber`, `Select`, `Textarea`, `Button`, `Toast`
+- `formatPrice` (apenas na prévia visual)
+
+### Validação
+
+Schema centralizado em `src/utils/productFormSchema.ts` com Yup + `@vee-validate/yup` (`toTypedSchema`).
+
+Regras:
+
+| Campo | Regras |
+|---|---|
+| Título | obrigatório; trim; conteúdo válido |
+| Preço | obrigatório; numérico; maior que zero |
+| Descrição | obrigatória; trim |
+| Categoria | obrigatória |
+| URL da imagem | obrigatória; URL válida |
+
+Mensagens de erro apresentadas próximas aos campos. Validação ocorre antes do `POST`.
+
+### Endpoint utilizado
+
+`POST /products` via `productService.createProduct`.
+
+### Payload
+
+`ProductCreatePayload`:
+
+```ts
+{
+  title: string
+  price: number
+  description: string
+  category: string
+  image: string
+}
+```
+
+### Loading
+
+Durante o envio:
+
+- botão "Salvar Produto" com estado `loading`;
+- botões desabilitados;
+- campos desabilitados;
+- submissões duplicadas impedidas por `isSubmitting`.
+
+### Tratamento de erro
+
+- Toast de erro: **Não foi possível criar o produto.**
+- Dados do formulário preservados.
+- Sem redirecionamento em falha.
+- Erros da API chegam como `AppError` via interceptor em `config/api.ts`.
+- Mensagens técnicas não são exibidas ao usuário.
+
+### Tratamento de sucesso
+
+- Toast: **Produto criado com sucesso.**
+- Navegação para `/produtos`.
+
+### Cancelar
+
+Botão "Cancelar" navega para `/produtos`, sem envio.
+
+### Categorias
+
+Carregadas com `productService.getCategories()` ao montar a página. Em falha, Toast de erro e ação de retry no formulário.
+
+### Referência visual
+
+Utilizada `public/cadastro-produtos.png` como referência de estrutura, hierarquia, espaçamento e ações.
+
+### Divergências registradas
+
+1. **Editor rich text:** presente no mockup; não implementado (SDD não exige; usa `Textarea`).
+2. **Limite 10–1000 caracteres na descrição:** presente no mockup; não implementado (SDD exige apenas obrigatoriedade).
+3. **Preço em USD no mockup:** a aplicação mantém `formatPrice` em BRL, alinhado às telas existentes.
+4. **Navegação pós-sucesso:** SDD pede "página apropriada"; decisão de implementação: `/produtos`.
+5. **Edição:** não implementada nesta fase (permanece na Fase 8).
+
+Essas divergências não foram transformadas em novos requisitos.
+
+### Validações técnicas
+
+- [x] `npm run type-check`
+- [x] `npm run lint`
+- [x] `npm run build`
+
+### Resultado esperado
+
+Usuário consegue abrir `/produtos/novo`, preencher o formulário, validar os campos, criar o produto via API com feedback de loading/sucesso/erro e retornar ao catálogo após sucesso ou cancelamento.
 
 ---
 
@@ -832,7 +945,7 @@ Resumo do acompanhamento:
 | Catálogo | concluída |
 | Detalhes | concluída |
 | Favoritos UI | concluída |
-| Criação | pendente |
+| Criação | concluída |
 | Edição | pendente |
 | Responsividade/acessibilidade | pendente |
 | QA | pendente |
@@ -840,7 +953,7 @@ Resumo do acompanhamento:
 
 ### Próxima fase
 
-**Fase 7 — Criação de produto**
+**Fase 8 — Edição de produto**
 
 ---
 
@@ -848,6 +961,6 @@ Resumo do acompanhamento:
 
 **Status:** Em andamento
 
-**Versão:** 1.3
+**Versão:** 1.4
 
 **Última atualização:** 2026-08-10

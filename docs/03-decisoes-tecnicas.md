@@ -702,16 +702,15 @@ Antes de considerar uma funcionalidade concluída, deverão ser avaliados:
 
 As seguintes decisões ainda precisam ser refinadas durante a implementação correspondente:
 
-- estratégia detalhada de testes automatizados (configuração do Vitest na fase de QA);
-- estratégia de feedback ao usuário (Toasts e mensagens finais de interface).
+- estratégia detalhada de testes automatizados (configuração do Vitest na fase de QA).
 
-Itens já definidos na fundação e não mais pendentes:
+Itens já definidos e não mais pendentes:
 
 - biblioteca de componentes visuais: PrimeVue;
 - biblioteca de validação: vee-validate + Yup;
 - configuração de ESLint e Prettier;
-- tratamento básico de erros da API em `config/api.ts`.
-
+- tratamento básico de erros da API em `config/api.ts`;
+- estratégia de feedback ao usuário via Toasts do PrimeVue.
 As decisões restantes deverão ser tomadas considerando o escopo real do projeto e não apenas popularidade das ferramentas.
 
 ---
@@ -777,6 +776,34 @@ O código atual ainda não possui infraestrutura de testes, e as fases já concl
 
 ---
 
+## 35.3 — Feedback com Toast e navegação após criação
+
+**Data:** 2026-08-10
+
+**Decisão anterior:**
+
+A estratégia de feedback ao usuário (Toasts) estava pendente de definição na implementação correspondente.
+
+**Nova decisão:**
+
+- Utilizar `ToastService` e o componente `Toast` do PrimeVue.
+- `ToastService` é registrado em `main.ts`.
+- O componente `Toast` fica em `DefaultLayout.vue`, disponível globalmente.
+- Após criação bem-sucedida: Toast de sucesso e navegação para `/produtos`.
+- Em erro de criação: Toast de erro, sem redirecionamento, preservando os dados do formulário.
+- Cancelar no formulário de criação retorna para `/produtos`.
+
+**Motivo:**
+
+A especificação de UI exige Toast de sucesso/erro e navegação para uma página apropriada. O catálogo (`/produtos`) é o destino coerente, pois a Fake Store API simula a criação sem garantir persistência consultável por ID.
+
+**Impacto:**
+
+- Fase 7 implementada com esse fluxo;
+- edição (Fase 8) poderá reutilizar o mesmo mecanismo de Toast.
+
+---
+
 # 36. Critérios de Aceite
 
 As decisões técnicas serão consideradas definidas quando:
@@ -804,6 +831,6 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.1
+**Versão:** 1.2
 
 **Última atualização:** 2026-08-10

@@ -253,18 +253,20 @@ Caso a API aceite uma estrutura diferente, o service deverá realizar a adaptaç
 
 # 14. Modelo de Formulário
 
-O estado do formulário poderá possuir uma representação própria.
+O estado do formulário possui uma representação própria, distinta do payload enviado à API.
 
-Exemplo conceitual:
+Estrutura implementada (`src/types/productForm.ts`):
 
     ProductFormData
     ├── title: string
-    ├── price: number
+    ├── price: number | undefined
     ├── description: string
-    ├── category: string
+    ├── category: string | undefined
     └── image: string
 
-A separação entre `ProductFormData` e `ProductCreatePayload` será utilizada quando houver diferença de responsabilidade entre os dados apresentados ao usuário e os dados enviados para a API.
+Os campos `price` e `category` utilizam `undefined` enquanto estão vazios na interface, antes da validação e da montagem do `ProductCreatePayload`.
+
+A separação entre `ProductFormData` e `ProductCreatePayload` evita acoplar o estado visual do formulário ao contrato de envio.
 
 ---
 
@@ -761,4 +763,4 @@ Os modelos de dados serão considerados definidos quando:
 
 **Status:** Em definição
 
-**Versão:** 1.0
+**Versão:** 1.1
