@@ -299,16 +299,181 @@ Usuário consegue abrir os detalhes de um produto, visualizar suas informações
 
 Implementar a experiência visual completa de favoritos.
 
+### Status
+
+**CONCLUÍDA**
+
 ### Tarefas
 
-- [ ] Implementar a página `/favoritos`.
-- [ ] Utilizar a store Pinia existente.
-- [ ] Recuperar IDs persistidos.
-- [ ] Obter dados necessários dos produtos.
-- [ ] Reutilizar ProductCard.
-- [ ] Atualizar lista ao desfavoritar.
-- [ ] Implementar estado vazio.
-- [ ] Implementar contador no Header.
+- [x] Implementar a página `/favoritos`.
+- [x] Utilizar a store Pinia existente (`useFavoritesStore`).
+- [x] Recuperar IDs persistidos via `favoriteProductIds`.
+- [x] Obter dados dos produtos via `productService.getProducts()` e filtrar pelos IDs favoritos.
+- [x] Reutilizar `ProductCard` (via `ProductGrid`).
+- [x] Atualizar lista ao desfavoritar (remoção imediata na interface).
+- [x] Implementar estado de loading com `LoadingState`.
+- [x] Implementar estado de erro com `ErrorState` e retry.
+- [x] Implementar estado vazio com `EmptyState` ("Você ainda não possui favoritos.") e ação para `/produtos`.
+- [x] Tratar produtos indisponíveis na API sem quebrar a página.
+- [x] Implementar contador no Header via `favoritesCount`.
+- [x] Navegação para detalhes através de `/produtos/:id`.
+- [x] Layout responsivo alinhado ao catálogo.
+- [x] Acessibilidade básica da página de favoritos.
+- [x] Utilizar `public/tela-favoritos.png` como referência visual.
+
+### Arquivos da implementação
+
+Criado:
+
+- `src/composables/useFavoriteProducts.ts`
+
+Modificado:
+
+- `src/views/FavoritosView.vue`
+
+Nenhum componente visual novo foi criado nesta fase.
+
+### Componentes reutilizados
+
+- `ProductGrid`
+- `ProductCard`
+- `FavoriteButton`
+- `LoadingState`
+- `EmptyState`
+- `ErrorState`
+- `AppHeader`
+- `DefaultLayout`
+
+### Store e persistência
+
+- `useFavoritesStore` permanece a fonte única dos IDs favoritos.
+- A persistência continua sendo feita pela store através do `localStorage`.
+- Objetos completos de produtos não são armazenados na store.
+- O desfavoritar atualiza a interface imediatamente.
+- O contador utiliza `favoritesCount`.
+
+Não houve nova estratégia de persistência nesta fase.
+
+### API utilizada
+
+`productService.getProducts()` com filtro pelos IDs em `favoriteProductIds`.
+
+Foi adotada uma única requisição para carregar o catálogo e filtrar os favoritos, evitando múltiplas chamadas `getProductById`.
+
+Não houve alteração no contrato da API.
+
+### Produtos indisponíveis
+
+Decisão adotada na implementação (sem transformar em novo requisito global):
+
+- IDs existentes na store, mas sem correspondência na API, não quebram a página.
+- IDs órfãos não são removidos automaticamente da store; permanecem até remoção explícita pelo usuário.
+- Quando existem produtos disponíveis e indisponíveis, é exibido um aviso discreto.
+- Quando nenhum favorito está disponível na API, é apresentado um estado adequado.
+
+### Estados da interface
+
+#### Loading
+
+Utiliza `LoadingState` com skeleton seguindo o padrão do catálogo.
+
+#### Erro
+
+Utiliza `ErrorState` com mensagem amigável e retry.
+
+#### Estado vazio
+
+Utiliza `EmptyState` com:
+
+"Você ainda não possui favoritos."
+
+e ação para retornar para `/produtos`.
+
+### Navegação
+
+- A página utiliza a rota `/favoritos`.
+- Os produtos utilizam `ProductCard`.
+- A navegação para detalhes ocorre através de `/produtos/:id`.
+
+### Referência visual
+
+A tela utilizou `public/tela-favoritos.png` como referência visual.
+
+A referência orientou principalmente:
+
+- breadcrumb;
+- título;
+- subtítulo;
+- contador;
+- grid;
+- hierarquia visual.
+
+Elementos presentes na referência e **não** implementados por não fazerem parte do SDD:
+
+- sidebar de Resumo/Dica;
+- ordenação;
+- paginação;
+- botão "Remover dos favoritos" específico no card;
+- avatar;
+- outros elementos exclusivamente presentes no mockup.
+
+Esses elementos não foram tratados como funcionalidades pendentes.
+
+### Responsividade
+
+- Utilização do mesmo grid do catálogo.
+- Comportamento de `1 → 2 → 3 → 4` colunas conforme viewport.
+- Container `max-w-7xl`.
+- Paddings alinhados às demais views.
+- Ausência de overflow horizontal.
+
+### Acessibilidade
+
+- Breadcrumb com `aria-label`.
+- Estados com `role`/`aria-live` nos componentes reutilizados.
+- Botão de favorito semântico.
+- Imagens com `alt`.
+- Foco visível.
+
+Não foi realizada auditoria WCAG completa nesta fase.
+
+### Problema corrigido durante a fase
+
+O `watch` inicialmente recarregava a API ao desfavoritar quando existiam IDs indisponíveis.
+
+Foi corrigido para realizar novas buscas somente quando existem IDs novos ausentes do catálogo em cache.
+
+### Decisão técnica
+
+A página utiliza `getProducts()` + filtro pelos IDs favoritos, realizando uma única requisição em vez de executar uma requisição `getProductById` para cada favorito.
+
+IDs órfãos permanecem na store até que o usuário os remova explicitamente.
+
+Essa decisão permanece registrada neste plano; `docs/03-decisoes-tecnicas.md` não foi alterado nesta sincronização.
+
+### Validações da fase
+
+- [x] Rota `/favoritos` funcional.
+- [x] Listagem dos produtos favoritados.
+- [x] Integração com `useFavoritesStore`.
+- [x] Integração com `productService`.
+- [x] Desfavoritar com remoção imediata da lista.
+- [x] Persistência mantida pela store existente.
+- [x] Contador de favoritos no Header.
+- [x] Navegação para `/produtos/:id`.
+- [x] Loading, erro com retry e estado vazio.
+- [x] Tratamento de produtos indisponíveis.
+- [x] Layout responsivo.
+- [x] Acessibilidade básica.
+- [x] Validar TypeScript (type-check).
+- [x] Validar lint.
+- [x] Validar build.
+
+Vitest permanece na fase de QA definida no planejamento.
+
+### Resultado esperado
+
+Usuário consegue visualizar os produtos favoritados, desfavoritar diretamente na página, acessar os detalhes e retornar ao catálogo, com estados de loading, erro e vazio tratados, mantendo a store existente como fonte de verdade dos IDs.
 
 ---
 
@@ -611,7 +776,7 @@ A implementação será considerada concluída quando:
 - [x] Paginação estiver funcionando.
 - [x] Favoritos estiverem gerenciados com Pinia.
 - [x] Favoritos estiverem persistidos em localStorage.
-- [ ] Página de favoritos estiver funcionando.
+- [x] Página de favoritos estiver funcionando.
 - [x] Detalhes estiverem funcionando.
 - [ ] Criação estiver funcionando.
 - [ ] Edição estiver funcionando.
@@ -666,7 +831,7 @@ Resumo do acompanhamento:
 | Favoritos (estado/persistência) | concluída |
 | Catálogo | concluída |
 | Detalhes | concluída |
-| Favoritos UI | pendente |
+| Favoritos UI | concluída |
 | Criação | pendente |
 | Edição | pendente |
 | Responsividade/acessibilidade | pendente |
@@ -675,7 +840,7 @@ Resumo do acompanhamento:
 
 ### Próxima fase
 
-**Fase 6 — Página de Favoritos**
+**Fase 7 — Criação de produto**
 
 ---
 
@@ -683,6 +848,6 @@ Resumo do acompanhamento:
 
 **Status:** Em andamento
 
-**Versão:** 1.2
+**Versão:** 1.3
 
 **Última atualização:** 2026-08-10
