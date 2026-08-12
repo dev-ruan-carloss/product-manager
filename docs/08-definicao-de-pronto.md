@@ -246,16 +246,16 @@ Critérios adicionais validados na Fase 9 (a11y):
 
 Antes da conclusão:
 
-- [ ] ESLint executado.
-- [ ] Build executado.
-- [ ] Nenhum erro de TypeScript.
-- [ ] Nenhum erro de runtime conhecido.
-- [ ] Console sem erros relacionados à aplicação.
-- [ ] Imports revisados.
-- [ ] Código duplicado revisado.
-- [ ] Componentes revisados.
-- [ ] Services revisados.
-- [ ] Stores revisadas.
+- [x] ESLint executado.
+- [x] Build executado.
+- [x] Nenhum erro de TypeScript.
+- [x] Nenhum erro de runtime conhecido.
+- [x] Console sem erros relacionados à aplicação.
+- [x] Imports revisados.
+- [x] Código duplicado revisado.
+- [x] Componentes revisados.
+- [x] Services revisados.
+- [x] Stores revisadas.
 
 ---
 
@@ -265,45 +265,45 @@ Os principais fluxos deverão ser executados manualmente.
 
 ### Produtos
 
-- [ ] Listagem.
-- [ ] Busca.
-- [ ] Debounce.
-- [ ] Categoria.
-- [ ] Menor preço.
-- [ ] Maior preço.
-- [ ] Nome A–Z.
-- [ ] Nome Z–A.
-- [ ] Paginação.
+- [x] Listagem.
+- [x] Busca.
+- [x] Debounce.
+- [x] Categoria.
+- [x] Menor preço.
+- [x] Maior preço.
+- [x] Nome A–Z.
+- [x] Nome Z–A.
+- [x] Paginação.
 
 ### Favoritos
 
-- [ ] Favoritar.
-- [ ] Desfavoritar.
-- [ ] Recarregar aplicação.
-- [ ] Persistência.
-- [ ] Página de favoritos.
-- [ ] Estado vazio.
+- [x] Favoritar.
+- [x] Desfavoritar.
+- [x] Recarregar aplicação.
+- [x] Persistência.
+- [x] Página de favoritos.
+- [x] Estado vazio.
 
 ### Detalhes
 
-- [ ] Abrir produto.
-- [ ] Produto inexistente.
-- [ ] Favoritar.
-- [ ] Acessar edição.
+- [x] Abrir produto.
+- [x] Produto inexistente.
+- [x] Favoritar.
+- [x] Acessar edição.
 
 ### Criação
 
-- [ ] Formulário vazio.
-- [ ] Validação.
-- [ ] Criação com sucesso.
-- [ ] Erro da API.
+- [x] Formulário vazio.
+- [x] Validação.
+- [x] Criação com sucesso.
+- [x] Erro da API.
 
 ### Edição
 
-- [ ] Carregamento.
-- [ ] Validação.
-- [ ] Atualização com sucesso.
-- [ ] Erro da API.
+- [x] Carregamento.
+- [x] Validação.
+- [x] Atualização com sucesso.
+- [x] Erro da API.
 
 ---
 
@@ -311,7 +311,7 @@ Os principais fluxos deverão ser executados manualmente.
 
 O projeto será considerado documentado quando:
 
-- [ ] README estiver atualizado.
+- [x] README estiver atualizado.
 - [x] Requisitos estiverem documentados.
 - [x] Arquitetura estiver documentada.
 - [x] Decisões técnicas estiverem documentadas.
@@ -323,7 +323,7 @@ O projeto será considerado documentado quando:
 
 A documentação não deverá contradizer o comportamento implementado.
 
-A atualização final do README e a verificação completa de consistência SDD × código permanecem na Fase 11.
+A verificação completa de consistência SDD × código permanece na Fase 11. O README foi atualizado na Fase 10.
 
 ---
 
@@ -350,17 +350,17 @@ Exemplos:
 
 O projeto somente será considerado pronto quando:
 
-- [ ] Todos os requisitos obrigatórios do desafio estiverem implementados.
-- [ ] Todas as funcionalidades estiverem funcionando.
-- [ ] API estiver integrada.
-- [ ] Favoritos estiverem persistidos.
-- [ ] Formulários estiverem validados.
+- [x] Todos os requisitos obrigatórios do desafio estiverem implementados.
+- [x] Todas as funcionalidades estiverem funcionando.
+- [x] API estiver integrada.
+- [x] Favoritos estiverem persistidos.
+- [x] Formulários estiverem validados.
 - [x] Responsividade estiver validada.
 - [x] Acessibilidade básica estiver validada.
-- [ ] Estados de loading, erro e vazio estiverem implementados.
-- [ ] Lint estiver passando.
-- [ ] Build estiver passando.
-- [ ] README estiver atualizado.
+- [x] Estados de loading, erro e vazio estiverem implementados.
+- [x] Lint estiver passando.
+- [x] Build estiver passando.
+- [x] README estiver atualizado.
 - [ ] Documentação estiver consistente com o código.
 
 ---
@@ -391,6 +391,13 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 
 **Status:** Em andamento
 
-**Versão:** 1.7
+**Versão:** 1.8
 
 **Última atualização:** 2026-08-11
+
+### Nota da Fase 10 (QA final)
+
+- Qualidade, testes manuais e critérios técnicos da Fase 10 foram validados.
+- Vitest configurado com 25 testes automatizados passando em `tests/` (separados de `src/`).
+- Pendência restante no critério final: consistência documental completa SDD × código (Fase 11).
+- Itens de Git (histórico/commits) permanecem sob processo contínuo e não bloqueiam a Fase 10.

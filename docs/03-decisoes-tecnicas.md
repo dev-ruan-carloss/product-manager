@@ -936,7 +936,35 @@ Evitar anúncios duplicados (ajuda + erro) em leitores de tela e garantir uso co
 **Impacto:**
 
 - Fase 9 (responsividade + acessibilidade) concluída;
-- QA final (Fase 10) permanece pendente.
+- QA final (Fase 10) concluído na sequência.
+
+---
+
+## 35.10 — Configuração do Vitest na Fase 10
+
+**Data:** 2026-08-11
+
+**Decisão anterior:**
+
+Vitest e Vue Test Utils estavam previstos, porém ainda não instalados/configurados (decisão 35.2).
+
+**Nova decisão:**
+
+- Instalar e configurar Vitest + Vue Test Utils + jsdom na Fase 10.
+- Integrar a configuração de testes em `vite.config.ts` (`environment: 'jsdom'`, `pool: 'threads'`).
+- Scripts: `npm test` e `npm run test:watch`.
+- Priorizar testes de comportamento crítico: store de favoritos, schema Yup, filtros/ordenação/paginação, debounce, utilitários e `productService`.
+- Manter os testes automatizados em `tests/`, separados do código de produção em `src/`, organizados por responsabilidade (`composables/`, `services/`, `stores/`, `utils/`; `components/` quando houver testes de componentes).
+- O Vitest inclui `tests/**/*.{test,spec}.{ts,tsx}` e os imports de produção usam o alias `@/`.
+
+**Motivo:**
+
+A Fase 10 é o momento definido no plano para infraestrutura de testes automatizados, com código de negócio suficiente para cobertura útil. Separar `tests/` de `src/` evita misturar código de produção com arquivos de teste.
+
+**Impacto:**
+
+- 25 testes automatizados passando em `tests/` (7 arquivos);
+- validação contínua das regras críticas sem substituir os testes manuais do QA.
 
 ---
 
@@ -967,6 +995,6 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.15
+**Versão:** 1.17
 
 **Última atualização:** 2026-08-11

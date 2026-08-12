@@ -844,112 +844,146 @@ Garantir funcionamento adequado a partir de 360px e atender critérios básicos 
 
 Consolidar qualidade técnica, estados de interface, testes manuais e, quando aplicável, testes automatizados.
 
+### Status
+
+**CONCLUÍDA**
+
 ### Tratamento de estados
 
 #### Loading
 
-- [ ] Listagem.
-- [ ] Detalhes.
-- [ ] Edição.
-- [ ] Formulário.
+- [x] Listagem.
+- [x] Detalhes.
+- [x] Edição.
+- [x] Formulário.
 
 #### Erro
 
-- [ ] Listagem.
-- [ ] Detalhes.
-- [ ] Criação.
-- [ ] Edição.
+- [x] Listagem.
+- [x] Detalhes.
+- [x] Criação.
+- [x] Edição.
 
 #### Vazio
 
-- [ ] Resultados sem correspondência.
-- [ ] Favoritos vazios.
+- [x] Resultados sem correspondência.
+- [x] Favoritos vazios.
 
 ### Revisão técnica
 
-- [ ] Remover `any` injustificado.
-- [ ] Verificar TypeScript strict.
-- [ ] Remover código duplicado.
-- [ ] Verificar responsabilidades dos componentes.
-- [ ] Verificar responsabilidades das stores.
-- [ ] Verificar services.
-- [ ] Verificar imports.
-- [ ] Verificar nomes.
-- [ ] Verificar componentes não utilizados.
-- [ ] Executar lint.
-- [ ] Executar build.
-- [ ] Corrigir warnings relevantes.
-- [ ] Verificar console.
-- [ ] Verificar erros de runtime.
+- [x] Remover `any` injustificado.
+- [x] Verificar TypeScript strict.
+- [x] Remover código duplicado.
+- [x] Verificar responsabilidades dos componentes.
+- [x] Verificar responsabilidades das stores.
+- [x] Verificar services.
+- [x] Verificar imports.
+- [x] Verificar nomes.
+- [x] Verificar componentes não utilizados.
+- [x] Executar lint.
+- [x] Executar build.
+- [x] Corrigir warnings relevantes.
+- [x] Verificar console.
+- [x] Verificar erros de runtime.
 
 ### Testes manuais
 
 #### Produtos
 
-- [ ] Listar produtos.
-- [ ] Pesquisar produto.
-- [ ] Aplicar debounce.
-- [ ] Filtrar categoria.
-- [ ] Ordenar menor preço.
-- [ ] Ordenar maior preço.
-- [ ] Ordenar nome A–Z.
-- [ ] Ordenar nome Z–A.
-- [ ] Navegar pela paginação.
+- [x] Listar produtos.
+- [x] Pesquisar produto.
+- [x] Aplicar debounce.
+- [x] Filtrar categoria.
+- [x] Ordenar menor preço.
+- [x] Ordenar maior preço.
+- [x] Ordenar nome A–Z.
+- [x] Ordenar nome Z–A.
+- [x] Navegar pela paginação.
 
 #### Detalhes
 
-- [ ] Abrir produto.
-- [ ] Produto inexistente.
-- [ ] Favoritar.
-- [ ] Desfavoritar.
+- [x] Abrir produto.
+- [x] Produto inexistente.
+- [x] Favoritar.
+- [x] Desfavoritar.
 
 #### Favoritos
 
-- [ ] Adicionar favorito.
-- [ ] Remover favorito.
-- [ ] Recarregar página.
-- [ ] Confirmar persistência no localStorage.
-- [ ] Acessar `/favoritos`.
-- [ ] Validar estado vazio.
+- [x] Adicionar favorito.
+- [x] Remover favorito.
+- [x] Recarregar página.
+- [x] Confirmar persistência no localStorage.
+- [x] Acessar `/favoritos`.
+- [x] Validar estado vazio.
 
 #### Criação
 
-- [ ] Abrir formulário.
-- [ ] Validar campos vazios.
-- [ ] Validar preço inválido.
-- [ ] Validar URL inválida.
-- [ ] Criar produto.
-- [ ] Validar sucesso.
-- [ ] Validar erro.
+- [x] Abrir formulário.
+- [x] Validar campos vazios.
+- [x] Validar preço inválido.
+- [x] Validar URL inválida.
+- [x] Criar produto.
+- [x] Validar sucesso.
+- [x] Validar erro.
 
 #### Edição
 
-- [ ] Abrir edição.
-- [ ] Carregar dados.
-- [ ] Validar campos.
-- [ ] Atualizar produto.
-- [ ] Validar sucesso.
-- [ ] Validar erro.
+- [x] Abrir edição.
+- [x] Carregar dados.
+- [x] Validar campos.
+- [x] Atualizar produto.
+- [x] Validar sucesso.
+- [x] Validar erro.
 
 ### Revisão visual
 
-- [ ] Consistência dos componentes.
-- [ ] Espaçamentos.
-- [ ] Tipografia.
-- [ ] Cores.
-- [ ] Estados de interação.
-- [ ] Responsividade.
-- [ ] Alinhamento.
-- [ ] Overflow.
-- [ ] Loading.
-- [ ] Empty states.
-- [ ] Mensagens de erro.
-- [ ] Toasts.
+- [x] Consistência dos componentes.
+- [x] Espaçamentos.
+- [x] Tipografia.
+- [x] Cores.
+- [x] Estados de interação.
+- [x] Responsividade.
+- [x] Alinhamento.
+- [x] Overflow.
+- [x] Loading.
+- [x] Empty states.
+- [x] Mensagens de erro.
+- [x] Toasts.
 
 ### Testes automatizados
 
-- [ ] Configurar Vitest e Vue Test Utils na fase de qualidade, quando necessário.
-- [ ] Cobrir regras críticas (stores, validações e fluxos relevantes).
+- [x] Configurar Vitest e Vue Test Utils na fase de qualidade, quando necessário.
+- [x] Cobrir regras críticas (stores, validações e fluxos relevantes).
+
+### Resultado do QA (2026-08-11)
+
+#### API
+
+- Catálogo alimentado exclusivamente pela FakeStoreAPI via `ProdutosView` → `useProductsCatalog` → `productService` → Axios.
+- Endpoints confirmados: `GET /products`, `GET /products/categories`, `GET /products/:id`, `POST /products`, `PUT /products/:id`.
+- Sem fallback silencioso para mocks/dados fictícios.
+- Produto inexistente (`200` com corpo vazio) tratado como não encontrado.
+
+#### Correção realizada no QA
+
+- Contador de favoritos no Header: posição do badge corrigida de `-right-20` para `-right-2` (`AppHeader.vue`).
+
+#### Validações técnicas
+
+- Type-check OK.
+- Lint OK.
+- Build OK.
+- Console sem erros relevantes; sem aviso `Invalid PrimeUI License` (PrimeVue `4.5.5` + `@primevue/themes` `4.5.4`).
+- Responsividade sem overflow horizontal nos breakpoints 320–1920px nas rotas principais.
+- Light/Dark Mode, Header, Footer, formulários, favoritos e CRUD validados.
+
+#### Testes automatizados
+
+- Vitest configurado em `vite.config.ts`.
+- Scripts: `npm test`, `npm run test:watch`.
+- Testes organizados em `tests/` (separados de `src/`), por responsabilidade: `composables/`, `services/`, `stores/`, `utils/`.
+- Cobertura crítica: favoritos, schema do formulário, filtros/ordenação/paginação, debounce, `parseProductId`, `formatPrice` e `productService`.
+- Resultado: **25 testes passando** (7 arquivos).
 
 ---
 
@@ -1064,7 +1098,7 @@ A implementação será considerada concluída quando:
 - [x] Acessibilidade básica estiver validada.
 - [x] Lint estiver passando.
 - [x] Build estiver passando.
-- [ ] README estiver atualizado.
+- [x] README estiver atualizado.
 - [ ] Documentação SDD estiver consistente com o código.
 
 ---
@@ -1114,12 +1148,12 @@ Resumo do acompanhamento:
 | Responsividade (Fase 9 — parte responsiva) | concluída |
 | Acessibilidade (Fase 9 — parte a11y) | concluída |
 | Fase 9 (completa) | concluída |
-| QA | pendente |
-| Entrega | pendente |
+| QA (Fase 10) | concluída |
+| Entrega (Fase 11) | pendente |
 
 ### Próxima fase
 
-**Fase 10 — QA final**
+**Fase 11 — Documentação e entrega**
 
 ---
 
@@ -1127,6 +1161,6 @@ Resumo do acompanhamento:
 
 **Status:** Em andamento
 
-**Versão:** 1.11
+**Versão:** 1.12
 
 **Última atualização:** 2026-08-11
