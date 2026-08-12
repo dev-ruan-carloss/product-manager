@@ -40,9 +40,10 @@ function onItemsPerPageChange(value: number): void {
 </script>
 
 <template>
-  <div
+  <nav
     v-if="showPagination"
     class="flex min-w-0 flex-col gap-2 border-t border-slate-200 pt-3 sm:gap-3 sm:pt-4 dark:border-slate-700"
+    aria-label="Paginação de produtos"
   >
     <p class="text-sm leading-relaxed text-slate-500 dark:text-slate-400" aria-live="polite">
       Mostrando {{ rangeStart }} a {{ rangeEnd }} de {{ totalProducts }} produtos
@@ -73,5 +74,5 @@ function onItemsPerPageChange(value: number): void {
         />
       </div>
     </div>
-  </div>
+  </nav>
 </template>

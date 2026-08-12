@@ -86,6 +86,32 @@ html.dark :focus-visible {
   width: 100%;
 }
 
+/* Foco visível em controles PrimeVue (Light e Dark). */
+.p-button:focus-visible,
+.p-inputtext:focus-visible,
+.p-textarea:focus-visible,
+.p-select:focus-visible,
+.p-select-label:focus-visible,
+.p-radiobutton-box:focus-visible,
+.p-paginator-page:focus-visible,
+.p-paginator-prev:focus-visible,
+.p-paginator-next:focus-visible {
+  outline: 2px solid #7c3aed;
+  outline-offset: 2px;
+}
+
+html.dark .p-button:focus-visible,
+html.dark .p-inputtext:focus-visible,
+html.dark .p-textarea:focus-visible,
+html.dark .p-select:focus-visible,
+html.dark .p-select-label:focus-visible,
+html.dark .p-radiobutton-box:focus-visible,
+html.dark .p-paginator-page:focus-visible,
+html.dark .p-paginator-prev:focus-visible,
+html.dark .p-paginator-next:focus-visible {
+  outline-color: #a78bfa;
+}
+
 .p-paginator {
   display: flex;
   flex-wrap: wrap;

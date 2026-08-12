@@ -882,7 +882,7 @@ A especificação de UI prevê Footer na estrutura geral da aplicação. Central
 **Impacto:**
 
 - Footer disponível em todas as rotas que usam `DefaultLayout`;
-- Fase 9 (acessibilidade) permanece pendente; responsividade foi tratada na camada de apresentação.
+- Responsividade e acessibilidade da Fase 9 foram tratadas na camada de apresentação (ver decisões posteriores).
 
 ---
 
@@ -899,7 +899,7 @@ A especificação de UI prevê Footer na estrutura geral da aplicação. Central
 - Não gravar no `localStorage` apenas por detectar o tema do sistema; gravar somente após ação explícita do usuário (`setTheme` / `toggleTheme`).
 - Integrar TailwindCSS v4 com `@custom-variant dark (&:where(.dark, .dark *));` e classe `.dark` no `<html>`.
 - Configurar PrimeVue (`darkModeSelector: '.dark'`) para respeitar o mesmo seletor global.
-- Controle de alternância em `ThemeToggle.vue`, reutilizado pelo `AppHeader`.
+- Controle de alternância em `ThemeToggle.vue`, reutilizado pelo `AppFooter`.
 - Script inline em `index.html` para aplicar o tema antes do bundle Vue (evitar flash).
 - Preservar o Light Mode atual como referência visual; Dark Mode adapta superfícies, textos, bordas e estados sem alterar lógica de negócio.
 
@@ -911,7 +911,32 @@ O tema é estado global persistente compartilhado por Header, Footer, layout, p�
 
 - Light Mode permanece visualmente consistente com o layout existente;
 - Dark Mode disponível em todas as rotas do `DefaultLayout`;
-- Fase 9 (acessibilidade completa) e QA final permanecem pendentes; a parte de responsividade da Fase 9 foi concluída.
+- A parte de responsividade da Fase 9 foi concluída; acessibilidade completa tratada na decisão 35.9.
+
+---
+
+## 35.9 — Acessibilidade de formulários e UX de mensagens
+
+**Data:** 2026-08-11
+
+**Decisão:**
+
+- Priorizar semântica HTML nativa; ARIA somente quando necessário.
+- No `ProductForm`, cada campo possui **uma única região contextual** abaixo do input: texto auxiliar **ou** mensagem de erro (nunca as duas ao mesmo tempo).
+- `aria-describedby` aponta sempre para essa região; `aria-invalid` só quando há erro; campos obrigatórios usam `aria-required`.
+- Após submit inválido, focar o primeiro campo inválido na ordem visual do formulário.
+- Manter foco visível em Light/Dark (`:focus-visible` global + reforço em controles PrimeVue).
+- `FavoriteButton` com `aria-pressed` alinhado à store e labels “Adicionar/Remover produto dos favoritos”.
+- Evitar elementos interativos aninhados; “Novo Produto” no Header como `RouterLink` na nav; `ThemeToggle` no Footer.
+
+**Motivo:**
+
+Evitar anúncios duplicados (ajuda + erro) em leitores de tela e garantir uso completo por teclado sem alterar o design já validado na parte responsiva.
+
+**Impacto:**
+
+- Fase 9 (responsividade + acessibilidade) concluída;
+- QA final (Fase 10) permanece pendente.
 
 ---
 
@@ -942,6 +967,6 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.14
+**Versão:** 1.15
 
 **Última atualização:** 2026-08-11

@@ -23,14 +23,17 @@ function onInput(event: Event): void {
   <div class="min-w-0 w-full">
     <label class="sr-only" :for="inputId ?? 'product-search'">Buscar produto</label>
     <IconField class="w-full min-w-0">
-      <InputIcon>
-        <SearchIcon />
+      <InputIcon aria-hidden="true">
+        <SearchIcon aria-hidden="true" />
       </InputIcon>
       <InputText
         :id="inputId ?? 'product-search'"
         :model-value="modelValue"
+        type="search"
         class="w-full"
         placeholder="Buscar produto..."
+        autocomplete="off"
+        enterkeyhint="search"
         @input="onInput"
       />
     </IconField>

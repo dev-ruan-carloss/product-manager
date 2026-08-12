@@ -790,7 +790,7 @@ Garantir funcionamento adequado a partir de 360px e atender critérios básicos 
 
 - [x] Implementar Light/Dark Mode global.
 - [x] Persistência do tema em `localStorage`.
-- [x] Controle de tema no Header (`ThemeToggle`).
+- [x] Controle de tema no Footer (`ThemeToggle`).
 - [x] Compatibilidade PrimeVue + TailwindCSS com seletor `.dark`.
 - [x] Adaptar páginas existentes sem alterar lógica de negócio.
 
@@ -811,14 +811,30 @@ Garantir funcionamento adequado a partir de 360px e atender critérios básicos 
 
 ### Acessibilidade
 
-- [ ] Validar labels dos campos.
-- [ ] Validar textos alternativos.
-- [ ] Validar nomes acessíveis dos botões.
-- [ ] Validar navegação por teclado.
-- [ ] Validar foco.
-- [ ] Validar mensagens de erro.
-- [ ] Verificar uso semântico do HTML.
-- [ ] Garantir que estados não dependam somente de cor.
+- [x] Validar labels dos campos.
+- [x] Validar textos alternativos.
+- [x] Validar nomes acessíveis dos botões.
+- [x] Validar navegação por teclado.
+- [x] Validar foco.
+- [x] Validar mensagens de erro.
+- [x] Verificar uso semântico do HTML.
+- [x] Garantir que estados não dependam somente de cor.
+
+### Implementação a11y (registro)
+
+- Região contextual única por campo no `ProductForm` (texto auxiliar **ou** erro).
+- `aria-invalid` / `aria-describedby` / `aria-required` alinhados ao estado real do campo.
+- Foco no primeiro campo inválido após tentativa de envio.
+- `FavoriteButton` com labels e `aria-pressed` coerentes.
+- Foco visível em Light/Dark (`:focus-visible` + controles PrimeVue).
+- Semântica de landmarks, breadcrumbs, paginação (`nav`) e estados dinâmicos sem ruído excessivo de `aria-live`.
+- Correção de CTA de criação no Header: “Novo Produto” como `RouterLink` na nav (separado visualmente de Produtos/Favoritos); `ThemeToggle` no Footer.
+
+### Validações técnicas (parte a11y)
+
+- [x] `npm run type-check`
+- [x] `npm run lint`
+- [x] `npm run build`
 
 ---
 
@@ -1045,7 +1061,7 @@ A implementação será considerada concluída quando:
 - [x] TailwindCSS estiver configurado no projeto.
 - [x] Estados de loading, erro e vazio estiverem implementados nas telas.
 - [x] Responsividade estiver validada a partir de 320px.
-- [ ] Acessibilidade básica estiver validada.
+- [x] Acessibilidade básica estiver validada.
 - [x] Lint estiver passando.
 - [x] Build estiver passando.
 - [ ] README estiver atualizado.
@@ -1096,13 +1112,14 @@ Resumo do acompanhamento:
 | Footer estrutural (`AppFooter` + `DefaultLayout`) | concluída |
 | Tema Light/Dark Mode (`themeStore` + `ThemeToggle`) | concluída |
 | Responsividade (Fase 9 — parte responsiva) | concluída |
-| Acessibilidade (Fase 9 — parte a11y) | pendente |
+| Acessibilidade (Fase 9 — parte a11y) | concluída |
+| Fase 9 (completa) | concluída |
 | QA | pendente |
 | Entrega | pendente |
 
 ### Próxima fase
 
-**Fase 9 — Acessibilidade** (itens de a11y ainda pendentes) e, em seguida, **Fase 10 — QA final**
+**Fase 10 — QA final**
 
 ---
 
@@ -1110,6 +1127,6 @@ Resumo do acompanhamento:
 
 **Status:** Em andamento
 
-**Versão:** 1.10
+**Versão:** 1.11
 
 **Última atualização:** 2026-08-11

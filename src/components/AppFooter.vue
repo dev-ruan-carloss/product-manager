@@ -2,6 +2,8 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
+import ThemeToggle from '@/components/ThemeToggle.vue'
+
 const route = useRoute()
 
 const isProductsActive = computed(
@@ -25,13 +27,19 @@ const linkClass =
   >
     <div class="mx-auto max-w-7xl px-2.5 py-4 sm:px-6 sm:py-6">
       <div class="flex flex-col gap-3 sm:gap-4">
-        <div class="min-w-0">
-          <p class="text-base font-semibold tracking-tight text-slate-900 sm:text-lg dark:text-slate-100">
-            Product Management
-          </p>
-          <p class="mt-1 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
-            Catálogo de produtos • Favoritos • Gerenciamento
-          </p>
+        <div class="flex min-w-0 items-start justify-between gap-3">
+          <div class="min-w-0">
+            <p class="text-base font-semibold tracking-tight text-slate-900 sm:text-lg dark:text-slate-100">
+              Product Management
+            </p>
+            <p class="mt-1 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
+              Catálogo de produtos • Favoritos • Gerenciamento
+            </p>
+          </div>
+
+          <div class="flex shrink-0 items-center self-start">
+            <ThemeToggle />
+          </div>
         </div>
 
         <nav

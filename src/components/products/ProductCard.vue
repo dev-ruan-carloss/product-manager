@@ -17,8 +17,6 @@ const emit = defineEmits<{
 
 const imageFailed = ref(false)
 
-const imageAlt = computed(() => `Imagem do produto ${props.product.title}`)
-
 const ratingLabel = computed(
   () =>
     `Avaliação ${props.product.rating.rate.toFixed(1)} de 5, com ${props.product.rating.count} avaliações`,
@@ -47,7 +45,7 @@ function onImageError(): void {
         <img
           v-if="!imageFailed"
           :src="product.image"
-          :alt="imageAlt"
+          alt=""
           class="max-h-full w-full max-w-[7.5rem] object-contain sm:max-w-[9rem]"
           width="144"
           height="144"
@@ -57,8 +55,7 @@ function onImageError(): void {
         <div
           v-else
           class="flex h-full w-full max-w-[7.5rem] items-center justify-center rounded-lg bg-slate-50 text-center text-xs text-slate-400 sm:max-w-[9rem] dark:bg-slate-700 dark:text-slate-400"
-          role="img"
-          :aria-label="imageAlt"
+          aria-hidden="true"
         >
           Imagem indisponível
         </div>

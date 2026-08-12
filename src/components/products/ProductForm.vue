@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { toTypedSchema } from '@vee-validate/yup'
 import { useForm } from 'vee-validate'
 import Button from 'primevue/button'
@@ -37,6 +37,16 @@ const emit = defineEmits<{
   retryCategories: []
 }>()
 
+const FIELD_FOCUS_ORDER = ['title', 'category', 'price', 'image', 'description'] as const
+
+const FIELD_INPUT_IDS: Record<(typeof FIELD_FOCUS_ORDER)[number], string> = {
+  title: 'product-title',
+  category: 'product-category',
+  price: 'product-price',
+  image: 'product-image',
+  description: 'product-description',
+}
+
 const { defineField, errors, handleSubmit, values } = useForm({
   validationSchema: toTypedSchema(productFormSchema),
   initialValues: {
@@ -58,6 +68,10 @@ const categoryOptions = computed(() =>
     label: item,
     value: item,
   })),
+)
+
+const categoriesUnavailable = computed(
+  () => props.categories.length === 0 && !props.categoriesLoading,
 )
 
 const previewTitle = computed(() => {
@@ -95,21 +109,48 @@ function onPreviewImageError(): void {
   previewImageFailed.value = true
 }
 
-const onSubmit = handleSubmit((formValues) => {
-  if (props.submitting) {
-    return
-  }
+function fieldMessageId(field: (typeof FIELD_FOCUS_ORDER)[number]): string {
+  return `product-${field}-message`
+}
 
-  const payload: ProductCreatePayload = {
-    title: String(formValues.title).trim(),
-    price: Number(formValues.price),
-    description: String(formValues.description).trim(),
-    category: String(formValues.category),
-    image: String(formValues.image).trim(),
-  }
+function focusFirstInvalidField(
+  fieldErrors: Partial<Record<(typeof FIELD_FOCUS_ORDER)[number], string | undefined>>,
+): void {
+  void nextTick(() => {
+    for (const field of FIELD_FOCUS_ORDER) {
+      if (!fieldErrors[field]) {
+        continue
+      }
 
-  emit('submit', payload)
-})
+      const element = document.getElementById(FIELD_INPUT_IDS[field])
+      if (element instanceof HTMLElement) {
+        element.focus()
+        return
+      }
+    }
+  })
+}
+
+const onSubmit = handleSubmit(
+  (formValues) => {
+    if (props.submitting) {
+      return
+    }
+
+    const payload: ProductCreatePayload = {
+      title: String(formValues.title).trim(),
+      price: Number(formValues.price),
+      description: String(formValues.description).trim(),
+      category: String(formValues.category),
+      image: String(formValues.image).trim(),
+    }
+
+    emit('submit', payload)
+  },
+  ({ errors: submitErrors }) => {
+    focusFirstInvalidField(submitErrors)
+  },
+)
 
 function onCancel(): void {
   if (props.submitting) {
@@ -136,6 +177,7 @@ function onCancel(): void {
             <label for="product-title" class="block text-sm font-medium text-slate-700 dark:text-slate-200">
               Título do produto
               <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
+              <span class="sr-only">(obrigatório)</span>
             </label>
             <InputText
               id="product-title"
@@ -146,22 +188,21 @@ function onCancel(): void {
               placeholder="Ex.: Mens Casual Slim Fit T-Shirts"
               :invalid="Boolean(errors.title)"
               :disabled="submitting"
-              :aria-invalid="Boolean(errors.title)"
-              :aria-describedby="
-                errors.title ? 'product-title-error product-title-help' : 'product-title-help'
-              "
+              :aria-required="true"
+              :aria-invalid="errors.title ? true : undefined"
+              :aria-describedby="fieldMessageId('title')"
               autocomplete="off"
             />
-            <p id="product-title-help" class="text-xs text-slate-500 dark:text-slate-400">
-              Digite um título claro e descritivo.
-            </p>
             <p
-              v-if="errors.title"
-              id="product-title-error"
-              class="text-sm text-red-600 dark:text-red-400"
-              role="alert"
+              :id="fieldMessageId('title')"
+              :class="
+                errors.title
+                  ? 'text-sm text-red-600 dark:text-red-400'
+                  : 'text-xs text-slate-500 dark:text-slate-400'
+              "
+              :role="errors.title ? 'alert' : undefined"
             >
-              {{ errors.title }}
+              {{ errors.title || 'Digite um título claro e descritivo.' }}
             </p>
           </div>
 
@@ -169,6 +210,7 @@ function onCancel(): void {
             <label for="product-category" class="block text-sm font-medium text-slate-700 dark:text-slate-200">
               Categoria
               <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
+              <span class="sr-only">(obrigatório)</span>
             </label>
             <Select
               v-model="category"
@@ -182,36 +224,33 @@ function onCancel(): void {
               :loading="categoriesLoading"
               :invalid="Boolean(errors.category)"
               :disabled="submitting || categoriesLoading"
-              :aria-invalid="Boolean(errors.category)"
-              :aria-describedby="
-                errors.category
-                  ? 'product-category-error product-category-help'
-                  : 'product-category-help'
-              "
+              :aria-required="true"
+              :aria-invalid="errors.category ? true : undefined"
+              :aria-describedby="fieldMessageId('category')"
             />
-            <p id="product-category-help" class="text-xs text-slate-500 dark:text-slate-400">
-              Escolha a categoria do produto.
-            </p>
             <p
-              v-if="errors.category"
-              id="product-category-error"
-              class="text-sm text-red-600 dark:text-red-400"
-              role="alert"
+              :id="fieldMessageId('category')"
+              :class="
+                errors.category
+                  ? 'text-sm text-red-600 dark:text-red-400'
+                  : categoriesUnavailable
+                    ? 'text-sm text-amber-700 dark:text-amber-300'
+                    : 'text-xs text-slate-500 dark:text-slate-400'
+              "
+              :role="errors.category ? 'alert' : undefined"
             >
-              {{ errors.category }}
-            </p>
-            <p
-              v-else-if="categories.length === 0 && !categoriesLoading"
-              class="text-sm text-amber-700 dark:text-amber-300"
-            >
-              Não foi possível carregar as categorias.
-              <button
-                type="button"
-                class="font-medium underline outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
-                @click="emit('retryCategories')"
-              >
-                Tentar novamente
-              </button>
+              <template v-if="errors.category">{{ errors.category }}</template>
+              <template v-else-if="categoriesUnavailable">
+                Não foi possível carregar as categorias.
+                <button
+                  type="button"
+                  class="font-medium underline outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
+                  @click="emit('retryCategories')"
+                >
+                  Tentar novamente
+                </button>
+              </template>
+              <template v-else>Escolha a categoria do produto.</template>
             </p>
           </div>
 
@@ -219,6 +258,7 @@ function onCancel(): void {
             <label for="product-price" class="block text-sm font-medium text-slate-700 dark:text-slate-200">
               Preço
               <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
+              <span class="sr-only">(obrigatório)</span>
             </label>
             <InputNumber
               v-model="price"
@@ -233,19 +273,20 @@ function onCancel(): void {
               placeholder="0,00"
               :invalid="Boolean(errors.price)"
               :disabled="submitting"
-              :aria-invalid="Boolean(errors.price)"
-              :aria-describedby="
-                errors.price ? 'product-price-error product-price-help' : 'product-price-help'
-              "
+              :aria-required="true"
+              :aria-invalid="errors.price ? true : undefined"
+              :aria-describedby="fieldMessageId('price')"
             />
-            <p id="product-price-help" class="text-xs text-slate-500 dark:text-slate-400">Informe o preço do produto.</p>
             <p
-              v-if="errors.price"
-              id="product-price-error"
-              class="text-sm text-red-600 dark:text-red-400"
-              role="alert"
+              :id="fieldMessageId('price')"
+              :class="
+                errors.price
+                  ? 'text-sm text-red-600 dark:text-red-400'
+                  : 'text-xs text-slate-500 dark:text-slate-400'
+              "
+              :role="errors.price ? 'alert' : undefined"
             >
-              {{ errors.price }}
+              {{ errors.price || 'Informe o preço do produto.' }}
             </p>
           </div>
 
@@ -253,6 +294,7 @@ function onCancel(): void {
             <label for="product-image" class="block text-sm font-medium text-slate-700 dark:text-slate-200">
               URL da imagem
               <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
+              <span class="sr-only">(obrigatório)</span>
             </label>
             <InputText
               id="product-image"
@@ -263,22 +305,21 @@ function onCancel(): void {
               placeholder="https://exemplo.com/imagem.jpg"
               :invalid="Boolean(errors.image)"
               :disabled="submitting"
-              :aria-invalid="Boolean(errors.image)"
-              :aria-describedby="
-                errors.image ? 'product-image-error product-image-help' : 'product-image-help'
-              "
+              :aria-required="true"
+              :aria-invalid="errors.image ? true : undefined"
+              :aria-describedby="fieldMessageId('image')"
               autocomplete="off"
             />
-            <p id="product-image-help" class="text-xs text-slate-500 dark:text-slate-400">
-              Cole o link da imagem do produto.
-            </p>
             <p
-              v-if="errors.image"
-              id="product-image-error"
-              class="text-sm text-red-600 dark:text-red-400"
-              role="alert"
+              :id="fieldMessageId('image')"
+              :class="
+                errors.image
+                  ? 'text-sm text-red-600 dark:text-red-400'
+                  : 'text-xs text-slate-500 dark:text-slate-400'
+              "
+              :role="errors.image ? 'alert' : undefined"
             >
-              {{ errors.image }}
+              {{ errors.image || 'Cole o link da imagem do produto.' }}
             </p>
           </div>
 
@@ -286,6 +327,7 @@ function onCancel(): void {
             <label for="product-description" class="block text-sm font-medium text-slate-700 dark:text-slate-200">
               Descrição
               <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
+              <span class="sr-only">(obrigatório)</span>
             </label>
             <Textarea
               id="product-description"
@@ -297,23 +339,20 @@ function onCancel(): void {
               placeholder="Descreva o produto em detalhes..."
               :invalid="Boolean(errors.description)"
               :disabled="submitting"
-              :aria-invalid="Boolean(errors.description)"
-              :aria-describedby="
-                errors.description
-                  ? 'product-description-error product-description-help'
-                  : 'product-description-help'
-              "
+              :aria-required="true"
+              :aria-invalid="errors.description ? true : undefined"
+              :aria-describedby="fieldMessageId('description')"
             />
-            <p id="product-description-help" class="text-xs text-slate-500 dark:text-slate-400">
-              Informe uma descrição clara do produto.
-            </p>
             <p
-              v-if="errors.description"
-              id="product-description-error"
-              class="text-sm text-red-600 dark:text-red-400"
-              role="alert"
+              :id="fieldMessageId('description')"
+              :class="
+                errors.description
+                  ? 'text-sm text-red-600 dark:text-red-400'
+                  : 'text-xs text-slate-500 dark:text-slate-400'
+              "
+              :role="errors.description ? 'alert' : undefined"
             >
-              {{ errors.description }}
+              {{ errors.description || 'Informe uma descrição clara do produto.' }}
             </p>
           </div>
         </div>

@@ -50,6 +50,7 @@ function goToCatalog(): void {
       <button
         type="button"
         class="inline-flex min-h-10 items-center gap-1.5 rounded-md px-1 py-1 font-medium text-slate-600 outline-none transition hover:text-slate-900 focus-visible:ring-2 focus-visible:ring-violet-500 dark:text-slate-300 dark:hover:text-slate-100"
+        aria-label="Voltar para produtos"
         @click="goToCatalog"
       >
         <svg

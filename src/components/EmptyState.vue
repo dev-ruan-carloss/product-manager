@@ -21,6 +21,7 @@ defineEmits<{
 
 <template>
   <div
+    role="status"
     class="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-white px-3 py-8 text-center sm:px-6 sm:py-12 dark:border-slate-600 dark:bg-slate-950"
   >
     <div

@@ -102,24 +102,18 @@ O cabeçalho deverá apresentar:
 - identificação da aplicação;
 - acesso aos produtos;
 - acesso aos favoritos;
-- acesso à criação de produto;
-- controle de alternância entre Light Mode e Dark Mode.
+- acesso à criação de produto.
 
 No mobile, a navegação deverá ser adaptada para o espaço disponível.
 
 **Implementação atual (responsividade):**
 
-- Em telas menores que `lg`, o Header organiza identidade + controles (tema/favoritos) na primeira linha e navegação + “Novo Produto” na segunda, com `flex-wrap`.
-- Em `lg+`, identidade, navegação e ações permanecem em uma composição horizontal fluida.
-- Áreas de toque dos controles do Header permanecem utilizáveis; safe-area superior é considerada via `env(safe-area-inset-top)`.
-
-O controle de tema (`ThemeToggle`) deve:
-
-- permanecer no Header global;
-- possuir área de toque adequada;
-- ser acessível por teclado;
-- possuir `aria-label` e estado acessível (`aria-pressed`);
-- indicar visualmente o tema atual.
+- Ordem do Header: **logo + nome** à esquerda; à direita (`ml-auto` + `justify-end`): **Produtos + Favoritos + Novo Produto**.
+- Em viewports ≤515px: nav em grid — Produtos/Favoritos **50%** (sem `margin-left`); Novo Produto **100%**.
+- Em viewports ≥516px: espaçamento extra entre Favoritos e Novo Produto (`ml-3` / `ml-4`) para separar navegação de cadastro.
+- Favoritos: coração + texto + contador; estado ativo em pill Light/Dark.
+- O controle de tema (`ThemeToggle`) foi movido para o **Footer** (não compete por espaço no Header).
+- Safe-area superior via `env(safe-area-inset-top)`.
 
 ---
 
@@ -134,11 +128,20 @@ Conteúdo:
 - identidade: `Product Management`;
 - descrição: `Catálogo de produtos • Favoritos • Gerenciamento`;
 - navegação interna via Vue Router: Produtos (`/produtos`), Favoritos (`/favoritos`), Novo produto (`/produtos/novo`);
+- controle de tema Light/Dark (`ThemeToggle`), alinhado ao fim da faixa de identidade (`justify-between`);
 - copyright: `© 2026 Product Management`.
 
 Não inclui redes sociais, contatos, links externos ou dados fictícios.
 
 No desktop, os links de navegação podem aparecer em linha; no mobile, empilhados. O layout principal usa `min-height: 100vh` com fallback moderno `100dvh` (classe `.app-shell`) + `flex-1` no conteúdo para manter o rodapé ao final da viewport quando a página tem pouco conteúdo. Safe-area inferior é considerada via `env(safe-area-inset-bottom)`.
+
+O controle de tema (`ThemeToggle`) deve:
+
+- permanecer no Footer global;
+- possuir área de toque adequada;
+- ser acessível por teclado;
+- possuir `aria-label` e estado acessível (`aria-pressed`);
+- indicar visualmente o tema atual.
 
 ---
 
@@ -616,6 +619,8 @@ Regras mínimas:
 
 As mensagens de validação deverão ser apresentadas próximas aos respectivos campos.
 
+Quando um campo possui texto auxiliar e entra em estado inválido, a mensagem de erro **substitui** o texto auxiliar na mesma região contextual (não devem aparecer as duas ao mesmo tempo). Ver seção 48.
+
 ---
 
 # 34. Estado de Validação
@@ -628,6 +633,8 @@ Os campos deverão apresentar visualmente:
 - estado válido quando aplicável.
 
 As mensagens de erro deverão ser claras e objetivas.
+
+No `ProductForm`, o estado inválido também atualiza `aria-invalid` e o conteúdo anunciado via `aria-describedby` (região única de mensagem).
 
 ---
 
@@ -816,7 +823,7 @@ Ajustes aplicados na camada de apresentação:
 - ausência de `overflow-x-hidden` como solução genérica;
 - segunda auditoria de validação (viewports mobile/tablet/desktop + Light/Dark) concluída para a parte responsiva.
 
-Acessibilidade completa permanece pendente (ver seção 48 / Fase 9).
+Acessibilidade (seção 48 / Fase 9 — parte a11y) foi implementada em paralelo à responsividade já validada.
 
 ---
 
@@ -850,16 +857,43 @@ Em desktop:
 
 A interface deverá seguir boas práticas de acessibilidade.
 
-Regras mínimas:
+### Status (Fase 9 — parte a11y)
 
-- HTML semântico;
-- labels associados aos campos;
-- botões com nomes acessíveis;
-- imagens com `alt`;
-- navegação por teclado;
-- foco visível;
+**Status:** **CONCLUÍDO**
+
+Regras mínimas atendidas:
+
+- HTML semântico (`header`, `nav`, `main`, `footer`, `section`, `article`, `form`, headings);
+- labels associados aos campos (`for` / `input-id`);
+- botões e links com nomes acessíveis;
+- imagens com `alt` descritivo (ou `alt=""` quando decorativas no mesmo link do título);
+- navegação por teclado (`Tab`, `Shift+Tab`, `Enter`, `Space`; overlays PrimeVue com `Esc`);
+- foco visível (`:focus-visible` global + anéis nos controles e estilos PrimeVue em Light/Dark);
 - mensagens de erro associadas aos campos;
-- não utilizar somente cor para indicar estados.
+- estados não dependem somente de cor (texto + ícones + `aria-*` quando necessário).
+
+### Formulários — texto auxiliar OU erro
+
+Cada campo do `ProductForm` possui **uma única região contextual** abaixo do input (`id` estável, ex.: `product-price-message`):
+
+- estado normal: texto auxiliar;
+- estado inválido: mensagem de erro **substitui** o texto auxiliar (não há duas mensagens simultâneas).
+
+Associações acessíveis:
+
+- `aria-invalid="true"` somente enquanto houver erro no campo;
+- `aria-describedby` aponta sempre para a região contextual atualmente apresentada;
+- `aria-required` nos campos obrigatórios;
+- após envio inválido, o foco é movido para o primeiro campo inválido (ordem visual do formulário).
+
+### Favoritos e controles
+
+- `FavoriteButton`: teclado, `aria-pressed` coerente com a store e `aria-label` (“Adicionar/Remover produto dos favoritos”);
+- Header: Favoritos na nav (coração + texto + contador), com estado ativo em pill (Light/Dark); Novo Produto como CTA separado na mesma nav;
+- `ThemeToggle` no Footer (não no Header);
+- ícones decorativos com `aria-hidden="true"`;
+- breadcrumbs com `aria-label="Trilha de navegação"`;
+- estados `LoadingState` / `EmptyState` / `ErrorState` com `role` adequado e ações focáveis.
 
 ---
 
@@ -888,7 +922,7 @@ A estrutura deverá considerar componentes reutilizáveis como:
 - Ordenação por preço, nome e avaliação: apresentada por `ProductSort`, integrado em `ProductFilters`.
 - `ProductSort` existe em `src/components/products/ProductSort.vue` (variantes `select` e `radiogroup`).
 - A lógica de ordenação permanece em `useProductListControls`.
-- Tema Light/Dark: `ThemeToggle` no Header; estado em `themeStore`.
+- Tema Light/Dark: `ThemeToggle` no Footer; estado em `themeStore`.
 
 A criação de novos componentes deverá ocorrer conforme necessidade real.
 
@@ -1010,7 +1044,7 @@ A interface será considerada adequada quando:
 - [x] Interface é responsiva a partir de 320px.
 - [x] Componentes PrimeVue são utilizados.
 - [x] TailwindCSS é utilizado para estilização e layout.
-- [ ] Interface possui navegação acessível por teclado.
+- [x] Interface possui navegação acessível por teclado.
 - [x] Componentes reutilizáveis foram priorizados.
 
 ---
@@ -1019,6 +1053,6 @@ A interface será considerada adequada quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.7
+**Versão:** 1.10
 
 **Última atualização:** 2026-08-11

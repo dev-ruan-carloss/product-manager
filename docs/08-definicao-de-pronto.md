@@ -189,7 +189,7 @@ A interface será considerada pronta quando:
 - [x] Footer estrutural estiver implementado no `DefaultLayout`.
 - [x] Tema Light/Dark Mode estiver implementado globalmente.
 - [x] Preferência de tema persistir em `localStorage`.
-- [x] Controle de tema estiver disponível no Header.
+- [x] Controle de tema estiver disponível no Footer.
 - [x] Estados de interação estiverem definidos.
 - [x] Loading estiver visualmente adequado.
 - [x] Erros forem compreensíveis.
@@ -224,14 +224,21 @@ Também deverá ser verificado:
 
 Antes de considerar a interface pronta:
 
-- [ ] Campos possuem labels.
-- [ ] Botões possuem nomes acessíveis.
-- [ ] Imagens possuem `alt`.
-- [ ] Elementos podem ser acessados por teclado.
-- [ ] Foco permanece visível.
-- [ ] Mensagens de erro são identificáveis.
-- [ ] Estados não dependem somente de cor.
-- [ ] HTML semântico é utilizado quando apropriado.
+- [x] Campos possuem labels.
+- [x] Botões possuem nomes acessíveis.
+- [x] Imagens possuem `alt`.
+- [x] Elementos podem ser acessados por teclado.
+- [x] Foco permanece visível.
+- [x] Mensagens de erro são identificáveis.
+- [x] Estados não dependem somente de cor.
+- [x] HTML semântico é utilizado quando apropriado.
+
+Critérios adicionais validados na Fase 9 (a11y):
+
+- região contextual única por campo (texto auxiliar **ou** erro);
+- `aria-invalid` / `aria-describedby` coerentes com o estado do campo;
+- favoritos operáveis por teclado com nome e estado acessíveis;
+- foco visível em Light Mode e Dark Mode.
 
 ---
 
@@ -349,7 +356,7 @@ O projeto somente será considerado pronto quando:
 - [ ] Favoritos estiverem persistidos.
 - [ ] Formulários estiverem validados.
 - [x] Responsividade estiver validada.
-- [ ] Acessibilidade básica estiver validada.
+- [x] Acessibilidade básica estiver validada.
 - [ ] Estados de loading, erro e vazio estiverem implementados.
 - [ ] Lint estiver passando.
 - [ ] Build estiver passando.
@@ -384,6 +391,6 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 
 **Status:** Em andamento
 
-**Versão:** 1.6
+**Versão:** 1.7
 
 **Última atualização:** 2026-08-11

@@ -17,7 +17,7 @@ const emit = defineEmits<{
 
 const imageFailed = ref(false)
 
-const imageAlt = computed(() => `Imagem do produto ${props.product.title}`)
+const imageAlt = computed(() => props.product.title)
 
 const ratingLabel = computed(
   () =>
@@ -25,7 +25,7 @@ const ratingLabel = computed(
 )
 
 const favoriteActionLabel = computed(() =>
-  props.favorited ? 'Remover dos favoritos' : 'Adicionar aos favoritos',
+  props.favorited ? 'Remover produto dos favoritos' : 'Adicionar produto aos favoritos',
 )
 
 function onImageError(): void {
