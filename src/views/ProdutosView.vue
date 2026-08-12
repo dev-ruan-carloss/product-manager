@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+
 import EmptyState from '@/components/EmptyState.vue'
 import ErrorState from '@/components/ErrorState.vue'
 import LoadingState from '@/components/LoadingState.vue'
@@ -10,6 +12,7 @@ import { useProductListControls } from '@/composables/useProductListControls'
 import { useProductsCatalog } from '@/composables/useProductsCatalog'
 import { useFavoritesStore } from '@/stores/favoritesStore'
 
+const { t } = useI18n()
 const favoritesStore = useFavoritesStore()
 const { products, categories, isLoading, hasError, loadCatalog } = useProductsCatalog()
 
@@ -52,7 +55,7 @@ function isFavorite(productId: number): boolean {
         :products="products"
       />
 
-      <section class="min-w-0 space-y-3 sm:space-y-5" aria-label="Catálogo de produtos">
+      <section class="min-w-0 space-y-3 sm:space-y-5" :aria-label="t('catalog.ariaLabel')">
         <div class="hidden min-w-0 lg:block">
           <ProductSearch v-model="searchInput" input-id="product-search-desktop" />
         </div>

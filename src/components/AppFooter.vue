@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
+import LocaleSelector from '@/components/LocaleSelector.vue'
 import ThemeToggle from '@/components/ThemeToggle.vue'
 
+const { t } = useI18n()
 const route = useRoute()
 
 const isProductsActive = computed(
@@ -30,21 +33,26 @@ const linkClass =
         <div class="flex min-w-0 items-start justify-between gap-3">
           <div class="min-w-0">
             <p class="text-base font-semibold tracking-tight text-slate-900 sm:text-lg dark:text-slate-100">
-              Product Management
+              {{ t('brand.name') }}
             </p>
             <p class="mt-1 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
-              Catálogo de produtos • Favoritos • Gerenciamento
+              {{ t('brand.tagline') }}
             </p>
           </div>
 
-          <div class="flex shrink-0 items-center self-start">
+          <div
+            class="flex shrink-0 flex-wrap items-center justify-end gap-2 self-start"
+            role="group"
+            :aria-label="t('preferences.ariaLabel')"
+          >
+            <LocaleSelector />
             <ThemeToggle />
           </div>
         </div>
 
         <nav
           class="flex flex-wrap items-center gap-x-4 gap-y-2 sm:gap-x-8"
-          aria-label="Rodapé"
+          :aria-label="t('nav.footer')"
         >
           <RouterLink
             to="/produtos"
@@ -56,7 +64,7 @@ const linkClass =
             ]"
             :aria-current="isProductsActive ? 'page' : undefined"
           >
-            Produtos
+            {{ t('nav.products') }}
           </RouterLink>
 
           <RouterLink
@@ -69,7 +77,7 @@ const linkClass =
             ]"
             :aria-current="isFavoritesActive ? 'page' : undefined"
           >
-            Favoritos
+            {{ t('nav.favorites') }}
           </RouterLink>
 
           <RouterLink
@@ -82,12 +90,12 @@ const linkClass =
             ]"
             :aria-current="isCreateActive ? 'page' : undefined"
           >
-            Novo produto
+            {{ t('nav.newProductFooter') }}
           </RouterLink>
         </nav>
 
         <div class="border-t border-slate-200 pt-3 sm:pt-4 dark:border-slate-800">
-          <p class="text-sm text-slate-500 dark:text-slate-400">© 2026 Product Management</p>
+          <p class="text-sm text-slate-500 dark:text-slate-400">{{ t('footer.copyright') }}</p>
         </div>
       </div>
     </div>

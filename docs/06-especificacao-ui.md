@@ -128,7 +128,7 @@ Conteúdo:
 - identidade: `Product Management`;
 - descrição: `Catálogo de produtos • Favoritos • Gerenciamento`;
 - navegação interna via Vue Router: Produtos (`/produtos`), Favoritos (`/favoritos`), Novo produto (`/produtos/novo`);
-- controle de tema Light/Dark (`ThemeToggle`), alinhado ao fim da faixa de identidade (`justify-between`);
+- grupo de preferências alinhado ao fim da faixa de identidade (`justify-between`): seletor de idioma (`LocaleSelector`) + controle de tema Light/Dark (`ThemeToggle`);
 - copyright: `© 2026 Product Management`.
 
 Não inclui redes sociais, contatos, links externos ou dados fictícios.
@@ -138,10 +138,33 @@ No desktop, os links de navegação podem aparecer em linha; no mobile, empilhad
 O controle de tema (`ThemeToggle`) deve:
 
 - permanecer no Footer global;
+- permanecer próximo ao seletor de idioma;
 - possuir área de toque adequada;
 - ser acessível por teclado;
 - possuir `aria-label` e estado acessível (`aria-pressed`);
 - indicar visualmente o tema atual.
+
+### Internacionalização no Footer (melhoria bônus)
+
+O seletor de idioma (`LocaleSelector`) deve:
+
+- permanecer no Footer, no mesmo grupo do `ThemeToggle`;
+- oferecer `pt-BR`, `es` e `en`;
+- iniciar em `pt-BR` quando não houver preferência válida;
+- persistir a escolha em `localStorage` (`product-management:locale`);
+- exibir texto acessível do idioma (não apenas bandeira);
+- adaptar labels em viewports estreitas (ex.: `PT` / `PT-BR`);
+- funcionar em Light e Dark Mode sem overflow horizontal.
+
+Categorias da FakeStoreAPI são exibidas traduzidas na interface; os valores originais da API continuam sendo usados em filtros, formulários e payloads.
+
+### Conteúdo dinâmico de produtos (title / description)
+
+- Conteúdo dinâmico de produtos **não** é traduzido automaticamente.
+- Catálogo, favoritos e detalhes renderizam `product.title` e `product.description` exatamente como retornados pela FakeStoreAPI.
+- A troca de idioma altera a interface e as categorias; **não** altera título nem descrição.
+- Busca e ordenação por nome usam o título original da API.
+- Loading da UI não aguarda tradução de conteúdo de produto.
 
 ---
 
@@ -1053,6 +1076,10 @@ A interface será considerada adequada quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.10
+**Versão:** 1.13
 
 **Última atualização:** 2026-08-11
+
+### Nota — melhoria bônus i18n
+
+Seletor de idioma no Footer (pt-BR / es / en), textos de UI via `vue-i18n`, categorias localizadas na apresentação. Título e descrição dos produtos permanecem no idioma original da FakeStoreAPI. ThemeToggle permanece no Footer. Pendências anteriores (ex.: Fase 11) não foram removidas.

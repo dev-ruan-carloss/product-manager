@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
 import EmptyState from '@/components/EmptyState.vue'
@@ -7,6 +8,7 @@ import LoadingState from '@/components/LoadingState.vue'
 import ProductGrid from '@/components/products/ProductGrid.vue'
 import { useFavoriteProducts } from '@/composables/useFavoriteProducts'
 
+const { t } = useI18n()
 const router = useRouter()
 
 const {
@@ -28,29 +30,31 @@ function goToCatalog(): void {
 
 <template>
   <div class="mx-auto max-w-7xl px-2.5 py-3 sm:px-6 sm:py-6 lg:py-8">
-    <nav class="mb-3 text-sm text-slate-400 dark:text-slate-500" aria-label="Trilha de navegação">
+    <nav class="mb-3 text-sm text-slate-400 dark:text-slate-500" :aria-label="t('favorites.breadcrumb')">
       <ol class="flex flex-wrap items-center gap-1.5">
         <li>
           <RouterLink
             to="/produtos"
             class="rounded-sm outline-none hover:text-slate-600 focus-visible:ring-2 focus-visible:ring-violet-500 dark:hover:text-slate-300"
           >
-            Início
+            {{ t('favorites.home') }}
           </RouterLink>
         </li>
         <li aria-hidden="true">/</li>
-        <li class="text-slate-500 dark:text-slate-400" aria-current="page">Favoritos</li>
+        <li class="text-slate-500 dark:text-slate-400" aria-current="page">{{ t('nav.favorites') }}</li>
       </ol>
     </nav>
 
     <header class="mb-3 min-w-0 space-y-1 sm:mb-6">
-      <h1 class="break-words text-xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-100">Meus Favoritos</h1>
+      <h1 class="break-words text-xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-100">
+        {{ t('favorites.title') }}
+      </h1>
       <p class="text-sm text-slate-500 sm:text-base dark:text-slate-400">
-        Produtos que você adicionou aos favoritos.
+        {{ t('favorites.subtitle') }}
       </p>
     </header>
 
-    <section class="min-w-0 space-y-3 sm:space-y-5" aria-label="Produtos favoritos">
+    <section class="min-w-0 space-y-3 sm:space-y-5" :aria-label="t('favorites.sectionAria')">
       <div
         v-if="!isEmpty && !hasError"
         class="flex min-w-0 flex-wrap items-center gap-2 rounded-xl border border-slate-200 bg-white px-2.5 py-2.5 shadow-sm sm:gap-3 sm:px-4 sm:py-3 dark:border-slate-700 dark:bg-slate-950"
@@ -67,37 +71,37 @@ function goToCatalog(): void {
         </span>
         <p class="min-w-0 text-sm font-medium leading-relaxed text-slate-700 dark:text-slate-200">
           <span class="tabular-nums">{{ favoritesCount }}</span>
-          {{ favoritesCount === 1 ? 'produto favoritado' : 'produtos favoritados' }}
+          {{ favoritesCount === 1 ? t('favorites.countOne') : t('favorites.countMany') }}
         </p>
       </div>
 
       <LoadingState
         v-if="isLoading"
-        title="Carregando favoritos"
-        description="Aguarde enquanto buscamos seus produtos favoritos."
+        :title="t('favorites.loadingTitle')"
+        :description="t('favorites.loadingDescription')"
         :rows="Math.min(Math.max(favoritesCount, 1), 8)"
       />
 
       <ErrorState
         v-else-if="hasError"
-        title="Não foi possível carregar os favoritos."
-        description="Verifique sua conexão e tente novamente."
+        :title="t('favorites.errorTitle')"
+        :description="t('favorites.errorDescription')"
         @retry="loadFavoriteProducts"
       />
 
       <EmptyState
         v-else-if="isEmpty"
-        title="Você ainda não possui favoritos."
-        description="Navegue pelos produtos e clique no coração para adicioná-los aos favoritos."
-        action-label="Ver produtos"
+        :title="t('favorites.emptyTitle')"
+        :description="t('favorites.emptyDescription')"
+        :action-label="t('favorites.emptyAction')"
         @action="goToCatalog"
       />
 
       <EmptyState
         v-else-if="favoriteProducts.length === 0"
-        title="Nenhum favorito disponível no momento."
-        description="Os produtos favoritados não puderam ser encontrados no catálogo. Você pode voltar à listagem ou tentar novamente mais tarde."
-        action-label="Ver produtos"
+        :title="t('favorites.unavailableTitle')"
+        :description="t('favorites.unavailableDescription')"
+        :action-label="t('favorites.emptyAction')"
         @action="goToCatalog"
       />
 
@@ -116,8 +120,8 @@ function goToCatalog(): void {
           {{ unavailableFavoritesCount }}
           {{
             unavailableFavoritesCount === 1
-              ? 'produto favoritado não está mais disponível no catálogo.'
-              : 'produtos favoritados não estão mais disponíveis no catálogo.'
+              ? t('favorites.unavailableOne')
+              : t('favorites.unavailableMany')
           }}
         </p>
       </template>

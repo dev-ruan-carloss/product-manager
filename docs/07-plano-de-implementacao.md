@@ -1150,10 +1150,23 @@ Resumo do acompanhamento:
 | Fase 9 (completa) | concluída |
 | QA (Fase 10) | concluída |
 | Entrega (Fase 11) | pendente |
+| Internacionalização (melhoria bônus) | concluída (`vue-i18n`, pt-BR/es/en, seletor no Footer; categorias localizadas) |
+| Localização dinâmica de title/description (bônus) | removida — conteúdo dinâmico permanece no idioma original da API |
 
 ### Próxima fase
 
 **Fase 11 — Documentação e entrega**
+
+### Nota — melhoria bônus (i18n)
+
+Implementação opcional concluída sem alterar o status das Fases 1–10:
+
+- `vue-i18n` com `pt-BR` (padrão), `es` e `en`;
+- persistência `product-management:locale`;
+- seletor no Footer ao lado do `ThemeToggle`;
+- categorias traduzidas na apresentação;
+- conteúdo dinâmico de produtos (`title`/`description`) **não** é traduzido automaticamente — preserva a FakeStoreAPI;
+- busca e ordenação por nome usam `product.title` original.
 
 ---
 
@@ -1161,6 +1174,6 @@ Resumo do acompanhamento:
 
 **Status:** Em andamento
 
-**Versão:** 1.12
+**Versão:** 1.15
 
 **Última atualização:** 2026-08-11

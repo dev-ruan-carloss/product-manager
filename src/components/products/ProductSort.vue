@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import RadioButton from 'primevue/radiobutton'
 import Select from 'primevue/select'
 
@@ -14,14 +16,16 @@ const emit = defineEmits<{
   'update:modelValue': [value: CatalogSortOrder]
 }>()
 
-const sortOptions: Array<{ label: string; value: CatalogSortOrder }> = [
-  { label: 'Menor preço', value: 'price-asc' },
-  { label: 'Maior preço', value: 'price-desc' },
-  { label: 'Nome A–Z', value: 'name-asc' },
-  { label: 'Nome Z–A', value: 'name-desc' },
-  { label: 'Maior avaliação', value: 'rating-desc' },
-  { label: 'Menor avaliação', value: 'rating-asc' },
-]
+const { t } = useI18n()
+
+const sortOptions = computed(() => [
+  { label: t('catalog.sortPriceAsc'), value: 'price-asc' as const },
+  { label: t('catalog.sortPriceDesc'), value: 'price-desc' as const },
+  { label: t('catalog.sortNameAsc'), value: 'name-asc' as const },
+  { label: t('catalog.sortNameDesc'), value: 'name-desc' as const },
+  { label: t('catalog.sortRatingDesc'), value: 'rating-desc' as const },
+  { label: t('catalog.sortRatingAsc'), value: 'rating-asc' as const },
+])
 </script>
 
 <template>
@@ -30,7 +34,7 @@ const sortOptions: Array<{ label: string; value: CatalogSortOrder }> = [
       class="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400"
       :for="inputId ?? 'product-sort'"
     >
-      Ordenação
+      {{ t('catalog.sort') }}
     </label>
     <Select
       :input-id="inputId ?? 'product-sort'"
@@ -44,7 +48,9 @@ const sortOptions: Array<{ label: string; value: CatalogSortOrder }> = [
   </div>
 
   <section v-else class="min-w-0 space-y-3" aria-labelledby="sort-heading">
-    <h2 id="sort-heading" class="text-sm font-semibold text-slate-900 dark:text-slate-100">Ordenação</h2>
+    <h2 id="sort-heading" class="text-sm font-semibold text-slate-900 dark:text-slate-100">
+      {{ t('catalog.sort') }}
+    </h2>
     <div class="space-y-3" role="radiogroup" aria-labelledby="sort-heading">
       <label
         v-for="option in sortOptions"

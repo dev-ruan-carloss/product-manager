@@ -141,3 +141,22 @@ html.dark .p-paginator-next:focus-visible {
 .p-toast {
   max-width: min(100vw - 1.5rem, 25rem);
 }
+
+/* Seletor de idioma no Footer — compacto e sem overflow em telas estreitas */
+.locale-select.p-select {
+  min-height: 2.25rem;
+}
+
+.locale-select.p-select .p-select-label {
+  padding-inline: 0.5rem;
+  padding-block: 0.35rem;
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .locale-select.p-select .p-select-label {
+    padding-inline: 0.625rem;
+    font-size: 0.875rem;
+  }
+}

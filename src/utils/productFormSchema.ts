@@ -1,11 +1,21 @@
 import * as yup from 'yup'
 
+import { i18n } from '@/i18n'
+
+function t(key: string): string {
+  return String(i18n.global.t(key))
+}
+
+/**
+ * Schema Yup com mensagens via i18n (avaliadas no momento da validação).
+ * Os valores de categoria no formulário permanecem os originais da FakeStoreAPI.
+ */
 export const productFormSchema = yup.object({
   title: yup
     .string()
     .trim()
-    .required('O título é obrigatório.')
-    .min(1, 'Informe um título válido.'),
+    .required(() => t('validation.titleRequired'))
+    .min(1, () => t('validation.titleInvalid')),
   price: yup
     .number()
     .transform((value, originalValue) => {
@@ -15,10 +25,13 @@ export const productFormSchema = yup.object({
 
       return value
     })
-    .typeError('Informe um preço válido.')
-    .required('O preço é obrigatório.')
-    .moreThan(0, 'O preço deve ser maior que zero.'),
-  description: yup.string().trim().required('A descrição é obrigatória.'),
+    .typeError(() => t('validation.priceType'))
+    .required(() => t('validation.priceRequired'))
+    .moreThan(0, () => t('validation.pricePositive')),
+  description: yup
+    .string()
+    .trim()
+    .required(() => t('validation.descriptionRequired')),
   category: yup
     .string()
     .nullable()
@@ -29,10 +42,10 @@ export const productFormSchema = yup.object({
 
       return value
     })
-    .required('A categoria é obrigatória.'),
+    .required(() => t('validation.categoryRequired')),
   image: yup
     .string()
     .trim()
-    .required('A URL da imagem é obrigatória.')
-    .url('Informe uma URL de imagem válida.'),
+    .required(() => t('validation.imageRequired'))
+    .url(() => t('validation.imageUrl')),
 })

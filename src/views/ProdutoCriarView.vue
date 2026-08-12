@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 
@@ -8,6 +9,7 @@ import { productService } from '@/services/productService'
 import type { Category } from '@/types/category'
 import type { ProductCreatePayload } from '@/types/product'
 
+const { t } = useI18n()
 const router = useRouter()
 const toast = useToast()
 
@@ -24,8 +26,8 @@ async function loadCategories(): Promise<void> {
     categories.value = []
     toast.add({
       severity: 'error',
-      summary: 'Erro',
-      detail: 'Não foi possível carregar as categorias.',
+      summary: t('toast.error'),
+      detail: t('toast.categoriesLoadError'),
       life: 4000,
     })
   } finally {
@@ -45,8 +47,8 @@ async function handleSubmit(payload: ProductCreatePayload): Promise<void> {
 
     toast.add({
       severity: 'success',
-      summary: 'Sucesso',
-      detail: 'Produto criado com sucesso.',
+      summary: t('toast.success'),
+      detail: t('toast.createSuccess'),
       life: 3000,
     })
 
@@ -55,8 +57,8 @@ async function handleSubmit(payload: ProductCreatePayload): Promise<void> {
     // Erros da API já chegam como AppError via interceptor em config/api.ts.
     toast.add({
       severity: 'error',
-      summary: 'Erro',
-      detail: 'Não foi possível criar o produto.',
+      summary: t('toast.error'),
+      detail: t('toast.createError'),
       life: 4000,
     })
   } finally {
@@ -75,14 +77,14 @@ onMounted(() => {
 
 <template>
   <div class="mx-auto max-w-7xl px-2.5 py-3 sm:px-6 sm:py-6 lg:py-8">
-    <nav class="mb-3 text-sm text-slate-400 dark:text-slate-500" aria-label="Trilha de navegação">
+    <nav class="mb-3 text-sm text-slate-400 dark:text-slate-500" :aria-label="t('favorites.breadcrumb')">
       <ol class="flex flex-wrap items-center gap-1.5">
         <li>
           <RouterLink
             to="/produtos"
             class="rounded-sm outline-none hover:text-slate-600 focus-visible:ring-2 focus-visible:ring-violet-500 dark:hover:text-slate-300"
           >
-            Início
+            {{ t('favorites.home') }}
           </RouterLink>
         </li>
         <li aria-hidden="true">/</li>
@@ -91,18 +93,20 @@ onMounted(() => {
             to="/produtos"
             class="rounded-sm outline-none hover:text-slate-600 focus-visible:ring-2 focus-visible:ring-violet-500 dark:hover:text-slate-300"
           >
-            Produtos
+            {{ t('nav.products') }}
           </RouterLink>
         </li>
         <li aria-hidden="true">/</li>
-        <li class="text-slate-500 dark:text-slate-400" aria-current="page">Novo Produto</li>
+        <li class="text-slate-500 dark:text-slate-400" aria-current="page">{{ t('form.createTitle') }}</li>
       </ol>
     </nav>
 
     <header class="mb-3 min-w-0 space-y-1 sm:mb-6">
-      <h1 class="break-words text-xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-100">Novo Produto</h1>
+      <h1 class="break-words text-xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-slate-100">
+        {{ t('form.createTitle') }}
+      </h1>
       <p class="text-sm text-slate-500 sm:text-base dark:text-slate-400">
-        Preencha os dados abaixo para cadastrar um novo produto.
+        {{ t('form.createSubtitle') }}
       </p>
     </header>
 

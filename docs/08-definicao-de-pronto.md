@@ -391,7 +391,7 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 
 **Status:** Em andamento
 
-**Versão:** 1.8
+**Versão:** 1.10
 
 **Última atualização:** 2026-08-11
 
@@ -401,3 +401,10 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 - Vitest configurado com 25 testes automatizados passando em `tests/` (separados de `src/`).
 - Pendência restante no critério final: consistência documental completa SDD × código (Fase 11).
 - Itens de Git (histórico/commits) permanecem sob processo contínuo e não bloqueiam a Fase 10.
+
+### Nota — melhoria bônus i18n
+
+- Internacionalização (`vue-i18n`) com `pt-BR`, `es` e `en` adicionada após a Fase 10.
+- Categorias conhecidas localizadas na apresentação; `title`/`description` permanecem no idioma original da FakeStoreAPI (sem tradução automática).
+- Não remove nem conclui a Fase 11 (ainda pendente).
+- Não altera a FakeStoreAPI como fonte dos produtos nem a persistência de favoritos.

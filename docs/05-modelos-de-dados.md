@@ -297,6 +297,19 @@ A separação entre `ProductFormData` e os payloads de escrita evita acoplar o e
 
 ---
 
+# 14.1 — Apresentação de produtos e categorias
+
+O contrato `Product` da FakeStoreAPI é a fonte de verdade na UI para `title` e `description` — **sem** modelo intermediário de tradução automática.
+
+Regras:
+
+- `title` e `description` são exibidos como retornados pela API;
+- categorias conhecidas podem receber rótulo localizado na apresentação (`getLocalizedCategory`), preservando o valor original da API em filtros e payloads;
+- criação/edição continuam usando `Product` / payloads originais;
+- não há cache de tradução de título/descrição.
+
+---
+
 # 15. Por que separar os modelos?
 
 O modelo recebido da API não necessariamente deve ser igual ao modelo utilizado no formulário.
@@ -824,6 +837,10 @@ Os modelos de dados serão considerados definidos quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.5
+**Versão:** 1.7
 
 **Última atualização:** 2026-08-11
+
+### Nota — conteúdo dinâmico de produtos
+
+`title`/`description` permanecem no idioma original da FakeStoreAPI. Categorias conhecidas continuam localizáveis na apresentação.

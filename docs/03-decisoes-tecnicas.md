@@ -968,6 +968,115 @@ A Fase 10 é o momento definido no plano para infraestrutura de testes automatiz
 
 ---
 
+## 35.11 — Internacionalização (melhoria bônus)
+
+**Data:** 2026-08-11
+
+**Decisão anterior:**
+
+A interface estava escrita em português de forma hardcoded, sem seletor de idioma. Categorias da FakeStoreAPI eram exibidas com os valores originais em inglês.
+
+**Nova decisão (melhoria bônus):**
+
+- Adotar `vue-i18n` (Composition API, `legacy: false`) para internacionalização.
+- Idiomas suportados: `pt-BR` (padrão), `es` e `en`.
+- Persistência em `localStorage` com chave `product-management:locale`.
+- Preferência inválida ou ausente → fallback para `pt-BR`.
+- Seletor de idioma no Footer, próximo ao `ThemeToggle` (sem mover o tema para o Header).
+- Categorias conhecidas da FakeStoreAPI traduzidas apenas na apresentação via `getLocalizedCategory`.
+- Valores originais da API preservados para filtros, payloads, comparação e regras de negócio.
+- Fallback de categoria desconhecida: exibir o valor original.
+- Títulos e descrições dos produtos permanecem como conteúdo externo da FakeStoreAPI (sem tradução automática externa e sem catálogo fictício).
+- Ordenação por nome (na primeira versão do bônus) usava o título original da API.
+
+**Motivo:**
+
+Melhorar a UX multilíngue sem alterar contratos da FakeStoreAPI nem invalidar as Fases 1–10.
+
+**Impacto:**
+
+- estrutura `src/i18n/` e `localeStore`;
+- textos de interface migrados para chaves i18n;
+- testes em `tests/i18n/`, `tests/utils/localizeCategory.test.ts` e `tests/stores/localeStore.test.ts`;
+- documentação de UI e plano atualizada;
+- Fase 11 (entrega) permanece pendente.
+
+---
+
+## 35.12 — Localização dinâmica de produtos (melhoria bônus)
+
+**Data:** 2026-08-11
+
+**Decisão anterior:**
+
+Títulos e descrições da FakeStoreAPI eram exibidos no idioma original da API. Apenas categorias e UI usavam i18n.
+
+**Nova decisão (melhoria bônus):**
+
+- Separar claramente: `vue-i18n` = interface estática; `ProductLocalizationService` = conteúdo dinâmico (`title`/`description`).
+- Tipo `LocalizedProduct` preserva `original: Product` e expõe campos de apresentação.
+- Tradução dinâmica via abstração `ProductTextTranslator` (implementação padrão MyMemory, **sem API key no frontend**).
+- `en` = pass-through do conteúdo original (idioma da FakeStoreAPI).
+- Cache em memória + `localStorage` (`product-management:localization-cache`).
+- Chave: `product:{id}:{locale}:{contentHash}` — invalida quando title/description da API mudam.
+- Deduplicação in-flight por chave+campos.
+- Catálogo localiza `title` de forma lazy; detalhes localizam `title` + `description`.
+- Loading da UI sincronizado: skeleton permanece até API + localização estarem prontos (sem flicker inglês → traduzido).
+- Cache HIT atualiza de forma síncrona; cache MISS aguarda o lote completo.
+- Fallback: conteúdo original da API (nunca `undefined`/`null`, nunca loading infinito).
+- Busca: título/descrição **original e localizado**.
+- Ordenação por nome: título **apresentado** (localizado), com `Intl.Collator` do idioma atual.
+- Preço/rating/favoritos/payloads de criação-edição permanecem nos valores originais.
+- Produtos novos da API passam pelo mesmo pipeline sem cadastro manual por ID.
+
+**Motivo:**
+
+Permitir apresentação multilíngue de conteúdo dinâmico sem mocks, sem lista fixa de IDs e sem expor secrets.
+
+**Impacto:**
+
+- `src/services/localization/*`, `useLocalizedProducts`, tipos em `productLocalization.ts`;
+- catálogo/detalhes/favoritos consomem `LocalizedProduct`;
+- testes em `tests/services/productLocalizationService.test.ts`;
+- Fase 11 permanece pendente.
+
+**Limitações:**
+
+- MyMemory é free-tier e pode rate-limitar; o fallback preserva a UI.
+- Substituição futura por proxy/backend não exige mudança nos componentes.
+
+---
+
+## 35.13 — Conteúdo dinâmico de produtos permanece no idioma original
+
+**Data:** 2026-08-11
+
+**Decisão anterior:**
+
+A melhoria bônus 35.12 traduzia dinamicamente `title` e `description` via `ProductLocalizationService` (cache, loading sincronizado e fallback).
+
+**Nova decisão:**
+
+- **Não** traduzir automaticamente `title` nem `description` vindos da FakeStoreAPI.
+- Exibir esses campos exatamente como retornados pela API.
+- Manter `vue-i18n` para conteúdo controlado pela aplicação (interface, labels, mensagens, estados).
+- Manter localização apenas de **categorias** conhecidas via `getLocalizedCategory`.
+- Remover a camada de Product Localization (serviços, cache, composable, tipo `LocalizedProduct`, loading de tradução).
+- Busca e ordenação por nome usam `product.title` original.
+- Loading da UI representa apenas operações reais (API, formulários etc.), sem ciclo de tradução.
+
+**Motivo:**
+
+Produtos são conteúdo externo dinâmico. Nomes podem conter marcas, modelos, nomes próprios e termos técnicos. Tradução automática gera resultados inconsistentes ou artificiais (ex.: *"Opna Women's Short Sleeve Moisture"* → *"Umidade de Manga Curta Feminina Opna"*), prejudicando a experiência. Preservar o original é mais confiável.
+
+**Impacto:**
+
+- Fluxo: FakeStoreAPI → `productService` → catálogo/detalhes → UI com `product.title` / `product.description`.
+- i18n continua para interface e categorias.
+- Fase 11 permanece pendente.
+
+---
+
 # 36. Critérios de Aceite
 
 As decisões técnicas serão consideradas definidas quando:
@@ -995,6 +1104,10 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.17
+**Versão:** 1.20
 
 **Última atualização:** 2026-08-11
+
+### Nota — conteúdo dinâmico de produtos
+
+Conteúdo dinâmico de produtos não é traduzido automaticamente. i18n cobre interface e localização de categorias. Fase 11 permanece pendente.

@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import StarFillIcon from '@primevue/icons/starfill'
 
 import FavoriteButton from '@/components/FavoriteButton.vue'
 import type { Product } from '@/types/product'
 import { formatPrice } from '@/utils/formatPrice'
+import { getLocalizedCategory } from '@/utils/localizeCategory'
 
 const props = defineProps<{
   product: Product
@@ -15,11 +17,19 @@ const emit = defineEmits<{
   toggleFavorite: [productId: number]
 }>()
 
+const { t, locale } = useI18n()
 const imageFailed = ref(false)
 
-const ratingLabel = computed(
-  () =>
-    `Avaliação ${props.product.rating.rate.toFixed(1)} de 5, com ${props.product.rating.count} avaliações`,
+const categoryLabel = computed(() => {
+  void locale.value
+  return getLocalizedCategory(props.product.category)
+})
+
+const ratingLabel = computed(() =>
+  t('product.ratingLabel', {
+    rate: props.product.rating.rate.toFixed(1),
+    count: props.product.rating.count,
+  }),
 )
 
 function onImageError(): void {
@@ -57,7 +67,7 @@ function onImageError(): void {
           class="flex h-full w-full max-w-[7.5rem] items-center justify-center rounded-lg bg-slate-50 text-center text-xs text-slate-400 sm:max-w-[9rem] dark:bg-slate-700 dark:text-slate-400"
           aria-hidden="true"
         >
-          Imagem indisponível
+          {{ t('product.imageUnavailable') }}
         </div>
       </div>
 
@@ -70,8 +80,8 @@ function onImageError(): void {
           {{ formatPrice(product.price) }}
         </p>
 
-        <p class="break-words text-xs capitalize leading-4 text-slate-500 dark:text-slate-400">
-          {{ product.category }}
+        <p class="break-words text-xs leading-4 text-slate-500 dark:text-slate-400">
+          {{ categoryLabel }}
         </p>
 
         <div class="flex flex-wrap items-center gap-x-1 gap-y-0.5" :aria-label="ratingLabel">

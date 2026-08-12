@@ -1,22 +1,24 @@
 <script setup lang="ts">
-withDefaults(
-  defineProps<{
-    title?: string
-    description?: string
-    actionLabel?: string
-    showAction?: boolean
-  }>(),
-  {
-    title: 'Nenhum produto encontrado.',
-    description: 'Tente alterar sua busca ou os filtros.',
-    actionLabel: 'Limpar filtros',
-    showAction: true,
-  },
-)
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const props = defineProps<{
+  title?: string
+  description?: string
+  actionLabel?: string
+  showAction?: boolean
+}>()
 
 defineEmits<{
   action: []
 }>()
+
+const { t } = useI18n()
+
+const resolvedTitle = computed(() => props.title ?? t('empty.productsTitle'))
+const resolvedDescription = computed(() => props.description ?? t('empty.productsDescription'))
+const resolvedActionLabel = computed(() => props.actionLabel ?? t('empty.clearFilters'))
+const showActionButton = computed(() => props.showAction !== false)
 </script>
 
 <template>
@@ -33,15 +35,15 @@ defineEmits<{
         <path stroke-linecap="round" d="m20 20-3-3" />
       </svg>
     </div>
-    <h2 class="break-words text-lg font-semibold text-slate-900 dark:text-slate-100">{{ title }}</h2>
-    <p class="mt-2 max-w-md break-words text-sm text-slate-500 dark:text-slate-400">{{ description }}</p>
+    <h2 class="break-words text-lg font-semibold text-slate-900 dark:text-slate-100">{{ resolvedTitle }}</h2>
+    <p class="mt-2 max-w-md break-words text-sm text-slate-500 dark:text-slate-400">{{ resolvedDescription }}</p>
     <button
-      v-if="showAction"
+      v-if="showActionButton"
       type="button"
       class="mt-6 inline-flex min-h-11 items-center justify-center rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 outline-none hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-800 dark:focus-visible:ring-offset-slate-950"
       @click="$emit('action')"
     >
-      {{ actionLabel }}
+      {{ resolvedActionLabel }}
     </button>
   </div>
 </template>

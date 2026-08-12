@@ -119,6 +119,7 @@ A estrutura planejada para o projeto será:
     │   ├── components/
     │   ├── composables/
     │   ├── config/
+    │   ├── i18n/
     │   ├── layouts/
     │   ├── router/
     │   ├── services/
@@ -857,6 +858,10 @@ A arquitetura será considerada adequada quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.4
+**Versão:** 1.5
 
 **Última atualização:** 2026-08-11
+
+### Nota — melhoria bônus i18n
+
+Pasta `src/i18n/` e `localeStore` adicionadas para internacionalização. Fluxo de produtos: FakeStoreAPI → services → `Product` → apresentação (`title`/`description` originais; categorias localizadas na UI).

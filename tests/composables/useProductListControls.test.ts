@@ -73,6 +73,17 @@ describe('useProductListControls', () => {
     expect(controls.filteredProducts.value.map((item) => item.id)).toEqual([2])
   })
 
+  it('busca pelo título original da API', async () => {
+    const controls = createControls([
+      makeProduct({ id: 1, title: "Opna Women's Short Sleeve Moisture" }),
+      makeProduct({ id: 2, title: 'Watch' }),
+    ])
+
+    controls.searchInput.value = 'opna'
+    await flushDebounce()
+    expect(controls.filteredProducts.value.map((item) => item.id)).toEqual([1])
+  })
+
   it('filtra por categoria e combina com busca', async () => {
     const controls = createControls()
 
@@ -83,7 +94,7 @@ describe('useProductListControls', () => {
     expect(controls.filteredProducts.value.map((item) => item.id)).toEqual([3])
   })
 
-  it('ordena por nome A–Z e Z–A de forma case-insensitive', () => {
+  it('ordena por nome A–Z e Z–A usando product.title', () => {
     const controls = createControls()
 
     controls.sortOrder.value = 'name-asc'

@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 import { useThemeStore } from '@/stores/themeStore'
 
+const { t } = useI18n()
 const themeStore = useThemeStore()
 
 const ariaLabel = computed(() =>
-  themeStore.isDark ? 'Ativar modo claro' : 'Ativar modo escuro',
+  themeStore.isDark ? t('theme.activateLight') : t('theme.activateDark'),
 )
 
-const title = computed(() => (themeStore.isDark ? 'Modo claro' : 'Modo escuro'))
+const title = computed(() => (themeStore.isDark ? t('theme.light') : t('theme.dark')))
 </script>
 
 <template>

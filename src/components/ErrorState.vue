@@ -1,20 +1,22 @@
 <script setup lang="ts">
-withDefaults(
-  defineProps<{
-    title?: string
-    description?: string
-    actionLabel?: string
-  }>(),
-  {
-    title: 'Não foi possível carregar os produtos.',
-    description: 'Verifique sua conexão e tente novamente.',
-    actionLabel: 'Tentar novamente',
-  },
-)
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const props = defineProps<{
+  title?: string
+  description?: string
+  actionLabel?: string
+}>()
 
 defineEmits<{
   retry: []
 }>()
+
+const { t } = useI18n()
+
+const resolvedTitle = computed(() => props.title ?? t('error.productsTitle'))
+const resolvedDescription = computed(() => props.description ?? t('error.productsDescription'))
+const resolvedActionLabel = computed(() => props.actionLabel ?? t('error.retry'))
 </script>
 
 <template>
@@ -34,14 +36,14 @@ defineEmits<{
         />
       </svg>
     </div>
-    <h2 class="break-words text-lg font-semibold text-slate-900 dark:text-slate-100">{{ title }}</h2>
-    <p class="mt-2 max-w-md break-words text-sm text-slate-500 dark:text-slate-400">{{ description }}</p>
+    <h2 class="break-words text-lg font-semibold text-slate-900 dark:text-slate-100">{{ resolvedTitle }}</h2>
+    <p class="mt-2 max-w-md break-words text-sm text-slate-500 dark:text-slate-400">{{ resolvedDescription }}</p>
     <button
       type="button"
       class="mt-6 inline-flex min-h-11 items-center justify-center rounded-lg bg-violet-600 px-4 py-2.5 text-sm font-medium text-white outline-none hover:bg-violet-700 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950"
       @click="$emit('retry')"
     >
-      {{ actionLabel }}
+      {{ resolvedActionLabel }}
     </button>
   </div>
 </template>

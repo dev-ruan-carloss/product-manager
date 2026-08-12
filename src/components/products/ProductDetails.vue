@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import StarFillIcon from '@primevue/icons/starfill'
 
 import FavoriteButton from '@/components/FavoriteButton.vue'
 import type { Product } from '@/types/product'
 import { formatPrice } from '@/utils/formatPrice'
+import { getLocalizedCategory } from '@/utils/localizeCategory'
 
 const props = defineProps<{
   product: Product
@@ -15,17 +17,29 @@ const emit = defineEmits<{
   toggleFavorite: []
 }>()
 
+const { t, locale } = useI18n()
 const imageFailed = ref(false)
 
 const imageAlt = computed(() => props.product.title)
 
-const ratingLabel = computed(
-  () =>
-    `Avaliação ${props.product.rating.rate.toFixed(1)} de 5, com ${props.product.rating.count} avaliações`,
+const categoryLabel = computed(() => {
+  void locale.value
+  return getLocalizedCategory(props.product.category)
+})
+
+const ratingLabel = computed(() =>
+  t('product.ratingLabel', {
+    rate: props.product.rating.rate.toFixed(1),
+    count: props.product.rating.count,
+  }),
 )
 
 const favoriteActionLabel = computed(() =>
-  props.favorited ? 'Remover produto dos favoritos' : 'Adicionar produto aos favoritos',
+  props.favorited ? t('favorites.remove') : t('favorites.add'),
+)
+
+const ratingCountLabel = computed(() =>
+  props.product.rating.count === 1 ? t('product.ratingOne') : t('product.ratingMany'),
 )
 
 function onImageError(): void {
@@ -62,7 +76,7 @@ function onImageError(): void {
             role="img"
             :aria-label="imageAlt"
           >
-            Imagem indisponível
+            {{ t('product.imageUnavailable') }}
           </div>
         </div>
       </div>
@@ -70,9 +84,9 @@ function onImageError(): void {
       <div class="flex min-w-0 flex-col gap-3 p-3 sm:gap-5 sm:p-6 lg:p-8">
         <div class="flex flex-wrap items-start gap-2 sm:gap-3">
           <span
-            class="inline-flex max-w-full break-words rounded-full bg-violet-50 px-3 py-1 text-xs font-medium capitalize text-violet-700 dark:bg-violet-950/50 dark:text-violet-300"
+            class="inline-flex max-w-full break-words rounded-full bg-violet-50 px-3 py-1 text-xs font-medium text-violet-700 dark:bg-violet-950/50 dark:text-violet-300"
           >
-            {{ product.category }}
+            {{ categoryLabel }}
           </span>
 
           <span
@@ -89,7 +103,7 @@ function onImageError(): void {
                 d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10Z"
               />
             </svg>
-            Favoritado
+            {{ t('favorites.favorited') }}
           </span>
         </div>
 
@@ -105,8 +119,7 @@ function onImageError(): void {
             <StarFillIcon class="h-4 w-4 shrink-0 text-amber-400" aria-hidden="true" />
             <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ product.rating.rate.toFixed(1) }}</span>
             <span class="text-sm text-slate-500 dark:text-slate-400">
-              ({{ product.rating.count }}
-              {{ product.rating.count === 1 ? 'avaliação' : 'avaliações' }})
+              ({{ product.rating.count }} {{ ratingCountLabel }})
             </span>
           </div>
 
@@ -117,7 +130,7 @@ function onImageError(): void {
 
         <section class="min-w-0 space-y-2 border-t border-slate-100 pt-5 dark:border-slate-800" aria-labelledby="product-description-heading">
           <h2 id="product-description-heading" class="text-sm font-semibold text-slate-900 dark:text-slate-100">
-            Descrição
+            {{ t('product.description') }}
           </h2>
           <p class="break-words text-sm leading-relaxed text-slate-600 sm:text-base dark:text-slate-300">
             {{ product.description }}
@@ -171,7 +184,7 @@ function onImageError(): void {
                 d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4 11.5-11.5Z"
               />
             </svg>
-            Editar produto
+            {{ t('product.edit') }}
           </RouterLink>
         </div>
       </div>

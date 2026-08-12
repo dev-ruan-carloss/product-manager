@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import Paginator, { type PageState } from 'primevue/paginator'
 import Select from 'primevue/select'
 
@@ -18,12 +19,16 @@ const emit = defineEmits<{
   'update:itemsPerPage': [rows: number]
 }>()
 
+const { t } = useI18n()
+
 const first = computed(() => (props.currentPage - 1) * props.itemsPerPage)
 
-const pageSizeOptions = ITEMS_PER_PAGE_OPTIONS.map((value) => ({
-  label: `${value} por página`,
-  value,
-}))
+const pageSizeOptions = computed(() =>
+  ITEMS_PER_PAGE_OPTIONS.map((value) => ({
+    label: t('catalog.perPage', { count: value }),
+    value,
+  })),
+)
 
 const showPagination = computed(() => props.totalProducts > 0)
 
@@ -43,10 +48,16 @@ function onItemsPerPageChange(value: number): void {
   <nav
     v-if="showPagination"
     class="flex min-w-0 flex-col gap-2 border-t border-slate-200 pt-3 sm:gap-3 sm:pt-4 dark:border-slate-700"
-    aria-label="Paginação de produtos"
+    :aria-label="t('catalog.paginationAria')"
   >
     <p class="text-sm leading-relaxed text-slate-500 dark:text-slate-400" aria-live="polite">
-      Mostrando {{ rangeStart }} a {{ rangeEnd }} de {{ totalProducts }} produtos
+      {{
+        t('catalog.showingRange', {
+          start: rangeStart,
+          end: rangeEnd,
+          total: totalProducts,
+        })
+      }}
     </p>
 
     <div class="flex min-w-0 flex-wrap items-center gap-2 sm:gap-3">
@@ -62,7 +73,7 @@ function onItemsPerPageChange(value: number): void {
       />
 
       <div class="min-w-0 w-full basis-full sm:w-auto sm:max-w-[11rem] sm:basis-auto sm:flex-1">
-        <label class="sr-only" for="items-per-page">Itens por página</label>
+        <label class="sr-only" for="items-per-page">{{ t('catalog.itemsPerPage') }}</label>
         <Select
           input-id="items-per-page"
           :model-value="itemsPerPage"

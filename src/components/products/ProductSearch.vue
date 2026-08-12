@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import IconField from 'primevue/iconfield'
 import InputIcon from 'primevue/inputicon'
 import InputText from 'primevue/inputtext'
@@ -13,6 +14,8 @@ const emit = defineEmits<{
   'update:modelValue': [value: string]
 }>()
 
+const { t } = useI18n()
+
 function onInput(event: Event): void {
   const target = event.target as HTMLInputElement
   emit('update:modelValue', target.value)
@@ -21,7 +24,7 @@ function onInput(event: Event): void {
 
 <template>
   <div class="min-w-0 w-full">
-    <label class="sr-only" :for="inputId ?? 'product-search'">Buscar produto</label>
+    <label class="sr-only" :for="inputId ?? 'product-search'">{{ t('catalog.searchLabel') }}</label>
     <IconField class="w-full min-w-0">
       <InputIcon aria-hidden="true">
         <SearchIcon aria-hidden="true" />
@@ -31,7 +34,7 @@ function onInput(event: Event): void {
         :model-value="modelValue"
         type="search"
         class="w-full"
-        placeholder="Buscar produto..."
+        :placeholder="t('catalog.searchPlaceholder')"
         autocomplete="off"
         enterkeyhint="search"
         @input="onInput"

@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
 import { useFavoritesStore } from '@/stores/favoritesStore'
 
+const { t } = useI18n()
 const route = useRoute()
 const favoritesStore = useFavoritesStore()
 
@@ -29,7 +31,7 @@ const isCreateActive = computed(() => route.name === 'produto-criar')
       <RouterLink
         to="/produtos"
         class="flex shrink-0 items-center gap-1.5 rounded-md text-slate-900 outline-none focus-visible:ring-2 focus-visible:ring-violet-500 sm:gap-2 dark:text-slate-100"
-        aria-label="Product Management — ir para produtos"
+        :aria-label="t('brand.homeAria')"
       >
         <span
           class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-600 text-white sm:h-9 sm:w-9"
@@ -44,13 +46,13 @@ const isCreateActive = computed(() => route.name === 'produto-criar')
           </svg>
         </span>
         <span class="text-sm font-semibold leading-snug tracking-tight whitespace-nowrap sm:text-lg">
-          Product Management
+          {{ t('brand.name') }}
         </span>
       </RouterLink>
 
       <nav
         class="ml-auto flex min-w-0 flex-wrap items-center justify-end gap-x-2 gap-y-2 max-[515px]:w-full max-[515px]:basis-full max-[515px]:grid max-[515px]:grid-cols-2 sm:gap-x-3"
-        aria-label="Principal"
+        :aria-label="t('nav.main')"
       >
         <RouterLink
           to="/produtos"
@@ -62,7 +64,7 @@ const isCreateActive = computed(() => route.name === 'produto-criar')
           "
           :aria-current="isProductsActive ? 'page' : undefined"
         >
-          Produtos
+          {{ t('nav.products') }}
         </RouterLink>
 
         <RouterLink
@@ -73,7 +75,7 @@ const isCreateActive = computed(() => route.name === 'produto-criar')
               ? 'bg-violet-200 font-semibold text-violet-700 dark:bg-violet-950/60 dark:text-violet-300'
               : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200'
           "
-          :aria-label="`Favoritos (${favoritesCount})`"
+          :aria-label="t('nav.favoritesWithCount', { count: favoritesCount })"
           :aria-current="isFavoritesActive ? 'page' : undefined"
         >
           <span class="relative mr-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center" aria-hidden="true">
@@ -97,7 +99,7 @@ const isCreateActive = computed(() => route.name === 'produto-criar')
               {{ favoritesCount > 99 ? '99+' : favoritesCount }}
             </span>
           </span>
-          <span class="whitespace-nowrap">Favoritos</span>
+          <span class="whitespace-nowrap">{{ t('nav.favorites') }}</span>
         </RouterLink>
 
         <RouterLink
@@ -105,7 +107,7 @@ const isCreateActive = computed(() => route.name === 'produto-criar')
           class="inline-flex shrink-0 items-center justify-center rounded-lg bg-violet-600 px-2.5 py-1.5 text-sm font-semibold whitespace-nowrap text-white outline-none transition-colors hover:bg-violet-700 focus-visible:ring-2 focus-visible:ring-violet-500 max-[515px]:col-span-2 max-[515px]:mt-1 max-[515px]:w-full min-[516px]:ml-3 sm:ml-4 sm:px-3 dark:hover:bg-violet-500"
           :aria-current="isCreateActive ? 'page' : undefined"
         >
-          Novo Produto
+          {{ t('nav.newProduct') }}
         </RouterLink>
       </nav>
     </div>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { toTypedSchema } from '@vee-validate/yup'
 import { useForm } from 'vee-validate'
 import Button from 'primevue/button'
@@ -13,6 +14,7 @@ import type { Category } from '@/types/category'
 import type { ProductCreatePayload } from '@/types/product'
 import { EMPTY_PRODUCT_FORM, type ProductFormData } from '@/types/productForm'
 import { formatPrice } from '@/utils/formatPrice'
+import { getLocalizedCategory } from '@/utils/localizeCategory'
 import { productFormSchema } from '@/utils/productFormSchema'
 
 const props = withDefaults(
@@ -27,7 +29,7 @@ const props = withDefaults(
     categoriesLoading: false,
     submitting: false,
     initialValues: undefined,
-    submitLabel: 'Salvar Produto',
+    submitLabel: undefined,
   },
 )
 
@@ -36,6 +38,8 @@ const emit = defineEmits<{
   cancel: []
   retryCategories: []
 }>()
+
+const { t, locale } = useI18n()
 
 const FIELD_FOCUS_ORDER = ['title', 'category', 'price', 'image', 'description'] as const
 
@@ -63,12 +67,16 @@ const [image, imageAttrs] = defineField('image')
 
 const previewImageFailed = ref(false)
 
-const categoryOptions = computed(() =>
-  props.categories.map((item) => ({
-    label: item,
+const resolvedSubmitLabel = computed(() => props.submitLabel ?? t('form.save'))
+
+const categoryOptions = computed(() => {
+  void locale.value
+
+  return props.categories.map((item) => ({
+    label: getLocalizedCategory(item),
     value: item,
-  })),
-)
+  }))
+})
 
 const categoriesUnavailable = computed(
   () => props.categories.length === 0 && !props.categoriesLoading,
@@ -76,12 +84,17 @@ const categoriesUnavailable = computed(
 
 const previewTitle = computed(() => {
   const value = values.title?.trim()
-  return value && value.length > 0 ? value : 'Título do produto'
+  return value && value.length > 0 ? value : t('form.previewTitleFallback')
 })
 
 const previewCategory = computed(() => {
+  void locale.value
   const value = values.category
-  return typeof value === 'string' && value.length > 0 ? value : 'Categoria'
+  if (typeof value === 'string' && value.length > 0) {
+    return getLocalizedCategory(value)
+  }
+
+  return t('form.categoryFallback')
 })
 
 const previewPrice = computed(() => {
@@ -169,15 +182,15 @@ function onCancel(): void {
         aria-labelledby="product-form-heading"
       >
         <h2 id="product-form-heading" class="text-lg font-semibold text-slate-900 dark:text-slate-100">
-          Informações do produto
+          {{ t('form.heading') }}
         </h2>
 
         <div class="mt-4 grid min-w-0 gap-4 sm:mt-5 sm:gap-5 md:grid-cols-2">
           <div class="min-w-0 space-y-1.5 md:col-span-1">
             <label for="product-title" class="block text-sm font-medium text-slate-700 dark:text-slate-200">
-              Título do produto
+              {{ t('form.title') }}
               <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
-              <span class="sr-only">(obrigatório)</span>
+              <span class="sr-only">{{ t('form.required') }}</span>
             </label>
             <InputText
               id="product-title"
@@ -185,7 +198,7 @@ function onCancel(): void {
               v-bind="titleAttrs"
               type="text"
               class="w-full"
-              placeholder="Ex.: Mens Casual Slim Fit T-Shirts"
+              :placeholder="t('form.titlePlaceholder')"
               :invalid="Boolean(errors.title)"
               :disabled="submitting"
               :aria-required="true"
@@ -202,15 +215,15 @@ function onCancel(): void {
               "
               :role="errors.title ? 'alert' : undefined"
             >
-              {{ errors.title || 'Digite um título claro e descritivo.' }}
+              {{ errors.title || t('form.titleHint') }}
             </p>
           </div>
 
           <div class="min-w-0 space-y-1.5 md:col-span-1">
             <label for="product-category" class="block text-sm font-medium text-slate-700 dark:text-slate-200">
-              Categoria
+              {{ t('form.category') }}
               <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
-              <span class="sr-only">(obrigatório)</span>
+              <span class="sr-only">{{ t('form.required') }}</span>
             </label>
             <Select
               v-model="category"
@@ -219,7 +232,7 @@ function onCancel(): void {
               :options="categoryOptions"
               option-label="label"
               option-value="value"
-              placeholder="Selecione uma categoria"
+              :placeholder="t('form.categoryPlaceholder')"
               class="w-full"
               :loading="categoriesLoading"
               :invalid="Boolean(errors.category)"
@@ -241,24 +254,24 @@ function onCancel(): void {
             >
               <template v-if="errors.category">{{ errors.category }}</template>
               <template v-else-if="categoriesUnavailable">
-                Não foi possível carregar as categorias.
+                {{ t('form.categoriesLoadError') }}
                 <button
                   type="button"
                   class="font-medium underline outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
                   @click="emit('retryCategories')"
                 >
-                  Tentar novamente
+                  {{ t('error.retry') }}
                 </button>
               </template>
-              <template v-else>Escolha a categoria do produto.</template>
+              <template v-else>{{ t('form.categoryHint') }}</template>
             </p>
           </div>
 
           <div class="min-w-0 space-y-1.5 md:col-span-1">
             <label for="product-price" class="block text-sm font-medium text-slate-700 dark:text-slate-200">
-              Preço
+              {{ t('form.price') }}
               <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
-              <span class="sr-only">(obrigatório)</span>
+              <span class="sr-only">{{ t('form.required') }}</span>
             </label>
             <InputNumber
               v-model="price"
@@ -286,15 +299,15 @@ function onCancel(): void {
               "
               :role="errors.price ? 'alert' : undefined"
             >
-              {{ errors.price || 'Informe o preço do produto.' }}
+              {{ errors.price || t('form.priceHint') }}
             </p>
           </div>
 
           <div class="min-w-0 space-y-1.5 md:col-span-1">
             <label for="product-image" class="block text-sm font-medium text-slate-700 dark:text-slate-200">
-              URL da imagem
+              {{ t('form.image') }}
               <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
-              <span class="sr-only">(obrigatório)</span>
+              <span class="sr-only">{{ t('form.required') }}</span>
             </label>
             <InputText
               id="product-image"
@@ -302,7 +315,7 @@ function onCancel(): void {
               v-bind="imageAttrs"
               type="url"
               class="w-full"
-              placeholder="https://exemplo.com/imagem.jpg"
+              :placeholder="t('form.imagePlaceholder')"
               :invalid="Boolean(errors.image)"
               :disabled="submitting"
               :aria-required="true"
@@ -319,15 +332,15 @@ function onCancel(): void {
               "
               :role="errors.image ? 'alert' : undefined"
             >
-              {{ errors.image || 'Cole o link da imagem do produto.' }}
+              {{ errors.image || t('form.imageHint') }}
             </p>
           </div>
 
           <div class="min-w-0 space-y-1.5 md:col-span-2">
             <label for="product-description" class="block text-sm font-medium text-slate-700 dark:text-slate-200">
-              Descrição
+              {{ t('form.description') }}
               <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
-              <span class="sr-only">(obrigatório)</span>
+              <span class="sr-only">{{ t('form.required') }}</span>
             </label>
             <Textarea
               id="product-description"
@@ -336,7 +349,7 @@ function onCancel(): void {
               class="w-full"
               rows="6"
               auto-resize
-              placeholder="Descreva o produto em detalhes..."
+              :placeholder="t('form.descriptionPlaceholder')"
               :invalid="Boolean(errors.description)"
               :disabled="submitting"
               :aria-required="true"
@@ -352,7 +365,7 @@ function onCancel(): void {
               "
               :role="errors.description ? 'alert' : undefined"
             >
-              {{ errors.description || 'Informe uma descrição clara do produto.' }}
+              {{ errors.description || t('form.descriptionHint') }}
             </p>
           </div>
         </div>
@@ -364,7 +377,7 @@ function onCancel(): void {
           aria-labelledby="product-preview-heading"
         >
           <h2 id="product-preview-heading" class="text-base font-semibold text-slate-900 dark:text-slate-100">
-            Prévia do produto
+            {{ t('form.preview') }}
           </h2>
 
           <div class="mt-4 overflow-hidden rounded-lg border border-slate-200 dark:border-slate-700">
@@ -374,18 +387,18 @@ function onCancel(): void {
               <img
                 v-if="previewImage && !previewImageFailed"
                 :src="previewImage"
-                :alt="`Prévia de ${previewTitle}`"
+                :alt="t('form.previewImageAlt', { title: previewTitle })"
                 class="max-h-36 max-w-full object-contain"
                 @error="onPreviewImageError"
               />
               <p v-else class="px-2 text-center text-xs text-slate-400 dark:text-slate-500">
-                Imagem do produto. Será carregada da URL informada.
+                {{ t('form.previewImageHint') }}
               </p>
             </div>
 
             <div class="space-y-2 p-4">
               <p class="line-clamp-2 text-sm font-semibold text-slate-900 dark:text-slate-100">{{ previewTitle }}</p>
-              <p class="text-xs capitalize text-violet-700 dark:text-violet-300">{{ previewCategory }}</p>
+              <p class="text-xs text-violet-700 dark:text-violet-300">{{ previewCategory }}</p>
               <p class="text-base font-bold text-violet-700 dark:text-violet-300">{{ previewPrice }}</p>
             </div>
           </div>
@@ -408,24 +421,26 @@ function onCancel(): void {
                 />
               </svg>
             </span>
-            <h2 id="product-tips-heading" class="text-base font-semibold text-slate-900 dark:text-slate-100">Dicas</h2>
+            <h2 id="product-tips-heading" class="text-base font-semibold text-slate-900 dark:text-slate-100">
+              {{ t('form.tips') }}
+            </h2>
           </div>
           <ul class="mt-3 space-y-2 text-sm text-slate-600 dark:text-slate-300">
             <li class="flex gap-2">
               <span class="mt-0.5 text-emerald-600 dark:text-emerald-400" aria-hidden="true">✓</span>
-              Use um título objetivo e descritivo.
+              {{ t('form.tipTitle') }}
             </li>
             <li class="flex gap-2">
               <span class="mt-0.5 text-emerald-600 dark:text-emerald-400" aria-hidden="true">✓</span>
-              Cole uma URL de imagem válida.
+              {{ t('form.tipImage') }}
             </li>
             <li class="flex gap-2">
               <span class="mt-0.5 text-emerald-600 dark:text-emerald-400" aria-hidden="true">✓</span>
-              A descrição deve ser clara e completa.
+              {{ t('form.tipDescription') }}
             </li>
             <li class="flex gap-2">
               <span class="mt-0.5 text-emerald-600 dark:text-emerald-400" aria-hidden="true">✓</span>
-              Revise os dados antes de salvar.
+              {{ t('form.tipReview') }}
             </li>
           </ul>
         </section>
@@ -437,7 +452,7 @@ function onCancel(): void {
     >
       <Button
         type="button"
-        label="Cancelar"
+        :label="t('form.cancel')"
         severity="secondary"
         outlined
         class="min-h-11 w-full sm:w-auto"
@@ -451,7 +466,7 @@ function onCancel(): void {
 
       <Button
         type="submit"
-        :label="submitLabel"
+        :label="resolvedSubmitLabel"
         severity="primary"
         class="min-h-11 w-full !border-violet-600 !bg-violet-600 hover:!bg-violet-700 sm:w-auto"
         :loading="submitting"

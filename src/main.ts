@@ -6,7 +6,9 @@ import ToastService from 'primevue/toastservice'
 import { createApp } from 'vue'
 
 import App from './App.vue'
+import { i18n } from './i18n'
 import router from './router'
+import { useLocaleStore } from '@/stores/localeStore'
 
 import './assets/styles/main.css'
 
@@ -31,6 +33,7 @@ const AppPreset = definePreset(Aura, {
 const app = createApp(App)
 
 app.use(createPinia())
+app.use(i18n)
 app.use(router)
 app.use(PrimeVue, {
   theme: {
@@ -42,5 +45,8 @@ app.use(PrimeVue, {
   },
 })
 app.use(ToastService)
+
+// Sincroniza idioma persistido com i18n/document no boot.
+useLocaleStore()
 
 app.mount('#app')
