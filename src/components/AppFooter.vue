@@ -23,7 +23,7 @@ const linkClass =
 
 <template>
   <footer
-    class="border-t border-slate-200 bg-white pb-[env(safe-area-inset-bottom)] transition-colors duration-150 dark:border-slate-800 dark:bg-slate-950"
+    class="border-t border-slate-200 bg-violet-100 pb-[env(safe-area-inset-bottom)] transition-colors duration-150 dark:border-slate-800 dark:bg-slate-950"
   >
     <div class="mx-auto max-w-7xl px-2.5 py-4 sm:px-6 sm:py-6">
       <div class="flex flex-col gap-3 sm:gap-4">

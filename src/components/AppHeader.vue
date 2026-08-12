@@ -21,7 +21,7 @@ const isCreateActive = computed(() => route.name === 'produto-criar')
 
 <template>
   <header
-    class="border-b border-slate-200 bg-white pt-[env(safe-area-inset-top)] transition-colors duration-150 dark:border-slate-800 dark:bg-slate-950"
+    class="border-b border-slate-200 bg-violet-100 pt-[env(safe-area-inset-top)] transition-colors duration-150 dark:border-slate-800 dark:bg-slate-950"
   >
     <div
       class="mx-auto flex w-full max-w-7xl flex-wrap items-center gap-x-2 gap-y-2 px-2.5 py-2.5 sm:gap-x-3 sm:gap-y-3 sm:px-6 sm:py-3"
@@ -57,7 +57,7 @@ const isCreateActive = computed(() => route.name === 'produto-criar')
           class="inline-flex shrink-0 items-center justify-center rounded-lg px-2.5 py-1.5 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-violet-500 max-[515px]:w-full sm:px-3"
           :class="
             isProductsActive
-              ? 'bg-violet-100 font-semibold text-violet-700 dark:bg-violet-950/60 dark:text-violet-300'
+              ? 'bg-violet-200 font-semibold text-violet-700 dark:bg-violet-950/60 dark:text-violet-300'
               : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200'
           "
           :aria-current="isProductsActive ? 'page' : undefined"
@@ -70,7 +70,7 @@ const isCreateActive = computed(() => route.name === 'produto-criar')
           class="relative inline-flex shrink-0 items-center justify-center gap-0.5 rounded-lg px-2.5 py-1.5 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-violet-500 max-[515px]:w-full sm:px-3"
           :class="
             isFavoritesActive
-              ? 'bg-violet-100 font-semibold text-violet-700 dark:bg-violet-950/60 dark:text-violet-300'
+              ? 'bg-violet-200 font-semibold text-violet-700 dark:bg-violet-950/60 dark:text-violet-300'
               : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200'
           "
           :aria-label="`Favoritos (${favoritesCount})`"

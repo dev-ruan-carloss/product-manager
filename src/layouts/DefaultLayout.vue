@@ -14,7 +14,7 @@ useThemeStore()
     class="app-shell flex flex-col bg-slate-50 text-slate-900 transition-colors duration-150 dark:bg-slate-900 dark:text-slate-100"
   >
     <AppHeader />
-    <main class="min-w-0 flex-1">
+    <main class="min-w-0 flex-1 bg-violet-50 dark:bg-transparent">
       <RouterView />
     </main>
     <AppFooter />
