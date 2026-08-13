@@ -15,6 +15,8 @@ describe('AppHeader', () => {
     expect(wrapper.text()).toContain('Product Management')
     const brand = wrapper.get('a[aria-label="Product Management — ir para produtos"]')
     expect(brand.attributes('href')).toBe('/produtos')
+    const logo = brand.get('img')
+    expect(logo.attributes('src')).toMatch(/image\/svg\+xml|logo-product-manager/)
   })
 
   it('renderiza navegação principal com Produtos, Favoritos e Novo Produto', async () => {

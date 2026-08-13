@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 
+import logoProductManager from '@/assets/logo-product-manager.webp'
 import { useFavoritesStore } from '@/stores/favoritesStore'
 
 const { t } = useI18n()
@@ -33,18 +34,15 @@ const isCreateActive = computed(() => route.name === 'produto-criar')
         class="flex shrink-0 items-center gap-1.5 rounded-md text-slate-900 outline-none focus-visible:ring-2 focus-visible:ring-violet-500 sm:gap-2 dark:text-slate-100"
         :aria-label="t('brand.homeAria')"
       >
-        <span
-          class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-violet-600 text-white sm:h-9 sm:w-9"
+        <img
+          :src="logoProductManager"
+          alt=""
+          width="40"
+          height="40"
+          class="h-9 w-9 shrink-0 object-contain sm:h-10 sm:w-10"
           aria-hidden="true"
-        >
-          <svg class="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M6 7h12l-1 13H7L6 7Zm3-3h6l1 3H8l1-3Z"
-            />
-          </svg>
-        </span>
+          decoding="async"
+        />
         <span class="text-sm font-semibold leading-snug tracking-tight whitespace-nowrap sm:text-lg">
           {{ t('brand.name') }}
         </span>
