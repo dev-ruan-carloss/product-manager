@@ -129,7 +129,7 @@ A escolha também reduz a quantidade de configuração necessária para iniciar 
 
 ## Decisão
 
-Utilizar Vue Router para gerenciamento das rotas.
+Utilizar Vue Router para gerenciamento das rotas, em **History Mode** (`createWebHistory`), com URLs limpas (`/produtos`, `/favoritos`, etc.).
 
 ## Justificativa
 
@@ -144,6 +144,8 @@ Entre elas:
 - edição.
 
 O Vue Router fornece integração oficial com Vue e permite organizar essas rotas de forma declarativa.
+
+History Mode exige que o host (ex.: Vercel) sirva `index.html` para rotas do frontend quando o arquivo físico não existir — ver decisão **35.15**.
 
 ---
 
@@ -1182,6 +1184,47 @@ Garantir classificação consistente, Empty ≠ Error, recuperação segura e ac
 
 ---
 
+## 35.15 — Fallback SPA na Vercel (History Mode)
+
+**Data:** 2026-08-13
+
+**Problema:**
+
+Em produção (`product-manager-eta-seven.vercel.app`), navegação interna via Vue Router funcionava, mas F5 / acesso direto / nova aba em rotas como `/produtos`, `/favoritos`, `/produtos/novo` e `/produtos/:id` retornavam `404 NOT_FOUND`.
+
+**Causa:**
+
+- Vue Router em `createWebHistory` (client-side routing).
+- Build Vite na raiz (`base` padrão `/`, `outDir` `dist`).
+- Ausência de `vercel.json` com rewrite/fallback para SPA.
+- Na navegação interna, o browser não pede a rota ao servidor; no F5/acesso direto, o browser faz `GET /produtos` e a Vercel procura um arquivo físico inexistente → 404, antes do Vue Router rodar.
+
+**Decisão:**
+
+- Manter History Mode (não migrar para Hash Mode).
+- Adicionar `vercel.json` com rewrite catch-all para `/index.html`.
+- Na Vercel, arquivos estáticos existentes em `dist/` têm precedência sobre rewrites; assets, favicon e imagens de `public/` continuam sendo servidos normalmente.
+- Não alterar `base` do Vite (app publicada na raiz do domínio).
+- API permanece externa (`fakestoreapi.com`); nenhum rewrite `/api` no projeto.
+
+**Motivo da escolha (vs Hash Mode):**
+
+- URLs limpas e profissionais (`/produtos` em vez de `/#/produtos`).
+- Comportamento padrão de SPA moderna; Vercel documenta fallback via `rewrites`.
+- Hash Mode só mascara a falta de configuração do host.
+
+**Impacto no deploy:**
+
+- Qualquer rota sem arquivo físico correspondente passa a servir `index.html`.
+- Arquivos reais em `dist/` (favicon, imagens em `public/`, assets hashed) continuam sendo servidos normalmente pela filesystem da Vercel.
+- Após o próximo deploy, F5 e deep links devem retornar 200 com o shell da SPA; o Vue Router resolve a view.
+
+**Sinais de alerta (outros hosts):**
+
+SPA ok na navegação interna + 404 no F5/deep link + History Mode + host sem fallback → mesmo problema. Equivalentes típicos: Netlify `_redirects`, Nginx `try_files`, Apache `FallbackResource`/`mod_rewrite`, Cloudflare Pages `_redirects`, S3/CloudFront error document, Firebase `rewrites`.
+
+---
+
 # 36. Critérios de Aceite
 
 As decisões técnicas serão consideradas definidas quando:
@@ -1209,7 +1252,7 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.24
+**Versão:** 1.25
 
 **Última atualização:** 2026-08-13
 
@@ -1224,3 +1267,7 @@ Erros HTTP/runtime passam por AppError + i18n errors.*, com ErrorState/Toast/sub
 ### Nota — testes de componentes
 
 Suíte de componentes adicionada em `tests/components/` (Vitest + Vue Test Utils), complementar aos testes de stores/composables/services/utils. Fase 11 (consistência documental completa) permanece pendente.
+
+### Nota — deploy SPA na Vercel
+
+History Mode + `vercel.json` rewrite para `index.html`. Sem esse fallback, F5/acesso direto a rotas do Vue Router retorna 404 no CDN.
