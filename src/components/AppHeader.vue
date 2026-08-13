@@ -67,7 +67,7 @@ const isCreateActive = computed(() => route.name === 'produto-criar')
 
         <RouterLink
           to="/favoritos"
-          class="relative inline-flex shrink-0 items-center justify-center gap-0.5 rounded-lg px-2.5 py-1.5 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-violet-500 max-[515px]:w-full sm:px-3"
+          class="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-violet-500 max-[515px]:w-full sm:px-3"
           :class="
             isFavoritesActive
               ? 'bg-violet-200 font-semibold text-violet-700 dark:bg-violet-950/60 dark:text-violet-300'
@@ -76,7 +76,11 @@ const isCreateActive = computed(() => route.name === 'produto-criar')
           :aria-label="t('nav.favoritesWithCount', { count: favoritesCount })"
           :aria-current="isFavoritesActive ? 'page' : undefined"
         >
-          <span class="relative mr-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center" aria-hidden="true">
+          <span
+            class="inline-flex h-5 w-5 shrink-0 items-center justify-center"
+            data-testid="favorites-icon"
+            aria-hidden="true"
+          >
             <svg
               class="h-4 w-4"
               viewBox="0 0 24 24"
@@ -90,14 +94,16 @@ const isCreateActive = computed(() => route.name === 'produto-criar')
                 d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10Z"
               />
             </svg>
-            <span
-              v-if="favoritesCount > 0"
-              class="absolute -right-20 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-violet-600 px-1 text-[11px] font-semibold text-white"
-            >
-              {{ favoritesCount > 99 ? '99+' : favoritesCount }}
-            </span>
           </span>
           <span class="whitespace-nowrap">{{ t('nav.favorites') }}</span>
+          <span
+            v-if="favoritesCount > 0"
+            class="inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-violet-600 px-1 text-[11px] font-semibold text-white"
+            data-testid="favorites-count"
+            aria-hidden="true"
+          >
+            {{ favoritesCount > 99 ? '99+' : favoritesCount }}
+          </span>
         </RouterLink>
 
         <RouterLink

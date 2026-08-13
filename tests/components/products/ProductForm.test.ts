@@ -85,6 +85,34 @@ describe('ProductForm', () => {
     wrapper.unmount()
   })
 
+  it('preserva hierarquia visual e ARIA no estado de erro', async () => {
+    const { wrapper } = await mountWithApp(ProductForm, {
+      props: { categories },
+      attachTo: document.body,
+    })
+
+    await submitForm(wrapper)
+
+    const titleInput = wrapper.get('#product-title')
+    const titleMessage = wrapper.get('#product-title-message')
+    const titleEl = titleInput.element as HTMLInputElement
+
+    expect(titleInput.attributes('aria-invalid')).toBe('true')
+    expect(titleInput.attributes('aria-describedby')).toBe('product-title-message')
+    expect(titleInput.attributes('aria-required')).toBe('true')
+    expect(titleMessage.attributes('role')).toBe('alert')
+    expect(titleMessage.classes()).toContain('text-red-600')
+    expect(titleInput.classes().some((c) => c.includes('text-red'))).toBe(false)
+
+    titleEl.value = 'Produto válido'
+    titleEl.dispatchEvent(new Event('input'))
+    await nextTick()
+
+    expect(getComputedStyle(titleEl).color).not.toBe(getComputedStyle(titleMessage.element).color)
+
+    wrapper.unmount()
+  })
+
   it('emite submit com payload válido a partir dos valores iniciais', async () => {
     const { wrapper } = await mountWithApp(ProductForm, {
       props: { categories, initialValues: validValues },

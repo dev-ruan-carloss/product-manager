@@ -100,6 +100,26 @@ html.dark :focus-visible {
   outline-offset: 2px;
 }
 
+/*
+  Estado inválido: borda e mensagem de erro com destaque.
+  Placeholder e texto digitado permanecem neutros (sem vermelho saturado).
+*/
+.p-inputtext.p-invalid,
+.p-textarea.p-invalid,
+.p-inputnumber.p-invalid .p-inputnumber-input {
+  color: var(--p-inputtext-color, inherit);
+}
+
+.p-inputtext.p-invalid::placeholder,
+.p-textarea.p-invalid::placeholder,
+.p-inputnumber.p-invalid .p-inputnumber-input::placeholder {
+  color: var(--p-inputtext-placeholder-color, var(--p-form-field-placeholder-color));
+}
+
+.p-select.p-invalid .p-select-label.p-placeholder {
+  color: var(--p-select-placeholder-color, var(--p-form-field-placeholder-color));
+}
+
 html.dark .p-button:focus-visible,
 html.dark .p-inputtext:focus-visible,
 html.dark .p-textarea:focus-visible,

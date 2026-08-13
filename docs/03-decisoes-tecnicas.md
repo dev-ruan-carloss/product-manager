@@ -940,7 +940,29 @@ Evitar anúncios duplicados (ajuda + erro) em leitores de tela e garantir uso co
 
 ---
 
-## 35.9.1 — Foco inicial em telas com input principal
+## 35.9.1 — Hierarquia visual do estado inválido e contador de Favoritos
+
+**Data:** 2026-08-13
+
+**Decisão:**
+
+- No estado inválido dos campos PrimeVue, o destaque visual fica na **borda** e na **mensagem de erro**; o placeholder permanece neutro (mesmo tom do estado normal) e o texto digitado **não** herda vermelho saturado.
+- Implementação: token `formField.invalidPlaceholderColor` alinhado ao placeholder normal no preset Aura (`main.ts`) + reforço em `main.css`.
+- Contador de Favoritos no Header: layout em `inline-flex` no contexto do link (`ícone + texto + badge`), associado ao final de “Favoritos”; **não** usar o ícone de coração como referência de `position: absolute`.
+
+**Motivo:**
+
+Reduzir excesso de vermelho dentro do campo (hierarquia mensagem > borda > placeholder) e corrigir estruturalmente o badge que dependia de offset absoluto relativo ao ícone (`-right-20`), frágil a tipografia e viewport.
+
+**Impacto:**
+
+- Feedback de validação mais legível sem perder ARIA existente;
+- Contador estável em mobile/tablet/desktop, dentro da área clicável;
+- Testes do Header passam a validar associação estrutural (texto ↔ contador), não classes `right-*`.
+
+---
+
+## 35.9.2 — Foco inicial em telas com input principal
 
 **Data:** 2026-08-13
 
@@ -1004,7 +1026,7 @@ A decisão 35.10 previa testes de componentes em `tests/components/` quando houv
 - Usar Vitest + Vue Test Utils + jsdom, com helper compartilhado (`tests/helpers/mountComponent.ts`) que monta Pinia, vue-i18n, Vue Router e PrimeVue de forma alinhada à aplicação.
 - Priorizar comportamento observável e contratos de acessibilidade já presentes no código (`aria-*`, `role`, labels, emits), sem asserts de CSS/Tailwind pixel a pixel.
 - Cobrir componentes reutilizáveis e de maior relevância: navegação (AppHeader/AppFooter), catálogo (ProductCard/Grid/Filters/Search/Sort/Pagination), detalhes, formulário, favoritos e estados (Empty/Error/Loading), além de ThemeToggle e LocaleSelector.
-- Não alterar regras de negócio nem o posicionamento `-right-20` do badge de favoritos do Header apenas para facilitar testes.
+- Não alterar regras de negócio apenas para facilitar testes; asserts de posicionamento CSS frágil (ex.: valores `right-*`) devem ser evitados — preferir estrutura e comportamento observáveis.
 
 **Motivo:**
 
@@ -1012,7 +1034,7 @@ Complementar os testes unitários existentes com uma estratégia real de fronten
 
 **Impacto:**
 
-- **120 testes** automatizados passando na suíte completa;
+- **121 testes** automatizados passando na suíte completa;
 - organização documentada em `tests/components/` + helpers;
 - README, plano de implementação e DoD atualizados com a cobertura de componentes.
 
@@ -1154,7 +1176,7 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.22
+**Versão:** 1.23
 
 **Última atualização:** 2026-08-13
 
@@ -1164,4 +1186,4 @@ Conteúdo dinâmico de produtos não é traduzido automaticamente. i18n cobre in
 
 ### Nota — testes de componentes
 
-Suíte de componentes adicionada em `tests/components/` (Vitest + Vue Test Utils), complementar aos testes de stores/composables/services/utils. Total da suíte: **120 testes**. Fase 11 (consistência documental completa) permanece pendente.
+Suíte de componentes adicionada em `tests/components/` (Vitest + Vue Test Utils), complementar aos testes de stores/composables/services/utils. Total da suíte: **121 testes**. Fase 11 (consistência documental completa) permanece pendente.

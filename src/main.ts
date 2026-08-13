@@ -27,6 +27,19 @@ const AppPreset = definePreset(Aura, {
       900: '{violet.900}',
       950: '{violet.950}',
     },
+    // Placeholder inválido permanece neutro; destaque fica na borda e na mensagem.
+    colorScheme: {
+      light: {
+        formField: {
+          invalidPlaceholderColor: '{form.field.placeholder.color}',
+        },
+      },
+      dark: {
+        formField: {
+          invalidPlaceholderColor: '{form.field.placeholder.color}',
+        },
+      },
+    },
   },
 })
 

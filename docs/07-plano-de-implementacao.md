@@ -966,7 +966,12 @@ Consolidar qualidade técnica, estados de interface, testes manuais e, quando ap
 
 #### Correção realizada no QA
 
-- Contador de favoritos no Header: posição do badge corrigida de `-right-20` para `-right-2` (`AppHeader.vue`).
+- Contador de favoritos no Header: badge reposicionado estruturalmente — de offset absoluto relativo ao ícone (`-right-20` / `-right-2`) para fluxo `inline-flex` no link (`ícone + Favoritos + contador`).
+
+#### Refinamento posterior (2026-08-13)
+
+- Hierarquia visual de inputs inválidos: placeholder neutro; borda e mensagem de erro com destaque; texto digitado sem vermelho indevido (preset Aura + `main.css`).
+- Testes do Header/Form atualizados para estrutura e ARIA (sem asserts de `right-*`).
 
 #### Validações técnicas
 
@@ -985,7 +990,7 @@ Consolidar qualidade técnica, estados de interface, testes manuais e, quando ap
 - Cobertura crítica de domínio: favoritos, schema do formulário, filtros/ordenação/paginação, debounce, `parseProductId`, `formatPrice` e `productService`.
 - Cobertura de componentes: AppHeader, AppFooter, FavoriteButton, ProductCard, ProductDetails, ProductForm, ProductFilters, ProductSearch, ProductSort, ProductPagination, ProductGrid, EmptyState, ErrorState, LoadingState, ThemeToggle e LocaleSelector.
 - Estratégia de componentes: comportamento e acessibilidade observáveis (roles, aria-*, labels, emits), com Pinia + vue-i18n + Vue Router + PrimeVue via `tests/helpers/mountComponent.ts`.
-- Resultado: **120 testes passando**.
+- Resultado: **121 testes passando**.
 
 ---
 
@@ -1176,6 +1181,6 @@ Implementação opcional concluída sem alterar o status das Fases 1–10:
 
 **Status:** Em andamento
 
-**Versão:** 1.16
+**Versão:** 1.17
 
-**Última atualização:** 2026-08-12
+**Última atualização:** 2026-08-13

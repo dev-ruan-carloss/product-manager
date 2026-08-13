@@ -111,7 +111,7 @@ No mobile, a navegação deverá ser adaptada para o espaço disponível.
 - Ordem do Header: **logo + nome** à esquerda; à direita (`ml-auto` + `justify-end`): **Produtos + Favoritos + Novo Produto**.
 - Em viewports ≤515px: nav em grid — Produtos/Favoritos **50%** (sem `margin-left`); Novo Produto **100%**.
 - Em viewports ≥516px: espaçamento extra entre Favoritos e Novo Produto (`ml-3` / `ml-4`) para separar navegação de cadastro.
-- Favoritos: coração + texto + contador; estado ativo em pill Light/Dark.
+- Favoritos: coração + texto + contador em `inline-flex` no link (contador associado ao final de “Favoritos”, não ancorado no ícone); estado ativo em pill Light/Dark.
 - O controle de tema (`ThemeToggle`) foi movido para o **Footer** (não compete por espaço no Header).
 - Safe-area superior via `env(safe-area-inset-top)`.
 
@@ -663,6 +663,20 @@ As mensagens de erro deverão ser claras e objetivas.
 
 No `ProductForm`, o estado inválido também atualiza `aria-invalid` e o conteúdo anunciado via `aria-describedby` (região única de mensagem).
 
+### Hierarquia visual no estado inválido
+
+Prioridade de destaque:
+
+1. mensagem de erro (vermelho de erro);
+2. borda/estado do campo (vermelho de erro);
+3. placeholder auxiliar (neutro — mesmo tom do estado normal, sem vermelho saturado).
+
+Regras:
+
+- o texto digitado pelo usuário **não** fica vermelho apenas porque o campo está inválido;
+- o label **não** precisa ficar vermelho (exceto o indicador `*` de obrigatório já existente);
+- a acessibilidade do erro não depende só da cor (`aria-invalid`, mensagem associada, foco visível).
+
 ---
 
 # 35. Ações do Formulário
@@ -925,7 +939,7 @@ Implementação: composable `useInitialFocus` (`ref`/`id` + `onMounted`/`nextTic
 ### Favoritos e controles
 
 - `FavoriteButton`: teclado, `aria-pressed` coerente com a store e `aria-label` (“Adicionar/Remover produto dos favoritos”);
-- Header: Favoritos na nav (coração + texto + contador), com estado ativo em pill (Light/Dark); Novo Produto como CTA separado na mesma nav;
+- Header: Favoritos na nav (coração + texto + contador em fluxo flexível no botão, badge após “Favoritos”), com estado ativo em pill (Light/Dark); Novo Produto como CTA separado na mesma nav;
 - `ThemeToggle` no Footer (não no Header);
 - ícones decorativos com `aria-hidden="true"`;
 - breadcrumbs com `aria-label="Trilha de navegação"`;
@@ -1089,10 +1103,15 @@ A interface será considerada adequada quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.13
+**Versão:** 1.14
 
-**Última atualização:** 2026-08-11
+**Última atualização:** 2026-08-13
 
 ### Nota — melhoria bônus i18n
 
 Seletor de idioma no Footer (pt-BR / es / en), textos de UI via `vue-i18n`, categorias localizadas na apresentação. Título e descrição dos produtos permanecem no idioma original da FakeStoreAPI. ThemeToggle permanece no Footer. Pendências anteriores (ex.: Fase 11) não foram removidas.
+
+### Nota — refinamentos de feedback e Favoritos (2026-08-13)
+
+- Estado inválido: placeholder neutro; destaque na borda e na mensagem de erro; texto digitado sem vermelho indevido.
+- Contador de Favoritos no Header: associado ao texto via `inline-flex` (não ancorado no ícone com `absolute`).

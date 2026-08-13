@@ -59,16 +59,26 @@ describe('AppHeader', () => {
     expect(favoritesLink.text()).toContain('2')
   })
 
-  it('mantém o badge de favoritos com posicionamento -right-20', async () => {
+  it('associa o contador ao texto Favoritos dentro da área clicável', async () => {
     const { wrapper, pinia } = await mountWithApp(AppHeader)
     useFavoritesStore(pinia).addFavorite(7)
     await wrapper.vm.$nextTick()
 
-    const badge = wrapper
-      .findAll('span')
-      .find((el) => el.classes().includes('-right-20'))
-    expect(badge).toBeDefined()
-    expect(badge?.text()).toBe('1')
+    const favoritesLink = wrapper.get('a[href="/favoritos"]')
+    const badge = favoritesLink.get('[data-testid="favorites-count"]')
+    const icon = favoritesLink.get('[data-testid="favorites-icon"]')
+    const label = favoritesLink.findAll('span').find((el) => el.text() === 'Favoritos')
+
+    expect(badge.text()).toBe('1')
+    expect(favoritesLink.element.contains(badge.element)).toBe(true)
+    expect(icon.element.contains(badge.element)).toBe(false)
+    expect(label).toBeDefined()
+
+    const linkHtml = favoritesLink.html()
+    expect(linkHtml.indexOf('Favoritos')).toBeLessThan(linkHtml.indexOf('favorites-count'))
+    expect(badge.classes().some((c) => c.startsWith('absolute') || c.includes('right-'))).toBe(
+      false,
+    )
   })
 
   it('capaz o contador visual em 99+', async () => {
