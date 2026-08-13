@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { nextTick } from 'vue'
 
 import ProductSearch from '@/components/products/ProductSearch.vue'
 import { mountWithApp } from '../../helpers/mountComponent'
@@ -42,5 +43,31 @@ describe('ProductSearch', () => {
 
     expect(wrapper.get('label[for="product-search-mobile"]').exists()).toBe(true)
     expect(wrapper.get('#product-search-mobile').attributes('type')).toBe('search')
+  })
+
+  it('foca o campo quando autofocus está ativo', async () => {
+    const { wrapper } = await mountWithApp(ProductSearch, {
+      props: { modelValue: '', autofocus: true },
+      attachTo: document.body,
+    })
+
+    await nextTick()
+    await nextTick()
+
+    expect(document.activeElement).toBe(wrapper.get('#product-search').element)
+    wrapper.unmount()
+  })
+
+  it('não foca automaticamente sem a prop autofocus', async () => {
+    const { wrapper } = await mountWithApp(ProductSearch, {
+      props: { modelValue: '' },
+      attachTo: document.body,
+    })
+
+    await nextTick()
+    await nextTick()
+
+    expect(document.activeElement).not.toBe(wrapper.get('#product-search').element)
+    wrapper.unmount()
   })
 })

@@ -940,6 +940,28 @@ Evitar anúncios duplicados (ajuda + erro) em leitores de tela e garantir uso co
 
 ---
 
+## 35.9.1 — Foco inicial em telas com input principal
+
+**Data:** 2026-08-13
+
+**Decisão:**
+
+- Telas com campo principal de digitação recebem foco automático após a montagem (`ProductForm` → título; catálogo → busca visível).
+- Implementação via composable `useInitialFocus` (`onMounted` + `nextTick`), sem depender só do atributo HTML `autofocus`.
+- Não roubar foco já escolhido pelo usuário; não focar elementos ocultos (busca mobile vs desktop).
+- Em componentes reutilizáveis (`ProductSearch`), o autofocus é opt-in por prop.
+
+**Motivo:**
+
+Permitir digitação imediata ao entrar na tela, mantendo teclado/leitores de tela e o indicador de foco já existente.
+
+**Impacto:**
+
+- Melhora UX de criação/edição e busca;
+- Sem mudança de regras de negócio, API ou rotas.
+
+---
+
 ## 35.10 — Configuração do Vitest na Fase 10
 
 **Data:** 2026-08-11
@@ -990,7 +1012,7 @@ Complementar os testes unitários existentes com uma estratégia real de fronten
 
 **Impacto:**
 
-- **117 testes** automatizados passando na suíte completa;
+- **120 testes** automatizados passando na suíte completa;
 - organização documentada em `tests/components/` + helpers;
 - README, plano de implementação e DoD atualizados com a cobertura de componentes.
 
@@ -1132,9 +1154,9 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.21
+**Versão:** 1.22
 
-**Última atualização:** 2026-08-12
+**Última atualização:** 2026-08-13
 
 ### Nota — conteúdo dinâmico de produtos
 
@@ -1142,4 +1164,4 @@ Conteúdo dinâmico de produtos não é traduzido automaticamente. i18n cobre in
 
 ### Nota — testes de componentes
 
-Suíte de componentes adicionada em `tests/components/` (Vitest + Vue Test Utils), complementar aos testes de stores/composables/services/utils. Total da suíte: **117 testes**. Fase 11 (consistência documental completa) permanece pendente.
+Suíte de componentes adicionada em `tests/components/` (Vitest + Vue Test Utils), complementar aos testes de stores/composables/services/utils. Total da suíte: **120 testes**. Fase 11 (consistência documental completa) permanece pendente.

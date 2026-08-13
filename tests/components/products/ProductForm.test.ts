@@ -156,4 +156,17 @@ describe('ProductForm', () => {
     expect(wrapper.get('#product-preview-heading').exists()).toBe(true)
     expect(wrapper.text()).toContain('Preview Title')
   })
+
+  it('foca o campo título ao montar o formulário', async () => {
+    const { wrapper } = await mountWithApp(ProductForm, {
+      props: { categories },
+      attachTo: document.body,
+    })
+
+    await flushPromises()
+    await nextTick()
+
+    expect(document.activeElement).toBe(wrapper.get('#product-title').element)
+    wrapper.unmount()
+  })
 })

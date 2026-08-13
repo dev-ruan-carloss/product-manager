@@ -47,20 +47,20 @@ function onItemsPerPageChange(value: number): void {
 <template>
   <nav
     v-if="showPagination"
-    class="flex min-w-0 flex-col gap-2 border-t border-slate-200 pt-3 sm:gap-3 sm:pt-4 dark:border-slate-700"
+    class="border-t border-slate-200 pt-3 sm:pt-4 dark:border-slate-700"
     :aria-label="t('catalog.paginationAria')"
   >
-    <p class="text-sm leading-relaxed text-slate-500 dark:text-slate-400" aria-live="polite">
-      {{
-        t('catalog.showingRange', {
-          start: rangeStart,
-          end: rangeEnd,
-          total: totalProducts,
-        })
-      }}
-    </p>
+    <div class="pagination-toolbar">
+      <p class="pagination-toolbar__range text-sm leading-relaxed text-slate-500 dark:text-slate-400" aria-live="polite">
+        {{
+          t('catalog.showingRange', {
+            start: rangeStart,
+            end: rangeEnd,
+            total: totalProducts,
+          })
+        }}
+      </p>
 
-    <div class="flex min-w-0 flex-wrap items-center gap-2 sm:gap-3">
       <Paginator
         v-if="showPageControls"
         :first="first"
@@ -68,22 +68,20 @@ function onItemsPerPageChange(value: number): void {
         :total-records="totalProducts"
         :page-link-size="3"
         template="PrevPageLink PageLinks NextPageLink"
-        class="!max-w-full !bg-transparent !p-0"
+        class="pagination-toolbar__paginator !bg-transparent !p-0"
         @page="onPage"
       />
 
-      <div class="min-w-0 w-full basis-full sm:w-auto sm:max-w-[11rem] sm:basis-auto sm:flex-1">
-        <label class="sr-only" for="items-per-page">{{ t('catalog.itemsPerPage') }}</label>
-        <Select
-          input-id="items-per-page"
-          :model-value="itemsPerPage"
-          :options="pageSizeOptions"
-          option-label="label"
-          option-value="value"
-          class="w-full"
-          @update:model-value="onItemsPerPageChange"
-        />
-      </div>
+      <label class="sr-only" for="items-per-page">{{ t('catalog.itemsPerPage') }}</label>
+      <Select
+        input-id="items-per-page"
+        :model-value="itemsPerPage"
+        :options="pageSizeOptions"
+        option-label="label"
+        option-value="value"
+        class="pagination-page-size"
+        @update:model-value="onItemsPerPageChange"
+      />
     </div>
   </nav>
 </template>

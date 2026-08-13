@@ -138,6 +138,58 @@ html.dark .p-paginator-next:focus-visible {
   gap: 0.125rem;
 }
 
+/* Range + paginação + select: uma div, mesma linha. */
+.pagination-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.pagination-toolbar__range {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+}
+
+.pagination-toolbar__paginator,
+.pagination-toolbar__paginator.p-paginator {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  width: auto;
+}
+
+.pagination-toolbar .p-paginator .p-paginator-content {
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.pagination-page-size.p-select {
+  flex: 1 1 9.5rem;
+  width: auto;
+  min-width: min(100%, 9.5rem);
+  max-width: 100%;
+  height: 56px;
+  min-height: 56px;
+}
+
+.pagination-page-size.p-select .p-select-label {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  white-space: nowrap;
+}
+
+.pagination-page-size.p-select .p-select-dropdown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
 .p-toast {
   max-width: min(100vw - 1.5rem, 25rem);
 }

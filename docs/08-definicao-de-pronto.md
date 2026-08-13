@@ -399,7 +399,7 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 
 - Qualidade, testes manuais e critérios técnicos da Fase 10 foram validados.
 - Vitest configurado com suíte automatizada em `tests/` (separados de `src/`), incluindo `components/`, `composables/`, `services/`, `stores/` e `utils/`.
-- Resultado atual da suíte: **117 testes** passando.
+- Resultado atual da suíte: **120 testes** passando.
 - Pendência restante no critério final: consistência documental completa SDD × código (Fase 11).
 - Itens de Git (histórico/commits) permanecem sob processo contínuo e não bloqueiam a Fase 10.
 

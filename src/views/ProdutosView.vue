@@ -57,7 +57,7 @@ function isFavorite(productId: number): boolean {
 
       <section class="min-w-0 space-y-3 sm:space-y-5" :aria-label="t('catalog.ariaLabel')">
         <div class="hidden min-w-0 lg:block">
-          <ProductSearch v-model="searchInput" input-id="product-search-desktop" />
+          <ProductSearch v-model="searchInput" input-id="product-search-desktop" autofocus />
         </div>
 
         <LoadingState v-if="isLoading" />

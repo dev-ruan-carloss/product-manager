@@ -75,13 +75,14 @@ function localizedCategory(category: string): string {
     <div class="min-w-0 lg:hidden">
       <ProductSearch
         input-id="product-search-mobile"
+        autofocus
         :model-value="search"
         @update:model-value="emit('update:search', $event)"
       />
     </div>
 
-    <div class="flex min-w-0 flex-col gap-3 sm:flex-row sm:flex-wrap lg:hidden">
-      <div class="min-w-0 flex-1 basis-full sm:basis-[calc(50%-0.375rem)]">
+    <div class="flex min-w-0 flex-wrap items-end gap-3 lg:hidden">
+      <div class="min-w-0 flex-1 basis-[min(100%,11rem)]">
         <div class="min-w-0 space-y-1.5">
           <label class="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400" for="category-mobile">
             {{ t('catalog.category') }}
@@ -98,7 +99,7 @@ function localizedCategory(category: string): string {
         </div>
       </div>
 
-      <div class="min-w-0 flex-1 basis-full sm:basis-[calc(50%-0.375rem)]">
+      <div class="min-w-0 flex-1 basis-[min(100%,11rem)]">
         <ProductSort
           variant="select"
           input-id="sort-mobile"

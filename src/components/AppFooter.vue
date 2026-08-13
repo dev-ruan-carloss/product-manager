@@ -30,9 +30,9 @@ const linkClass =
   >
     <div class="mx-auto max-w-7xl px-2.5 py-4 sm:px-6 sm:py-6">
       <div class="flex flex-col gap-3 sm:gap-4">
-        <div class="flex min-w-0 items-start justify-between gap-3">
-          <div class="min-w-0">
-            <p class="text-base font-semibold tracking-tight text-slate-900 sm:text-lg dark:text-slate-100">
+        <div class="flex min-w-0 flex-wrap items-start gap-x-3 gap-y-3">
+          <div class="min-w-0 grow basis-[min(100%,14rem)]">
+            <p class="text-base font-semibold tracking-tight whitespace-nowrap text-slate-900 sm:text-lg dark:text-slate-100">
               {{ t('brand.name') }}
             </p>
             <p class="mt-1 text-sm leading-relaxed text-slate-500 dark:text-slate-400">
@@ -41,7 +41,7 @@ const linkClass =
           </div>
 
           <div
-            class="flex shrink-0 flex-wrap items-center justify-end gap-2 self-start"
+            class="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2"
             role="group"
             :aria-label="t('preferences.ariaLabel')"
           >

@@ -288,6 +288,7 @@ Exemplos possíveis:
     ├── useProductsCatalog.ts
     ├── useProductListControls.ts
     ├── useDebouncedRef.ts
+    ├── useInitialFocus.ts
     ├── useProductDetails.ts
     └── useFavoriteProducts.ts
 
@@ -315,6 +316,18 @@ Responsabilidades:
 Encapsula a lógica de debounce utilizada na pesquisa (delay padrão: 300ms).
 
 O objetivo é evitar que a aplicação execute operações desnecessárias a cada alteração imediata do campo de pesquisa.
+
+---
+
+## 7.2.1 — useInitialFocus
+
+Foca o campo principal de uma tela após a montagem (via `nextTick`), sem depender apenas do atributo HTML `autofocus`.
+
+Regras:
+
+- não rouba foco se o usuário já interagiu com outro controle;
+- não foca elementos ocultos (ex.: busca mobile vs desktop);
+- usado no `ProductForm` (título) e no `ProductSearch` quando `autofocus` é solicitado pelo pai.
 
 ---
 

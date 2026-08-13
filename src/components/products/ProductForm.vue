@@ -10,6 +10,7 @@ import Select from 'primevue/select'
 import Textarea from 'primevue/textarea'
 import TimesIcon from '@primevue/icons/times'
 
+import { useInitialFocus } from '@/composables/useInitialFocus'
 import type { Category } from '@/types/category'
 import type { ProductCreatePayload } from '@/types/product'
 import { EMPTY_PRODUCT_FORM, type ProductFormData } from '@/types/productForm'
@@ -40,6 +41,8 @@ const emit = defineEmits<{
 }>()
 
 const { t, locale } = useI18n()
+
+useInitialFocus('product-title')
 
 const FIELD_FOCUS_ORDER = ['title', 'category', 'price', 'image', 'description'] as const
 

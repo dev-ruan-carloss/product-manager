@@ -451,6 +451,10 @@ O botão próximo deverá permanecer desabilitado na última página.
 
 A escolha por paginação em vez de scroll infinito mantém a navegação previsível e atende ao escopo do desafio.
 
+### Implementação atual
+
+`ProductPagination` concentra intervalo (“Mostrando X a Y…”), controles de página e seletor de itens por página em um único container flex (`pagination-toolbar`), com wrap quando faltar espaço.
+
 ---
 
 # 22. Estado de Loading
@@ -908,6 +912,15 @@ Associações acessíveis:
 - `aria-describedby` aponta sempre para a região contextual atualmente apresentada;
 - `aria-required` nos campos obrigatórios;
 - após envio inválido, o foco é movido para o primeiro campo inválido (ordem visual do formulário).
+
+### Foco inicial em telas com input principal
+
+Ao entrar em telas com campo principal de digitação, o foco é aplicado automaticamente quando apropriado:
+
+- criação/edição (`ProductForm`): campo título;
+- catálogo (`ProductSearch`): campo de busca visível (mobile ou desktop), via prop `autofocus`.
+
+Implementação: composable `useInitialFocus` (`ref`/`id` + `onMounted`/`nextTick`), preservando foco já escolhido pelo usuário e ignorando elementos ocultos.
 
 ### Favoritos e controles
 
