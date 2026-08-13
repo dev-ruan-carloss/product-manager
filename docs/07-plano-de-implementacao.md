@@ -543,7 +543,7 @@ Implementar o formulário reutilizável e o fluxo de criação em `/produtos/nov
 Criados:
 
 - `src/components/products/ProductForm.vue`
-- `src/utils/productFormSchema.ts`
+- `src/schemas/productFormSchema.ts`
 - `src/types/productForm.ts`
 
 Modificados:
@@ -561,7 +561,7 @@ Modificados:
 
 ### Validação
 
-Schema centralizado em `src/utils/productFormSchema.ts` com Yup + `@vee-validate/yup` (`toTypedSchema`).
+Schema centralizado em `src/schemas/productFormSchema.ts` com Yup + `@vee-validate/yup` (`toTypedSchema`).
 
 Regras:
 
@@ -704,7 +704,7 @@ Modificados:
 
 ### Validação
 
-Reutiliza `src/utils/productFormSchema.ts` — mesmas regras da criação (RF-009). Sem schema duplicado.
+Reutiliza `src/schemas/productFormSchema.ts` — mesmas regras da criação (RF-009). Sem schema duplicado.
 
 ### Endpoints
 
@@ -986,7 +986,7 @@ Consolidar qualidade técnica, estados de interface, testes manuais e, quando ap
 
 - Vitest configurado em `vite.config.ts`.
 - Scripts: `npm test`, `npm run test:watch`.
-- Testes organizados em `tests/` (separados de `src/`), por responsabilidade: `components/`, `composables/`, `services/`, `stores/`, `utils/` (+ `helpers/` e `i18n/`).
+- Testes organizados em `tests/` (separados de `src/`), por responsabilidade: `components/`, `composables/`, `services/`, `stores/`, `schemas/`, `utils/` (+ `helpers/` e `i18n/`).
 - Cobertura crítica de domínio: favoritos, schema do formulário, filtros/ordenação/paginação, debounce, `parseProductId`, `formatPrice` e `productService`.
 - Cobertura de componentes: AppHeader, AppFooter, FavoriteButton, ProductCard, ProductDetails, ProductForm, ProductFilters, ProductSearch, ProductSort, ProductPagination, ProductGrid, EmptyState, ErrorState, ErrorBoundary, LoadingState, ThemeToggle e LocaleSelector.
 - Estratégia de componentes: comportamento e acessibilidade observáveis (roles, aria-*, labels, emits), com Pinia + vue-i18n + Vue Router + PrimeVue via `tests/helpers/mountComponent.ts`.

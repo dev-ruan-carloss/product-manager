@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { productFormSchema } from '@/utils/productFormSchema'
+import { productFormSchema } from '@/schemas/productFormSchema'
 
 describe('productFormSchema', () => {
   const validPayload = {

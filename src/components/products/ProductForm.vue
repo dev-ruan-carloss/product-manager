@@ -15,6 +15,7 @@ import { useInitialFocus } from '@/composables/useInitialFocus'
 import type { Category } from '@/types/category'
 import type { ProductCreatePayload } from '@/types/product'
 import { EMPTY_PRODUCT_FORM, type ProductFormData } from '@/types/productForm'
+import { productFormSchema } from '@/schemas/productFormSchema'
 import {
   formatPrice,
   formatPriceInput,
@@ -22,7 +23,6 @@ import {
   parsePriceInput,
 } from '@/utils/formatPrice'
 import { getLocalizedCategory } from '@/utils/localizeCategory'
-import { productFormSchema } from '@/utils/productFormSchema'
 
 const props = withDefaults(
   defineProps<{

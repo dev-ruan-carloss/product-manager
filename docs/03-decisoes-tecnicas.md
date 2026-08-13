@@ -235,7 +235,7 @@ TailwindCSS complementa o PrimeVue na composição de layout, espaçamento e res
 
 Utilizar **vee-validate** com **Yup** (`@vee-validate/yup`) para validação dos formulários.
 
-O schema Yup permanece centralizado em `src/utils/productFormSchema.ts` e é reutilizado por criação e edição.
+O schema Yup permanece centralizado em `src/schemas/productFormSchema.ts` e é reutilizado por criação e edição.
 
 ## Justificativa
 
@@ -1251,6 +1251,29 @@ SPA ok na navegação interna + 404 no F5/deep link + History Mode + host sem fa
 
 ---
 
+## 35.17 — Pasta `src/schemas/` para contratos Yup
+
+**Data:** 2026-08-13
+
+**Decisão anterior:**
+
+O schema Yup de produto ficava em `src/utils/productFormSchema.ts`, junto de helpers puros (`formatPrice`, `parseProductId`, etc.).
+
+**Nova decisão:**
+
+Schemas de validação Yup passam a viver em `src/schemas/`. O schema de produto foi movido para `src/schemas/productFormSchema.ts`; os testes correspondentes ficam em `tests/schemas/`.
+
+**Motivo:**
+
+`utils/` é para funções auxiliares puras. Schemas Yup são contratos de validação (análogos a `types/` para TypeScript e `services/` para a API), não utilitários genéricos. Isolá-los deixa a responsabilidade explícita na estrutura de pastas.
+
+**Impacto:**
+
+- `ProductForm` importa de `@/schemas/productFormSchema`;
+- documentação de arquitetura, decisões técnicas e plano de implementação.
+
+---
+
 # 36. Critérios de Aceite
 
 As decisões técnicas serão consideradas definidas quando:
@@ -1278,7 +1301,7 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.27
+**Versão:** 1.28
 
 **Última atualização:** 2026-08-13
 
@@ -1292,7 +1315,7 @@ Erros HTTP/runtime passam por AppError + i18n errors.*, com ErrorState/Toast/sub
 
 ### Nota — testes automatizados
 
-Suíte em `tests/` (components, composables, services, stores, utils, config, i18n): **164 testes** passando.
+Suíte em `tests/` (components, composables, services, stores, schemas, utils, config, i18n): **164 testes** passando.
 
 ### Nota — formatação monetária por locale
 

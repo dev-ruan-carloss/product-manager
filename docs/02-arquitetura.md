@@ -91,6 +91,7 @@ Exemplos:
 - lógica reutilizável → composables;
 - apresentação → components;
 - páginas → views;
+- validação → schemas;
 - tipos → types.
 
 ---
@@ -122,6 +123,7 @@ A estrutura planejada para o projeto será:
     │   ├── i18n/
     │   ├── layouts/
     │   ├── router/
+    │   ├── schemas/
     │   ├── services/
     │   ├── stores/
     │   ├── types/
@@ -503,7 +505,6 @@ Exemplos implementados:
     src/utils/
     ├── formatPrice.ts
     ├── parseProductId.ts
-    ├── productFormSchema.ts
     ├── localizeCategory.ts
     ├── logError.ts
     └── resolveErrorCopy.ts
@@ -513,6 +514,23 @@ Exemplos implementados:
 Esses arquivos somente deverão existir quando houver uma necessidade real.
 
 Não deverão ser utilizados como uma pasta genérica para colocar qualquer código que não tenha um local definido.
+
+Schemas Yup de validação não pertencem a `utils/`; concentram-se em `schemas/`.
+
+---
+
+# 13.1 — Schemas
+
+A pasta `schemas/` concentra os contratos de validação Yup utilizados pelos formulários.
+
+Estrutura implementada:
+
+    src/schemas/
+    └── productFormSchema.ts
+
+`productFormSchema` é compartilhado entre criação e edição via `ProductForm`. As mensagens são resolvidas via i18n no momento da validação.
+
+A pasta não deve misturar helpers de formatação ou parse — esses permanecem em `utils/`.
 
 ---
 
@@ -634,6 +652,7 @@ O fluxo de edição seguirá estrutura semelhante:
 | `config` | Configurações de infraestrutura, incluindo o cliente HTTP |
 | `services` | Comunicação com API e recursos externos |
 | `types` | Contratos e tipos TypeScript |
+| `schemas` | Contratos de validação Yup |
 | `router` | Configuração da navegação |
 | `utils` | Funções auxiliares puras |
 | `assets` | Recursos estáticos da aplicação |
@@ -799,13 +818,13 @@ A responsabilidade pelos formulários será dividida entre:
       ↓
     ProductForm
       ↓
-    Validação
+    Schema Yup (`src/schemas/`)
       ↓
     Service
 
 O `ProductForm` será responsável principalmente pela apresentação e interação.
 
-As regras de validação deverão permanecer em uma solução estruturada de validação.
+As regras de validação deverão permanecer em `src/schemas/`, fora do componente visual.
 
 A comunicação com a API será realizada fora do componente visual.
 
@@ -898,6 +917,7 @@ A arquitetura será considerada adequada quando:
 - [x] Services concentrarem comunicação com a API.
 - [x] Stores forem utilizados somente para estado compartilhado.
 - [x] Types concentrarem contratos TypeScript compartilhados.
+- [x] Schemas concentrarem contratos de validação Yup.
 - [x] Router concentrar a configuração de rotas.
 - [x] Utils forem utilizados somente para funções auxiliares apropriadas.
 - [x] Components não realizarem diretamente chamadas HTTP.
@@ -912,10 +932,14 @@ A arquitetura será considerada adequada quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.7
+**Versão:** 1.8
 
 **Última atualização:** 2026-08-13
 
 ### Nota — melhoria bônus i18n
 
 Pasta `src/i18n/` e `localeStore` adicionadas para internacionalização. Fluxo de produtos: FakeStoreAPI → services → `Product` → apresentação (`title`/`description` originais; categorias localizadas na UI; preço formatado na UI via `formatPrice` conforme o locale).
+
+### Nota — pasta `schemas/`
+
+Contratos Yup saíram de `utils/` para `src/schemas/` (decisão 35.17). `productFormSchema` continua compartilhado entre criação e edição.
