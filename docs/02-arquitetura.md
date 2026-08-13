@@ -889,30 +889,30 @@ O objetivo não é criar uma arquitetura excessivamente complexa, mas estabelece
 
 A arquitetura será considerada adequada quando:
 
-- [ ] Views representarem páginas e fluxos.
-- [ ] Components concentrarem apresentação e interação.
-- [ ] Composables concentrarem lógica reutilizável.
-- [ ] Config concentrar configurações de infraestrutura, incluindo o cliente HTTP.
-- [ ] Services concentrarem comunicação com a API.
-- [ ] Stores forem utilizados somente para estado compartilhado.
-- [ ] Types concentrarem contratos TypeScript compartilhados.
-- [ ] Router concentrar a configuração de rotas.
-- [ ] Utils forem utilizados somente para funções auxiliares apropriadas.
-- [ ] Components não realizarem diretamente chamadas HTTP.
-- [ ] Services não dependerem de Components.
-- [ ] Regras de negócio não estiverem excessivamente concentradas nas Views.
-- [ ] O código puder ser testado de maneira isolada.
-- [ ] A estrutura permitir evolução sem aumento desnecessário do acoplamento.
+- [x] Views representarem páginas e fluxos.
+- [x] Components concentrarem apresentação e interação.
+- [x] Composables concentrarem lógica reutilizável.
+- [x] Config concentrar configurações de infraestrutura, incluindo o cliente HTTP.
+- [x] Services concentrarem comunicação com a API.
+- [x] Stores forem utilizados somente para estado compartilhado.
+- [x] Types concentrarem contratos TypeScript compartilhados.
+- [x] Router concentrar a configuração de rotas.
+- [x] Utils forem utilizados somente para funções auxiliares apropriadas.
+- [x] Components não realizarem diretamente chamadas HTTP.
+- [x] Services não dependerem de Components.
+- [x] Regras de negócio não estiverem excessivamente concentradas nas Views.
+- [x] O código puder ser testado de maneira isolada.
+- [x] A estrutura permitir evolução sem aumento desnecessário do acoplamento.
 
 ---
 
 # 29. Status do Documento
 
-**Status:** Em andamento
+**Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.5
+**Versão:** 1.6
 
-**Última atualização:** 2026-08-11
+**Última atualização:** 2026-08-13
 
 ### Nota — melhoria bônus i18n
 

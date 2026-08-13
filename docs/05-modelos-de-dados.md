@@ -818,33 +818,33 @@ Para estruturas simples e equivalentes, não será criada duplicação artificia
 
 Os modelos de dados serão considerados definidos quando:
 
-- [ ] Produto estiver documentado.
-- [ ] Avaliação estiver documentada.
-- [ ] Categoria estiver documentada.
-- [ ] Favoritos estiverem documentados.
-- [ ] Payload de criação estiver definido.
-- [ ] Payload de atualização estiver definido.
-- [ ] Estado da listagem estiver definido.
-- [ ] Estado de erro estiver definido.
-- [ ] Estado de loading estiver definido.
-- [ ] Estado de pesquisa estiver definido.
-- [ ] Estado de filtro estiver definido.
+- [x] Produto estiver documentado.
+- [x] Avaliação estiver documentada.
+- [x] Categoria estiver documentada.
+- [x] Favoritos estiverem documentados.
+- [x] Payload de criação estiver definido.
+- [x] Payload de atualização estiver definido.
+- [x] Estado da listagem estiver definido.
+- [x] Estado de erro estiver definido.
+- [x] Estado de loading estiver definido.
+- [x] Estado de pesquisa estiver definido.
+- [x] Estado de filtro estiver definido.
 - [x] Estado de ordenação estiver definido.
-- [ ] Paginação estiver definida.
-- [ ] Persistência local estiver definida.
-- [ ] Fonte de cada dado estiver documentada.
-- [ ] Regras de tipagem estiverem definidas.
-- [ ] Estrutura de tipos TypeScript estiver definida.
+- [x] Paginação estiver definida.
+- [x] Persistência local estiver definida.
+- [x] Fonte de cada dado estiver documentada.
+- [x] Regras de tipagem estiverem definidas.
+- [x] Estrutura de tipos TypeScript estiver definida.
 
 ---
 
 # 43. Status do Documento
 
-**Status:** Em andamento
+**Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.7
+**Versão:** 1.8
 
-**Última atualização:** 2026-08-11
+**Última atualização:** 2026-08-13
 
 ### Nota — conteúdo dinâmico de produtos
 

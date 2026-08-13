@@ -753,17 +753,17 @@ A API não será chamada para favoritar ou desfavoritar produtos.
 
 A implementação deverá seguir as seguintes regras:
 
-- [ ] Nenhum componente realiza requisição HTTP diretamente.
-- [ ] Toda comunicação passa por um service.
-- [ ] O cliente Axios é centralizado.
-- [ ] Respostas da API possuem tipos TypeScript.
-- [ ] Payloads possuem tipos apropriados.
-- [ ] Erros são tratados antes de chegar à interface.
-- [ ] Estados de loading são controlados.
-- [ ] Estados vazios são diferenciados de erros.
-- [ ] URLs não são duplicadas nos componentes.
-- [ ] Credenciais não são armazenadas no código.
-- [ ] Favoritos permanecem como responsabilidade exclusiva do frontend.
+- [x] Nenhum componente realiza requisição HTTP diretamente.
+- [x] Toda comunicação passa por um service.
+- [x] O cliente Axios é centralizado.
+- [x] Respostas da API possuem tipos TypeScript.
+- [x] Payloads possuem tipos apropriados.
+- [x] Erros são tratados antes de chegar à interface.
+- [x] Estados de loading são controlados.
+- [x] Estados vazios são diferenciados de erros.
+- [x] URLs não são duplicadas nos componentes.
+- [x] Credenciais não são armazenadas no código.
+- [x] Favoritos permanecem como responsabilidade exclusiva do frontend.
 
 ---
 
@@ -784,27 +784,27 @@ A implementação deverá seguir as seguintes regras:
 
 O contrato da API será considerado documentado quando:
 
-- [ ] URL base estiver centralizada.
-- [ ] Cliente HTTP estiver definido.
-- [ ] Endpoints principais estiverem documentados.
-- [ ] Métodos HTTP estiverem documentados.
-- [ ] Parâmetros estiverem documentados.
-- [ ] Payloads estiverem documentados.
-- [ ] Respostas estiverem tipadas.
-- [ ] Códigos de erro estiverem considerados.
-- [ ] Loading estiver definido.
-- [ ] Estado vazio estiver definido.
-- [ ] Tratamento de erros estiver definido.
-- [ ] Limitações da API estiverem documentadas.
-- [ ] Responsabilidade dos services estiver definida.
-- [ ] Favoritos estiverem separados do contrato da API.
+- [x] URL base estiver centralizada.
+- [x] Cliente HTTP estiver definido.
+- [x] Endpoints principais estiverem documentados.
+- [x] Métodos HTTP estiverem documentados.
+- [x] Parâmetros estiverem documentados.
+- [x] Payloads estiverem documentados.
+- [x] Respostas estiverem tipadas.
+- [x] Códigos de erro estiverem considerados.
+- [x] Loading estiver definido.
+- [x] Estado vazio estiver definido.
+- [x] Tratamento de erros estiver definido.
+- [x] Limitações da API estiverem documentadas.
+- [x] Responsabilidade dos services estiver definida.
+- [x] Favoritos estiverem separados do contrato da API.
 
 ---
 
 # 35. Status do Documento
 
-**Status:** Em andamento
+**Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.2
+**Versão:** 1.3
 
-**Última atualização:** 2026-08-11
+**Última atualização:** 2026-08-13

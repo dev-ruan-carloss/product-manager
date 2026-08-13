@@ -323,7 +323,7 @@ O projeto será considerado documentado quando:
 
 A documentação não deverá contradizer o comportamento implementado.
 
-A verificação completa de consistência SDD × código permanece na Fase 11. O README foi atualizado na Fase 10.
+Consistência SDD × código verificada na Fase 11 (2026-08-13).
 
 ---
 
@@ -331,11 +331,11 @@ A verificação completa de consistência SDD × código permanece na Fase 11. O
 
 Os commits deverão:
 
-- [ ] Ser pequenos e relacionados a uma responsabilidade.
-- [ ] Utilizar Conventional Commits.
-- [ ] Possuir mensagens claras.
-- [ ] Evitar commits genéricos como `update`, `changes` ou `fix stuff`.
-- [ ] Manter o histórico compreensível.
+- [x] Ser pequenos e relacionados a uma responsabilidade.
+- [x] Utilizar Conventional Commits.
+- [x] Possuir mensagens claras.
+- [x] Evitar commits genéricos como `update`, `changes` ou `fix stuff`.
+- [x] Manter o histórico compreensível.
 
 Exemplos:
 
@@ -361,7 +361,7 @@ O projeto somente será considerado pronto quando:
 - [x] Lint estiver passando.
 - [x] Build estiver passando.
 - [x] README estiver atualizado.
-- [ ] Documentação estiver consistente com o código.
+- [x] Documentação estiver consistente com o código.
 
 ---
 
@@ -389,23 +389,27 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 
 # 21. Status do Documento
 
-**Status:** Em andamento
+**Status:** Concluído
 
-**Versão:** 1.12
+**Versão:** 1.13
 
 **Última atualização:** 2026-08-13
 
 ### Nota da Fase 10 (QA final)
 
 - Qualidade, testes manuais e critérios técnicos da Fase 10 foram validados.
-- Vitest configurado com suíte automatizada em `tests/` (separados de `src/`), incluindo `components/`, `composables/`, `services/`, `stores/` e `utils/`.
-- Resultado atual da suíte: **121 testes** passando.
-- Pendência restante no critério final: consistência documental completa SDD × código (Fase 11).
-- Itens de Git (histórico/commits) permanecem sob processo contínuo e não bloqueiam a Fase 10.
+- Vitest configurado com suíte automatizada em `tests/` (separados de `src/`), incluindo `components/`, `composables/`, `services/`, `stores/`, `utils/`, `config/` e `i18n/`.
+- Resultado atual da suíte (Fase 11): **146 testes** passando em **33 arquivos**.
 
 ### Nota — melhoria bônus i18n
 
 - Internacionalização (`vue-i18n`) com `pt-BR`, `es` e `en` adicionada após a Fase 10.
 - Categorias conhecidas localizadas na apresentação; `title`/`description` permanecem no idioma original da FakeStoreAPI (sem tradução automática).
-- Não remove nem conclui a Fase 11 (ainda pendente).
 - Não altera a FakeStoreAPI como fonte dos produtos nem a persistência de favoritos.
+
+### Nota — Fase 11 (auditoria documental)
+
+- README e SDD alinhados ao código e ao desafio.
+- Responsividade: requisito do desafio **360px+**; alvo interno **320px+**.
+- Deploy: https://product-manager-eta-seven.vercel.app/ com fallback SPA validado (HTTP 200 em deep links).
+- Critério final de consistência documental atendido.

@@ -386,7 +386,7 @@ A interface deverá considerar, no mínimo:
 - tablets;
 - desktops.
 
-A largura mínima considerada para a interface deverá ser aproximadamente 320px.
+O desafio técnico exige layout funcional a partir de **360px**. O projeto adota, como alvo interno adicional de usabilidade, validação a partir de aproximadamente **320px**.
 
 ### Critérios de aceite
 
@@ -852,8 +852,12 @@ Dessa forma, os requisitos permanecem independentes das decisões de implementa�
 
 ## Status do Documento
 
-**Status:** Em andamento
+**Status:** Concluído (requisitos alinhados ao código na Fase 11)
 
-**Versão:** 1.4
+**Versão:** 1.5
 
-**Última atualização:** 2026-08-11
+**Última atualização:** 2026-08-13
+
+### Nota — responsividade
+
+O desafio exige **360px+**. O projeto valida também a partir de **320px** como alvo interno de usabilidade.

@@ -1033,7 +1033,7 @@ A decisão 35.10 previa testes de componentes em `tests/components/` quando houv
 - Implementar suíte de testes de componentes exclusivamente em `tests/components/` (sem `*.test.ts` em `src/`).
 - Usar Vitest + Vue Test Utils + jsdom, com helper compartilhado (`tests/helpers/mountComponent.ts`) que monta Pinia, vue-i18n, Vue Router e PrimeVue de forma alinhada à aplicação.
 - Priorizar comportamento observável e contratos de acessibilidade já presentes no código (`aria-*`, `role`, labels, emits), sem asserts de CSS/Tailwind pixel a pixel.
-- Cobrir componentes reutilizáveis e de maior relevância: navegação (AppHeader/AppFooter), catálogo (ProductCard/Grid/Filters/Search/Sort/Pagination), detalhes, formulário, favoritos e estados (Empty/Error/Loading), além de ThemeToggle e LocaleSelector.
+- Cobrir componentes reutilizáveis e de maior relevância: navegação (AppHeader/AppFooter), catálogo (ProductCard/Grid/Filters/Search/Sort/Pagination), detalhes, formulário, favoritos e estados (Empty/Error/Loading/ErrorBoundary), além de ThemeToggle e LocaleSelector.
 - Não alterar regras de negócio apenas para facilitar testes; asserts de posicionamento CSS frágil (ex.: valores `right-*`) devem ser evitados — preferir estrutura e comportamento observáveis.
 
 **Motivo:**
@@ -1042,7 +1042,7 @@ Complementar os testes unitários existentes com uma estratégia real de fronten
 
 **Impacto:**
 
-- **121 testes** automatizados passando na suíte completa;
+- **146 testes** automatizados passando na suíte completa (valor atualizado na Fase 11);
 - organização documentada em `tests/components/` + helpers;
 - README, plano de implementação e DoD atualizados com a cobertura de componentes.
 
@@ -1078,8 +1078,7 @@ Melhorar a UX multilíngue sem alterar contratos da FakeStoreAPI nem invalidar a
 - estrutura `src/i18n/` e `localeStore`;
 - textos de interface migrados para chaves i18n;
 - testes em `tests/i18n/`, `tests/utils/localizeCategory.test.ts` e `tests/stores/localeStore.test.ts`;
-- documentação de UI e plano atualizada;
-- Fase 11 (entrega) permanece pendente.
+- documentação de UI e plano atualizada.
 
 ---
 
@@ -1118,7 +1117,7 @@ Permitir apresentação multilíngue de conteúdo dinâmico sem mocks, sem lista
 - `src/services/localization/*`, `useLocalizedProducts`, tipos em `productLocalization.ts`;
 - catálogo/detalhes/favoritos consomem `LocalizedProduct`;
 - testes em `tests/services/productLocalizationService.test.ts`;
-- Fase 11 permanece pendente.
+- **posteriormente removida** pela decisão 35.13.
 
 **Limitações:**
 
@@ -1153,7 +1152,6 @@ Produtos são conteúdo externo dinâmico. Nomes podem conter marcas, modelos, n
 
 - Fluxo: FakeStoreAPI → `productService` → catálogo/detalhes → UI com `product.title` / `product.description`.
 - i18n continua para interface e categorias.
-- Fase 11 permanece pendente.
 
 ---
 
@@ -1229,45 +1227,49 @@ SPA ok na navegação interna + 404 no F5/deep link + History Mode + host sem fa
 
 As decisões técnicas serão consideradas definidas quando:
 
-- [ ] Framework definido.
-- [ ] Linguagem definida.
-- [ ] Ferramenta de build definida.
-- [ ] Roteamento definido.
-- [ ] Gerenciamento de estado definido.
-- [ ] Cliente HTTP definido.
-- [ ] Estratégia de services definida.
-- [ ] Estratégia de composables definida.
-- [ ] Estratégia de persistência definida.
-- [ ] Estratégia de validação definida.
-- [ ] Estratégia de testes definida.
-- [ ] Lint definido.
-- [ ] Formatação definida.
-- [ ] Estratégia de uso de IA documentada.
-- [ ] Critérios para novas dependências definidos.
-- [ ] Decisões pendentes resolvidas antes da implementação correspondente.
+- [x] Framework definido.
+- [x] Linguagem definida.
+- [x] Ferramenta de build definida.
+- [x] Roteamento definido.
+- [x] Gerenciamento de estado definido.
+- [x] Cliente HTTP definido.
+- [x] Estratégia de services definida.
+- [x] Estratégia de composables definida.
+- [x] Estratégia de persistência definida.
+- [x] Estratégia de validação definida.
+- [x] Estratégia de testes definida.
+- [x] Lint definido.
+- [x] Formatação definida.
+- [x] Estratégia de uso de IA documentada.
+- [x] Critérios para novas dependências definidos.
+- [x] Decisões pendentes resolvidas antes da implementação correspondente.
 
 ---
 
 # 37. Status do Documento
 
-**Status:** Em andamento
+**Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.25
+**Versão:** 1.26
 
 **Última atualização:** 2026-08-13
 
 ### Nota — conteúdo dinâmico de produtos
 
-Conteúdo dinâmico de produtos não é traduzido automaticamente. i18n cobre interface e localização de categorias. Fase 11 permanece pendente.
+Conteúdo dinâmico de produtos não é traduzido automaticamente. i18n cobre interface e localização de categorias. A decisão 35.12 foi substituída pela 35.13.
 
 ### Nota — tratamento global de erros
 
 Erros HTTP/runtime passam por AppError + i18n errors.*, com ErrorState/Toast/submitError conforme o contexto. Empty ≠ Error. Retry seguro apenas em leituras.
 
-### Nota — testes de componentes
+### Nota — testes automatizados
 
-Suíte de componentes adicionada em `tests/components/` (Vitest + Vue Test Utils), complementar aos testes de stores/composables/services/utils. Fase 11 (consistência documental completa) permanece pendente.
+Suíte em `tests/` (components, composables, services, stores, utils, config, i18n): **146 testes** passando (valor confirmado na Fase 11).
 
 ### Nota — deploy SPA na Vercel
 
-History Mode + `vercel.json` rewrite para `index.html`. Sem esse fallback, F5/acesso direto a rotas do Vue Router retorna 404 no CDN.
+History Mode + `vercel.json` rewrite para `index.html`. Deep links e F5 em rotas internas retornam 200 com o shell da SPA.
+
+### Nota — Fase 11
+
+Auditoria final de documentação concluída. O estado vigente das decisões está refletido neste documento, no README e no código.

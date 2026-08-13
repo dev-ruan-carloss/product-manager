@@ -988,9 +988,10 @@ Consolidar qualidade técnica, estados de interface, testes manuais e, quando ap
 - Scripts: `npm test`, `npm run test:watch`.
 - Testes organizados em `tests/` (separados de `src/`), por responsabilidade: `components/`, `composables/`, `services/`, `stores/`, `utils/` (+ `helpers/` e `i18n/`).
 - Cobertura crítica de domínio: favoritos, schema do formulário, filtros/ordenação/paginação, debounce, `parseProductId`, `formatPrice` e `productService`.
-- Cobertura de componentes: AppHeader, AppFooter, FavoriteButton, ProductCard, ProductDetails, ProductForm, ProductFilters, ProductSearch, ProductSort, ProductPagination, ProductGrid, EmptyState, ErrorState, LoadingState, ThemeToggle e LocaleSelector.
+- Cobertura de componentes: AppHeader, AppFooter, FavoriteButton, ProductCard, ProductDetails, ProductForm, ProductFilters, ProductSearch, ProductSort, ProductPagination, ProductGrid, EmptyState, ErrorState, ErrorBoundary, LoadingState, ThemeToggle e LocaleSelector.
 - Estratégia de componentes: comportamento e acessibilidade observáveis (roles, aria-*, labels, emits), com Pinia + vue-i18n + Vue Router + PrimeVue via `tests/helpers/mountComponent.ts`.
-- Resultado: **121 testes passando**.
+- Também cobertos: `tests/config/` (normalização de erros Axios) e utilitários de apresentação de erro.
+- Resultado atual (Fase 11): **146 testes** passando em **33 arquivos**.
 
 ---
 
@@ -999,6 +1000,10 @@ Consolidar qualidade técnica, estados de interface, testes manuais e, quando ap
 ### Objetivo
 
 Consolidar a documentação final e garantir consistência entre código e SDD.
+
+### Status
+
+**CONCLUÍDA**
 
 ### README
 
@@ -1013,18 +1018,27 @@ O README deverá apresentar:
 - decisões relevantes;
 - funcionalidades;
 - limitações da FakeStoreAPI;
-- comandos disponíveis.
+- comandos disponíveis;
+- demo/deploy público;
+- bônus e extras;
+- o que faria diferente com mais tempo.
 
 ### Documentação SDD
 
-- [ ] Requisitos consistentes com o código.
-- [ ] Arquitetura consistente com o código.
-- [ ] Decisões técnicas atualizadas.
-- [ ] Contrato da API consistente.
-- [ ] Modelos de dados consistentes.
-- [ ] Especificação de UI consistente.
-- [ ] Plano de implementação atualizado.
-- [ ] Definição de pronto atendida.
+- [x] Requisitos consistentes com o código.
+- [x] Arquitetura consistente com o código.
+- [x] Decisões técnicas atualizadas.
+- [x] Contrato da API consistente.
+- [x] Modelos de dados consistentes.
+- [x] Especificação de UI consistente.
+- [x] Plano de implementação atualizado.
+- [x] Definição de pronto atendida.
+
+### Entrega / deploy
+
+- [x] README com link de produção: https://product-manager-eta-seven.vercel.app/
+- [x] Fallback SPA na Vercel (`vercel.json`) validado (deep links `/produtos`, `/favoritos`, `/produtos/:id`, `/produtos/novo` retornam HTTP 200).
+- [x] Validação técnica: `npm test`, `npm run type-check`, `npm run lint`, `npm run build`.
 
 ---
 
@@ -1081,8 +1095,8 @@ Isso mantém a documentação e o código sincronizados.
 
 A implementação será considerada concluída quando:
 
-- [ ] Todos os requisitos do desafio estiverem implementados.
-- [ ] Todas as rotas estiverem funcionando com suas funcionalidades.
+- [x] Todos os requisitos do desafio estiverem implementados.
+- [x] Todas as rotas estiverem funcionando com suas funcionalidades.
 - [x] Camada de API estiver implementada.
 - [x] Busca estiver funcionando com debounce.
 - [x] Filtro por categoria estiver funcionando.
@@ -1101,12 +1115,12 @@ A implementação será considerada concluída quando:
 - [x] PrimeVue estiver configurado no projeto.
 - [x] TailwindCSS estiver configurado no projeto.
 - [x] Estados de loading, erro e vazio estiverem implementados nas telas.
-- [x] Responsividade estiver validada a partir de 320px.
+- [x] Responsividade estiver validada a partir de 360px (desafio) e 320px (alvo interno).
 - [x] Acessibilidade básica estiver validada.
 - [x] Lint estiver passando.
 - [x] Build estiver passando.
 - [x] README estiver atualizado.
-- [ ] Documentação SDD estiver consistente com o código.
+- [x] Documentação SDD estiver consistente com o código.
 
 ---
 
@@ -1156,13 +1170,14 @@ Resumo do acompanhamento:
 | Acessibilidade (Fase 9 — parte a11y) | concluída |
 | Fase 9 (completa) | concluída |
 | QA (Fase 10) | concluída |
-| Entrega (Fase 11) | pendente |
+| Entrega (Fase 11) | concluída |
 | Internacionalização (melhoria bônus) | concluída (`vue-i18n`, pt-BR/es/en, seletor no Footer; categorias localizadas) |
 | Localização dinâmica de title/description (bônus) | removida — conteúdo dinâmico permanece no idioma original da API |
+| Deploy público (Vercel) | concluído — https://product-manager-eta-seven.vercel.app/ (SPA rewrite validado) |
 
 ### Próxima fase
 
-**Fase 11 — Documentação e entrega**
+Nenhuma. Fase 11 concluída — projeto pronto para entrega ao recrutador.
 
 ### Nota — melhoria bônus (i18n)
 
@@ -1175,12 +1190,19 @@ Implementação opcional concluída sem alterar o status das Fases 1–10:
 - conteúdo dinâmico de produtos (`title`/`description`) **não** é traduzido automaticamente — preserva a FakeStoreAPI;
 - busca e ordenação por nome usam `product.title` original.
 
+### Nota — Fase 11 (2026-08-13)
+
+- Auditoria README × código × desafio × SDD concluída.
+- Suíte atual: **146 testes** / 33 arquivos.
+- Responsividade documentada de forma coerente: desafio **360px+**, alvo interno **320px+**.
+- Deep links na Vercel retornam HTTP 200.
+
 ---
 
 # 19. Status do Documento
 
-**Status:** Em andamento
+**Status:** Concluído
 
-**Versão:** 1.17
+**Versão:** 1.18
 
 **Última atualização:** 2026-08-13

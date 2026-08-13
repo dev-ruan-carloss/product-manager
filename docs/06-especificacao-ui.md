@@ -16,7 +16,7 @@ A implementação deverá seguir os requisitos definidos no desafio técnico, ut
 - vee-validate;
 - Yup.
 
-A interface deverá ser responsiva, acessível e adequada para desktop e dispositivos móveis a partir de 360px.
+A interface deverá ser responsiva, acessível e adequada para desktop e dispositivos móveis. O desafio exige **360px+**; o alvo interno do projeto inclui validação a partir de **320px**.
 
 ---
 
@@ -838,14 +838,12 @@ As mensagens deverão ser curtas e compreensíveis.
 
 # 45. Responsividade
 
-A interface deverá funcionar corretamente a partir de:
-
-`320px`
+A interface deverá atender o requisito do desafio (**360px+**) e o alvo interno do projeto (**320px+**).
 
 Deverá ser validada pelo menos em:
 
-- 320px;
-- 360px;
+- 320px (alvo interno);
+- 360px (mínimo do desafio);
 - 768px;
 - desktop.
 
@@ -855,7 +853,8 @@ Deverá ser validada pelo menos em:
 
 Ajustes aplicados na camada de apresentação:
 
-- alvo mínimo de usabilidade: **320px+**;
+- requisito do desafio: **360px+**;
+- alvo mínimo interno de usabilidade: **320px+**;
 - prioridade: sem espaços em branco forçados; quando faltar largura, usar `flex-wrap`;
 - Header/Footer reorganizados com wrap e hierarquia preservada (sem `justify-between` gerando vazio no mobile);
 - catálogo, favoritos, detalhes e formulários com paddings compactos em telas estreitas;
@@ -1093,7 +1092,7 @@ A interface será considerada adequada quando:
 - [x] Estados de loading estão implementados.
 - [x] Estados de erro estão implementados.
 - [x] Estados vazios estão implementados.
-- [x] Interface é responsiva a partir de 320px.
+- [x] Interface é responsiva a partir de 360px (desafio) e validada também a partir de 320px (alvo interno).
 - [x] Componentes PrimeVue são utilizados.
 - [x] TailwindCSS é utilizado para estilização e layout.
 - [x] Interface possui navegação acessível por teclado.
@@ -1103,17 +1102,21 @@ A interface será considerada adequada quando:
 
 # 57. Status do Documento
 
-**Status:** Em andamento
+**Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.14
+**Versão:** 1.15
 
 **Última atualização:** 2026-08-13
 
 ### Nota — melhoria bônus i18n
 
-Seletor de idioma no Footer (pt-BR / es / en), textos de UI via `vue-i18n`, categorias localizadas na apresentação. Título e descrição dos produtos permanecem no idioma original da FakeStoreAPI. ThemeToggle permanece no Footer. Pendências anteriores (ex.: Fase 11) não foram removidas.
+Seletor de idioma no Footer (pt-BR / es / en), textos de UI via `vue-i18n`, categorias localizadas na apresentação. Título e descrição dos produtos permanecem no idioma original da FakeStoreAPI. ThemeToggle permanece no Footer.
 
 ### Nota — refinamentos de feedback e Favoritos (2026-08-13)
 
 - Estado inválido: placeholder neutro; destaque na borda e na mensagem de erro; texto digitado sem vermelho indevido.
 - Contador de Favoritos no Header: associado ao texto via `inline-flex` (não ancorado no ícone com `absolute`).
+
+### Nota — Fase 11
+
+Auditoria final de documentação concluída: README e SDD alinhados ao código, ao desafio (360px+) e ao alvo interno (320px+).
