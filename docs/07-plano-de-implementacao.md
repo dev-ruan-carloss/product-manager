@@ -981,9 +981,11 @@ Consolidar qualidade técnica, estados de interface, testes manuais e, quando ap
 
 - Vitest configurado em `vite.config.ts`.
 - Scripts: `npm test`, `npm run test:watch`.
-- Testes organizados em `tests/` (separados de `src/`), por responsabilidade: `composables/`, `services/`, `stores/`, `utils/`.
-- Cobertura crítica: favoritos, schema do formulário, filtros/ordenação/paginação, debounce, `parseProductId`, `formatPrice` e `productService`.
-- Resultado: **25 testes passando** (7 arquivos).
+- Testes organizados em `tests/` (separados de `src/`), por responsabilidade: `components/`, `composables/`, `services/`, `stores/`, `utils/` (+ `helpers/` e `i18n/`).
+- Cobertura crítica de domínio: favoritos, schema do formulário, filtros/ordenação/paginação, debounce, `parseProductId`, `formatPrice` e `productService`.
+- Cobertura de componentes: AppHeader, AppFooter, FavoriteButton, ProductCard, ProductDetails, ProductForm, ProductFilters, ProductSearch, ProductSort, ProductPagination, ProductGrid, EmptyState, ErrorState, LoadingState, ThemeToggle e LocaleSelector.
+- Estratégia de componentes: comportamento e acessibilidade observáveis (roles, aria-*, labels, emits), com Pinia + vue-i18n + Vue Router + PrimeVue via `tests/helpers/mountComponent.ts`.
+- Resultado: **117 testes passando**.
 
 ---
 
@@ -1174,6 +1176,6 @@ Implementação opcional concluída sem alterar o status das Fases 1–10:
 
 **Status:** Em andamento
 
-**Versão:** 1.15
+**Versão:** 1.16
 
-**Última atualização:** 2026-08-11
+**Última atualização:** 2026-08-12

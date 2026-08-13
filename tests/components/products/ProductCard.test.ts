@@ -1,0 +1,81 @@
+import { describe, expect, it } from 'vitest'
+
+import FavoriteButton from '@/components/FavoriteButton.vue'
+import ProductCard from '@/components/products/ProductCard.vue'
+import { formatPrice } from '@/utils/formatPrice'
+import { makeProduct } from '../../helpers/makeProduct'
+import { mountWithApp } from '../../helpers/mountComponent'
+
+const product = makeProduct({
+  id: 19,
+  title: "Opna Women's Short Sleeve Moisture",
+  price: 7.95,
+  category: "women's clothing",
+  image: 'https://fakestoreapi.com/img/51eg55uWmdL._AC_UX679_t.png',
+  rating: { rate: 4.5, count: 146 },
+  description: 'A short sleeve moisture product',
+})
+
+describe('ProductCard', () => {
+  it('renderiza título, preço, categoria e avaliação', async () => {
+    const { wrapper } = await mountWithApp(ProductCard, {
+      props: { product, favorited: false },
+    })
+
+    expect(wrapper.text()).toContain(product.title)
+    expect(wrapper.text()).toContain(formatPrice(product.price))
+    expect(wrapper.text()).toContain('Moda feminina')
+    expect(wrapper.text()).toContain('4.5')
+    expect(wrapper.text()).toContain('(146)')
+  })
+
+  it('expõe imagem do produto e navegação para detalhes', async () => {
+    const { wrapper } = await mountWithApp(ProductCard, {
+      props: { product, favorited: false },
+    })
+
+    const img = wrapper.get('img')
+    expect(img.attributes('src')).toBe(product.image)
+    expect(img.attributes('alt')).toBe('')
+    expect(wrapper.get(`a[href="/produtos/${product.id}"]`).exists()).toBe(true)
+  })
+
+  it('expõe aria-label de avaliação', async () => {
+    const { wrapper } = await mountWithApp(ProductCard, {
+      props: { product, favorited: false },
+    })
+
+    expect(
+      wrapper.get('[aria-label="Avaliação 4.5 de 5, com 146 avaliações"]').exists(),
+    ).toBe(true)
+  })
+
+  it('passa estado favorito ao FavoriteButton', async () => {
+    const { wrapper } = await mountWithApp(ProductCard, {
+      props: { product, favorited: true },
+    })
+
+    const favorite = wrapper.getComponent(FavoriteButton)
+    expect(favorite.props('favorited')).toBe(true)
+    expect(favorite.get('button').attributes('aria-pressed')).toBe('true')
+  })
+
+  it('emite toggleFavorite com o id do produto', async () => {
+    const { wrapper } = await mountWithApp(ProductCard, {
+      props: { product, favorited: false },
+    })
+
+    await wrapper.getComponent(FavoriteButton).get('button').trigger('click')
+    expect(wrapper.emitted('toggleFavorite')).toEqual([[product.id]])
+  })
+
+  it('exibe fallback quando a imagem falha', async () => {
+    const { wrapper } = await mountWithApp(ProductCard, {
+      props: { product, favorited: false },
+    })
+
+    await wrapper.get('img').trigger('error')
+    expect(wrapper.text()).toContain('Imagem indisponível')
+    expect(wrapper.find('img').exists()).toBe(false)
+  })
+})

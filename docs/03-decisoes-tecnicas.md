@@ -963,8 +963,36 @@ A Fase 10 é o momento definido no plano para infraestrutura de testes automatiz
 
 **Impacto:**
 
-- 25 testes automatizados passando em `tests/` (7 arquivos);
+- infraestrutura de testes pronta para evolução da suíte (stores, utils, services, composables e componentes);
 - validação contínua das regras críticas sem substituir os testes manuais do QA.
+
+---
+
+## 35.14 — Suíte de testes de componentes
+
+**Data:** 2026-08-12
+
+**Decisão anterior:**
+
+A decisão 35.10 previa testes de componentes em `tests/components/` quando houvesse cobertura útil, mantendo a suíte inicial focada em stores/utils/composables/services.
+
+**Nova decisão:**
+
+- Implementar suíte de testes de componentes exclusivamente em `tests/components/` (sem `*.test.ts` em `src/`).
+- Usar Vitest + Vue Test Utils + jsdom, com helper compartilhado (`tests/helpers/mountComponent.ts`) que monta Pinia, vue-i18n, Vue Router e PrimeVue de forma alinhada à aplicação.
+- Priorizar comportamento observável e contratos de acessibilidade já presentes no código (`aria-*`, `role`, labels, emits), sem asserts de CSS/Tailwind pixel a pixel.
+- Cobrir componentes reutilizáveis e de maior relevância: navegação (AppHeader/AppFooter), catálogo (ProductCard/Grid/Filters/Search/Sort/Pagination), detalhes, formulário, favoritos e estados (Empty/Error/Loading), além de ThemeToggle e LocaleSelector.
+- Não alterar regras de negócio nem o posicionamento `-right-20` do badge de favoritos do Header apenas para facilitar testes.
+
+**Motivo:**
+
+Complementar os testes unitários existentes com uma estratégia real de frontend, elevando confiança em interações, acessibilidade e integração com plugins sem acoplar a suíte a detalhes visuais frágeis.
+
+**Impacto:**
+
+- **117 testes** automatizados passando na suíte completa;
+- organização documentada em `tests/components/` + helpers;
+- README, plano de implementação e DoD atualizados com a cobertura de componentes.
 
 ---
 
@@ -1104,10 +1132,14 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.20
+**Versão:** 1.21
 
-**Última atualização:** 2026-08-11
+**Última atualização:** 2026-08-12
 
 ### Nota — conteúdo dinâmico de produtos
 
 Conteúdo dinâmico de produtos não é traduzido automaticamente. i18n cobre interface e localização de categorias. Fase 11 permanece pendente.
+
+### Nota — testes de componentes
+
+Suíte de componentes adicionada em `tests/components/` (Vitest + Vue Test Utils), complementar aos testes de stores/composables/services/utils. Total da suíte: **117 testes**. Fase 11 (consistência documental completa) permanece pendente.

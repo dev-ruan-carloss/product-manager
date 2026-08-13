@@ -391,14 +391,15 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 
 **Status:** Em andamento
 
-**Versão:** 1.10
+**Versão:** 1.11
 
-**Última atualização:** 2026-08-11
+**Última atualização:** 2026-08-12
 
 ### Nota da Fase 10 (QA final)
 
 - Qualidade, testes manuais e critérios técnicos da Fase 10 foram validados.
-- Vitest configurado com 25 testes automatizados passando em `tests/` (separados de `src/`).
+- Vitest configurado com suíte automatizada em `tests/` (separados de `src/`), incluindo `components/`, `composables/`, `services/`, `stores/` e `utils/`.
+- Resultado atual da suíte: **117 testes** passando.
 - Pendência restante no critério final: consistência documental completa SDD × código (Fase 11).
 - Itens de Git (histórico/commits) permanecem sob processo contínuo e não bloqueiam a Fase 10.
 
