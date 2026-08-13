@@ -75,12 +75,14 @@ html.dark :focus-visible {
 .p-textarea,
 .p-select,
 .p-iconfield,
+.p-inputgroup,
 .p-inputnumber,
 .p-inputnumber-input {
   max-width: 100%;
 }
 
 .p-iconfield,
+.p-inputgroup,
 .p-inputnumber,
 .p-select {
   width: 100%;

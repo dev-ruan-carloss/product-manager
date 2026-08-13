@@ -3,7 +3,13 @@ import { nextTick } from 'vue'
 import { describe, expect, it } from 'vitest'
 
 import ProductForm from '@/components/products/ProductForm.vue'
+import { i18n } from '@/i18n'
 import type { ProductFormData } from '@/types/productForm'
+import {
+  formatPrice,
+  formatPriceInput,
+  getCurrencyAffix,
+} from '@/utils/formatPrice'
 import { invokeFormSubmit, mountWithApp } from '../../helpers/mountComponent'
 
 const categories = ['electronics', 'jewelery', "men's clothing", "women's clothing"]
@@ -16,11 +22,33 @@ const validValues: ProductFormData = {
   image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_t.png',
 }
 
+const existingPrice = 7.95
+
+const existingProduct: ProductFormData = {
+  ...validValues,
+  price: existingPrice,
+}
+
+function normalizeSpaces(value: string): string {
+  return value.replace(/\u00a0|\u202f/g, ' ')
+}
+
 async function submitForm(
   wrapper: Awaited<ReturnType<typeof mountWithApp>>['wrapper'],
 ): Promise<void> {
   await invokeFormSubmit(wrapper)
   await flushPromises()
+  await nextTick()
+}
+
+async function setPrice(
+  wrapper: Awaited<ReturnType<typeof mountWithApp>>['wrapper'],
+  value: number,
+  locale: string = 'pt-BR',
+): Promise<void> {
+  const input = wrapper.get('#product-price')
+  await input.setValue(formatPriceInput(value, locale))
+  await input.trigger('blur')
   await nextTick()
 }
 
@@ -202,6 +230,149 @@ describe('ProductForm', () => {
     await nextTick()
     expect(wrapper.get('#product-preview-heading').exists()).toBe(true)
     expect(wrapper.text()).toContain('Preview Title')
+  })
+
+  it('exibe preço formatado no preview com o mesmo formatter', async () => {
+    const { wrapper } = await mountWithApp(ProductForm, {
+      props: { categories, initialValues: validValues },
+    })
+
+    expect(normalizeSpaces(wrapper.text())).toContain(
+      normalizeSpaces(formatPrice(validValues.price!, 'pt-BR')),
+    )
+  })
+
+  it('atualiza o preview ao trocar o locale sem alterar o valor numérico', async () => {
+    const { wrapper } = await mountWithApp(ProductForm, {
+      props: { categories, initialValues: validValues },
+    })
+
+    expect(normalizeSpaces(wrapper.text())).toContain(
+      normalizeSpaces(formatPrice(validValues.price!, 'pt-BR')),
+    )
+
+    i18n.global.locale.value = 'en'
+    await nextTick()
+    expect(normalizeSpaces(wrapper.text())).toContain(
+      normalizeSpaces(formatPrice(validValues.price!, 'en')),
+    )
+
+    i18n.global.locale.value = 'es'
+    await nextTick()
+    expect(normalizeSpaces(wrapper.text())).toContain(
+      normalizeSpaces(formatPrice(validValues.price!, 'es')),
+    )
+
+    await submitForm(wrapper)
+    expect(wrapper.emitted('submit')).toEqual([
+      [
+        {
+          title: validValues.title,
+          price: validValues.price,
+          description: validValues.description,
+          category: validValues.category,
+          image: validValues.image,
+        },
+      ],
+    ])
+  })
+
+  it('mantém preço existente numérico e símbolo fora do value do input', async () => {
+    const { wrapper } = await mountWithApp(ProductForm, {
+      props: { categories, initialValues: existingProduct },
+    })
+
+    const priceInput = wrapper.get('#product-price').element as HTMLInputElement
+    expect(priceInput.value).toBe(formatPriceInput(existingPrice, 'pt-BR'))
+    expect(priceInput.value).not.toContain('R$')
+    expect(priceInput.value).not.toContain('$')
+    expect(priceInput.value).not.toContain('€')
+
+    const affix = getCurrencyAffix('pt-BR')
+    expect(wrapper.text()).toContain(affix.symbol)
+    expect(normalizeSpaces(wrapper.text())).toContain(
+      normalizeSpaces(formatPrice(existingPrice, 'pt-BR')),
+    )
+  })
+
+  it('seleciona o valor ao focar para permitir substituição imediata', async () => {
+    const { wrapper } = await mountWithApp(ProductForm, {
+      props: { categories, initialValues: existingProduct },
+      attachTo: document.body,
+    })
+
+    const input = wrapper.get('#product-price')
+    const el = input.element as HTMLInputElement
+    el.focus()
+    await input.trigger('focus')
+    await nextTick()
+    await flushPromises()
+
+    expect(el.selectionStart).toBe(0)
+    expect(el.selectionEnd).toBe(el.value.length)
+    expect(el.value).toBe(formatPriceInput(existingPrice, 'pt-BR'))
+
+    wrapper.unmount()
+  })
+
+  it('permite substituir o preço sem apagar o símbolo da moeda', async () => {
+    const { wrapper } = await mountWithApp(ProductForm, {
+      props: { categories, initialValues: existingProduct },
+    })
+
+    await setPrice(wrapper, 10.5)
+
+    const priceInput = wrapper.get('#product-price').element as HTMLInputElement
+    expect(priceInput.value).toBe(formatPriceInput(10.5, 'pt-BR'))
+    expect(priceInput.value).not.toContain('R$')
+    expect(normalizeSpaces(wrapper.text())).toContain(
+      normalizeSpaces(formatPrice(10.5, 'pt-BR')),
+    )
+
+    await submitForm(wrapper)
+    expect(wrapper.emitted('submit')?.[0]?.[0]).toMatchObject({ price: 10.5 })
+  })
+
+  it('permite edição parcial mantendo o valor numérico no model', async () => {
+    const { wrapper } = await mountWithApp(ProductForm, {
+      props: { categories, initialValues: existingProduct },
+    })
+
+    await setPrice(wrapper, 17.95)
+
+    expect((wrapper.get('#product-price').element as HTMLInputElement).value).toBe(
+      formatPriceInput(17.95, 'pt-BR'),
+    )
+
+    await submitForm(wrapper)
+    expect(wrapper.emitted('submit')?.[0]?.[0]).toMatchObject({ price: 17.95 })
+  })
+
+  it('reposiciona o símbolo ao trocar locale sem alterar o preço numérico', async () => {
+    const { wrapper } = await mountWithApp(ProductForm, {
+      props: { categories, initialValues: existingProduct },
+    })
+
+    expect(wrapper.text()).toContain(getCurrencyAffix('pt-BR').symbol)
+
+    i18n.global.locale.value = 'en'
+    await nextTick()
+    expect((wrapper.get('#product-price').element as HTMLInputElement).value).toBe(
+      formatPriceInput(existingPrice, 'en'),
+    )
+    expect(wrapper.text()).toContain(getCurrencyAffix('en').symbol)
+    expect((wrapper.get('#product-price').element as HTMLInputElement).value).not.toContain('$')
+
+    i18n.global.locale.value = 'es'
+    await nextTick()
+    expect((wrapper.get('#product-price').element as HTMLInputElement).value).toBe(
+      formatPriceInput(existingPrice, 'es'),
+    )
+    expect(wrapper.text()).toContain(getCurrencyAffix('es').symbol)
+    expect((wrapper.get('#product-price').element as HTMLInputElement).value).not.toContain('€')
+
+    await submitForm(wrapper)
+    expect(wrapper.emitted('submit')?.[0]?.[0]).toMatchObject({ price: existingPrice })
   })
 
   it('foca o campo título ao montar o formulário', async () => {

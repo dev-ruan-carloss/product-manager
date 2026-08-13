@@ -304,7 +304,7 @@ A tela utilizou `public/detalhe-produtos.png` como referência visual, priorizan
 
 1. **Acesso à edição:** adiado na Fase 4 e concluído na Fase 8 com o link "Editar produto" em `ProductDetails`.
 2. **Modelo da FakeStoreAPI:** elementos da referência visual (galeria, estoque, tipo/material, reviews detalhadas e metadados adicionais) não foram implementados por não fazerem parte do modelo `Product` utilizado.
-3. **Preço:** a referência visual utiliza `$`, enquanto a aplicação utiliza `formatPrice` com padrão BRL, conforme o SDD.
+3. **Preço:** a referência visual utiliza `$`; a aplicação formata o número da API com `formatPrice` conforme o locale (`pt-BR`/`BRL`, `en`/`USD`, `es`/`EUR`).
 4. **Produto inexistente:** o contrato considera o cenário de `404`, porém a FakeStoreAPI pode retornar `200` com corpo vazio; a implementação trata ambos os cenários.
 
 Essas divergências não foram transformadas em novos requisitos.
@@ -556,8 +556,8 @@ Modificados:
 
 - `AppHeader`
 - `DefaultLayout`
-- PrimeVue: `InputText`, `InputNumber`, `Select`, `Textarea`, `Button`, `Toast`
-- `formatPrice` (apenas na prévia visual)
+- PrimeVue: `InputText`, `InputGroup` / `InputGroupAddon`, `Select`, `Textarea`, `Button`, `Toast`
+- `formatPrice` (prévia e demais telas); `formatPriceInput` / `parsePriceInput` / `getCurrencyAffix` no campo de preço
 
 ### Validação
 
@@ -631,7 +631,7 @@ Utilizada `public/cadastro-produtos.png` como referência de estrutura, hierarqu
 
 1. **Editor rich text:** presente no mockup; não implementado (SDD não exige; usa `Textarea`).
 2. **Limite 10–1000 caracteres na descrição:** presente no mockup; não implementado (SDD exige apenas obrigatoriedade).
-3. **Preço em USD no mockup:** a aplicação mantém `formatPrice` em BRL, alinhado às telas existentes.
+3. **Preço no mockup em USD:** a aplicação formata o valor numérico da API conforme o locale atual (`formatPrice`), não o símbolo do mockup.
 4. **Navegação pós-sucesso:** SDD pede "página apropriada"; decisão de implementação: `/produtos`.
 5. **Edição:** concluída na Fase 8 com reuso do `ProductForm`.
 
@@ -991,7 +991,7 @@ Consolidar qualidade técnica, estados de interface, testes manuais e, quando ap
 - Cobertura de componentes: AppHeader, AppFooter, FavoriteButton, ProductCard, ProductDetails, ProductForm, ProductFilters, ProductSearch, ProductSort, ProductPagination, ProductGrid, EmptyState, ErrorState, ErrorBoundary, LoadingState, ThemeToggle e LocaleSelector.
 - Estratégia de componentes: comportamento e acessibilidade observáveis (roles, aria-*, labels, emits), com Pinia + vue-i18n + Vue Router + PrimeVue via `tests/helpers/mountComponent.ts`.
 - Também cobertos: `tests/config/` (normalização de erros Axios) e utilitários de apresentação de erro.
-- Resultado atual (Fase 11): **146 testes** passando em **33 arquivos**.
+- Resultado atual: **164 testes** passando em **33 arquivos**.
 
 ---
 
@@ -1187,13 +1187,20 @@ Implementação opcional concluída sem alterar o status das Fases 1–10:
 - persistência `product-management:locale`;
 - seletor no Footer ao lado do `ThemeToggle`;
 - categorias traduzidas na apresentação;
+- preço formatado conforme o locale (`formatPrice`: PT-BR/`BRL`, EN/`USD`, ES/`EUR`);
 - conteúdo dinâmico de produtos (`title`/`description`) **não** é traduzido automaticamente — preserva a FakeStoreAPI;
 - busca e ordenação por nome usam `product.title` original.
+
+### Nota — formatação monetária (2026-08-13)
+
+- Única regra de apresentação em `src/utils/formatPrice.ts`.
+- Input de preço: valor numérico no formulário; símbolo em addon; texto editável sem `R$`/`$`/`€`.
+- Troca de locale atualiza apresentação (catálogo, detalhes, cadastro, edição, preview) sem alterar o payload.
 
 ### Nota — Fase 11 (2026-08-13)
 
 - Auditoria README × código × desafio × SDD concluída.
-- Suíte atual: **146 testes** / 33 arquivos.
+- Suíte atual: **164 testes** / 33 arquivos.
 - Responsividade documentada de forma coerente: desafio **360px+**, alvo interno **320px+**.
 - Deep links na Vercel retornam HTTP 200.
 
@@ -1203,6 +1210,6 @@ Implementação opcional concluída sem alterar o status das Fases 1–10:
 
 **Status:** Concluído
 
-**Versão:** 1.18
+**Versão:** 1.19
 
 **Última atualização:** 2026-08-13

@@ -391,7 +391,7 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 
 **Status:** Concluído
 
-**Versão:** 1.13
+**Versão:** 1.14
 
 **Última atualização:** 2026-08-13
 
@@ -399,12 +399,13 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 
 - Qualidade, testes manuais e critérios técnicos da Fase 10 foram validados.
 - Vitest configurado com suíte automatizada em `tests/` (separados de `src/`), incluindo `components/`, `composables/`, `services/`, `stores/`, `utils/`, `config/` e `i18n/`.
-- Resultado atual da suíte (Fase 11): **146 testes** passando em **33 arquivos**.
+- Resultado atual da suíte: **164 testes** passando em **33 arquivos**.
 
 ### Nota — melhoria bônus i18n
 
 - Internacionalização (`vue-i18n`) com `pt-BR`, `es` e `en` adicionada após a Fase 10.
 - Categorias conhecidas localizadas na apresentação; `title`/`description` permanecem no idioma original da FakeStoreAPI (sem tradução automática).
+- Preço formatado na apresentação conforme o locale (`formatPrice`); o valor da API permanece `number`.
 - Não altera a FakeStoreAPI como fonte dos produtos nem a persistência de favoritos.
 
 ### Nota — Fase 11 (auditoria documental)

@@ -854,10 +854,12 @@ Dessa forma, os requisitos permanecem independentes das decisões de implementa�
 
 **Status:** Concluído (requisitos alinhados ao código na Fase 11)
 
-**Versão:** 1.5
+**Versão:** 1.6
 
 **Última atualização:** 2026-08-13
 
-### Nota — responsividade
+### Nota — preço e locale
+
+O preço exibido na interface acompanha o idioma selecionado (`pt-BR`/`BRL`, `en`/`USD`, `es`/`EUR`). O valor persistido e enviado à API continua sendo numérico; a formatação é apenas apresentação.
 
 O desafio exige **360px+**. O projeto valida também a partir de **320px** como alvo interno de usabilidade.

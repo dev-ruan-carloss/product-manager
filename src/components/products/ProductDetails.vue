@@ -124,7 +124,7 @@ function onImageError(): void {
           </div>
 
           <p class="break-words text-3xl font-bold tracking-tight text-violet-700 dark:text-violet-300">
-            {{ formatPrice(product.price) }}
+            {{ formatPrice(product.price, locale) }}
           </p>
         </div>
 

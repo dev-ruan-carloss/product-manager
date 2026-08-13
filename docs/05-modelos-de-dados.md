@@ -748,17 +748,25 @@ Para o escopo inicial, a tipagem TypeScript será utilizada como contrato de des
 
 O campo `price` será tratado como número conforme o contrato da API.
 
-A formatação visual do preço não deverá modificar o valor original.
+A formatação visual do preço não deverá modificar o valor original nem ser persistida no modelo.
 
 Exemplo conceitual:
 
-    API
-    price: 109.99
+    API / modelo
+    price: 1234.56
 
-    Interface
-    R$ 109,99
+    Interface (locale atual)
+    pt-BR → R$ 1.234,56
+    en    → $1,234.56
+    es    → 1.234,56 €
 
-A conversão será responsabilidade da camada de apresentação ou de uma função utilitária específica.
+A conversão é responsabilidade da camada de apresentação, centralizada em `src/utils/formatPrice.ts`:
+
+- `formatPrice` — exibição completa (símbolo, agrupamento e decimais);
+- `formatPriceInput` / `parsePriceInput` — texto do input sem símbolo;
+- `getCurrencyAffix` — símbolo e posição (prefixo/sufixo) para o addon do formulário.
+
+POST/PUT continuam enviando `price: number` (nunca `"R$ 1.234,56"`).
 
 ---
 
@@ -842,10 +850,10 @@ Os modelos de dados serão considerados definidos quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.8
+**Versão:** 1.9
 
 **Última atualização:** 2026-08-13
 
 ### Nota — conteúdo dinâmico de produtos
 
-`title`/`description` permanecem no idioma original da FakeStoreAPI. Categorias conhecidas continuam localizáveis na apresentação.
+`title`/`description` permanecem no idioma original da FakeStoreAPI. Categorias conhecidas continuam localizáveis na apresentação. `price` permanece `number`; a string monetária existe só na UI (`formatPrice`).

@@ -1,7 +1,9 @@
+import { nextTick } from 'vue'
 import { describe, expect, it } from 'vitest'
 
 import FavoriteButton from '@/components/FavoriteButton.vue'
 import ProductCard from '@/components/products/ProductCard.vue'
+import { i18n } from '@/i18n'
 import { formatPrice } from '@/utils/formatPrice'
 import { makeProduct } from '../../helpers/makeProduct'
 import { mountWithApp } from '../../helpers/mountComponent'
@@ -15,6 +17,10 @@ const product = makeProduct({
   rating: { rate: 4.5, count: 146 },
   description: 'A short sleeve moisture product',
 })
+
+function normalizeSpaces(value: string): string {
+  return value.replace(/\u00a0|\u202f/g, ' ')
+}
 
 describe('ProductCard', () => {
   it('renderiza título, preço, categoria e avaliação', async () => {
@@ -77,5 +83,29 @@ describe('ProductCard', () => {
     await wrapper.get('img').trigger('error')
     expect(wrapper.text()).toContain('Imagem indisponível')
     expect(wrapper.find('img').exists()).toBe(false)
+  })
+
+  it('atualiza o preço formatado ao trocar o locale', async () => {
+    const { wrapper } = await mountWithApp(ProductCard, {
+      props: { product, favorited: false },
+    })
+
+    expect(normalizeSpaces(wrapper.text())).toContain(
+      normalizeSpaces(formatPrice(product.price, 'pt-BR')),
+    )
+
+    i18n.global.locale.value = 'en'
+    await nextTick()
+    expect(normalizeSpaces(wrapper.text())).toContain(
+      normalizeSpaces(formatPrice(product.price, 'en')),
+    )
+
+    i18n.global.locale.value = 'es'
+    await nextTick()
+    expect(normalizeSpaces(wrapper.text())).toContain(
+      normalizeSpaces(formatPrice(product.price, 'es')),
+    )
+
+    expect(product.price).toBe(7.95)
   })
 })

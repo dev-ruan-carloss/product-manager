@@ -77,7 +77,7 @@ function onImageError(): void {
         </h3>
 
         <p class="break-words text-base font-bold leading-6 text-violet-700 dark:text-violet-300">
-          {{ formatPrice(product.price) }}
+          {{ formatPrice(product.price, locale) }}
         </p>
 
         <p class="break-words text-xs leading-4 text-slate-500 dark:text-slate-400">

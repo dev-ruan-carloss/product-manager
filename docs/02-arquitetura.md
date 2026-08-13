@@ -508,6 +508,8 @@ Exemplos implementados:
     ├── logError.ts
     └── resolveErrorCopy.ts
 
+`formatPrice.ts` é o único ponto de formatação monetária. Componentes de apresentação (`ProductCard`, `ProductDetails`, prévia do `ProductForm`) chamam `formatPrice`; o input de preço usa `formatPriceInput` / `parsePriceInput` e `getCurrencyAffix`. O locale segue `vue-i18n` (`pt-BR`/`BRL`, `en`/`USD`, `es`/`EUR`).
+
 Esses arquivos somente deverão existir quando houver uma necessidade real.
 
 Não deverão ser utilizados como uma pasta genérica para colocar qualquer código que não tenha um local definido.
@@ -910,10 +912,10 @@ A arquitetura será considerada adequada quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.6
+**Versão:** 1.7
 
 **Última atualização:** 2026-08-13
 
 ### Nota — melhoria bônus i18n
 
-Pasta `src/i18n/` e `localeStore` adicionadas para internacionalização. Fluxo de produtos: FakeStoreAPI → services → `Product` → apresentação (`title`/`description` originais; categorias localizadas na UI).
+Pasta `src/i18n/` e `localeStore` adicionadas para internacionalização. Fluxo de produtos: FakeStoreAPI → services → `Product` → apresentação (`title`/`description` originais; categorias localizadas na UI; preço formatado na UI via `formatPrice` conforme o locale).

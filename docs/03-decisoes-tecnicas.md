@@ -1042,7 +1042,7 @@ Complementar os testes unitários existentes com uma estratégia real de fronten
 
 **Impacto:**
 
-- **146 testes** automatizados passando na suíte completa (valor atualizado na Fase 11);
+- **164 testes** automatizados passando na suíte completa;
 - organização documentada em `tests/components/` + helpers;
 - README, plano de implementação e DoD atualizados com a cobertura de componentes.
 
@@ -1155,6 +1155,34 @@ Produtos são conteúdo externo dinâmico. Nomes podem conter marcas, modelos, n
 
 ---
 
+## 35.16 — Formatação monetária conforme o locale
+
+**Data:** 2026-08-13
+
+**Decisão anterior:**
+
+`formatPrice` usava `Intl.NumberFormat` fixo em `pt-BR` / `BRL`. O `ProductForm` usava `InputNumber` em `mode="currency"`, com o símbolo de moeda dentro do `value` do input.
+
+**Nova decisão:**
+
+- Centralizar apresentação de preço em `src/utils/formatPrice.ts` (`Intl.NumberFormat`).
+- Mapear locale da aplicação → moeda: `pt-BR`/`BRL`, `en`/`USD`, `es`/`EUR` (`useGrouping: true`).
+- Catálogo, favoritos, detalhes e prévia do formulário usam a mesma `formatPrice`.
+- O valor do produto permanece `number`; POST/PUT enviam número.
+- No `ProductForm`, não usar `InputNumber` em modo currency: o símbolo (`R$`, `$`, `€`) fica em `InputGroupAddon`; o campo editável é `InputText` com texto decimal do locale (`formatPriceInput` / `parsePriceInput`).
+- Ao focar o preço, selecionar o valor numérico para substituição imediata; ao blur, reformatar. Troca de locale atualiza só a apresentação.
+
+**Motivo:**
+
+`mode="currency"` do PrimeVue coloca o símbolo no texto do input e, com `maxFractionDigits: 2`, o caret no fim das casas decimais impede digitação. ES (`7,95 €`) piora o problema. Separar símbolo da edição e reutilizar um único formatter alinha i18n sem alterar API nem o modelo `Product`.
+
+**Impacto:**
+
+- `ProductForm`, `ProductCard`, `ProductDetails` e testes de `formatPrice` / formulário / card / detalhes;
+- documentação de UI, modelos, arquitetura e README.
+
+---
+
 ## 35.14 — Tratamento global de erros (`AppError` + ErrorBoundary)
 
 **Data:** 2026-08-13
@@ -1250,7 +1278,7 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.26
+**Versão:** 1.27
 
 **Última atualização:** 2026-08-13
 
@@ -1264,7 +1292,11 @@ Erros HTTP/runtime passam por AppError + i18n errors.*, com ErrorState/Toast/sub
 
 ### Nota — testes automatizados
 
-Suíte em `tests/` (components, composables, services, stores, utils, config, i18n): **146 testes** passando (valor confirmado na Fase 11).
+Suíte em `tests/` (components, composables, services, stores, utils, config, i18n): **164 testes** passando.
+
+### Nota — formatação monetária por locale
+
+Preço permanece `number` no modelo e na API. A apresentação usa `formatPrice` conforme o locale (`pt-BR`/`BRL`, `en`/`USD`, `es`/`EUR`). No formulário, o símbolo fica fora do input editável.
 
 ### Nota — deploy SPA na Vercel
 

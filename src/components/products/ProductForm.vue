@@ -4,7 +4,8 @@ import { useI18n } from 'vue-i18n'
 import { toTypedSchema } from '@vee-validate/yup'
 import { useForm } from 'vee-validate'
 import Button from 'primevue/button'
-import InputNumber from 'primevue/inputnumber'
+import InputGroup from 'primevue/inputgroup'
+import InputGroupAddon from 'primevue/inputgroupaddon'
 import InputText from 'primevue/inputtext'
 import Select from 'primevue/select'
 import Textarea from 'primevue/textarea'
@@ -14,7 +15,12 @@ import { useInitialFocus } from '@/composables/useInitialFocus'
 import type { Category } from '@/types/category'
 import type { ProductCreatePayload } from '@/types/product'
 import { EMPTY_PRODUCT_FORM, type ProductFormData } from '@/types/productForm'
-import { formatPrice } from '@/utils/formatPrice'
+import {
+  formatPrice,
+  formatPriceInput,
+  getCurrencyAffix,
+  parsePriceInput,
+} from '@/utils/formatPrice'
 import { getLocalizedCategory } from '@/utils/localizeCategory'
 import { productFormSchema } from '@/utils/productFormSchema'
 
@@ -102,14 +108,68 @@ const previewCategory = computed(() => {
   return t('form.categoryFallback')
 })
 
+const priceCurrencyAffix = computed(() => getCurrencyAffix(locale.value))
+
+const pricePlaceholder = computed(() => formatPriceInput(0, locale.value))
+
+/** Texto editável do preço; `null` = espelhar o valor numérico formatado. */
+const priceDraft = ref<string | null>(null)
+
+const priceInputDisplay = computed(() => {
+  if (priceDraft.value !== null) {
+    return priceDraft.value
+  }
+
+  if (typeof price.value === 'number' && Number.isFinite(price.value)) {
+    return formatPriceInput(price.value, locale.value)
+  }
+
+  return ''
+})
+
 const previewPrice = computed(() => {
   const value = values.price
   if (typeof value === 'number' && Number.isFinite(value)) {
-    return formatPrice(value)
+    return formatPrice(value, locale.value)
   }
 
-  return formatPrice(0)
+  return formatPrice(0, locale.value)
 })
+
+function onPriceFocus(event: FocusEvent): void {
+  const target = event.target
+  if (!(target instanceof HTMLInputElement)) {
+    return
+  }
+
+  if (priceDraft.value === null) {
+    priceDraft.value =
+      typeof price.value === 'number' && Number.isFinite(price.value)
+        ? formatPriceInput(price.value, locale.value)
+        : ''
+  }
+
+  void nextTick(() => {
+    target.select()
+  })
+}
+
+function onPriceInput(raw: string | undefined): void {
+  const next = raw ?? ''
+  priceDraft.value = next
+  price.value = parsePriceInput(next, locale.value)
+}
+
+function onPriceBlur(): void {
+  const parsed = parsePriceInput(priceDraft.value ?? '', locale.value)
+  price.value = parsed
+  priceDraft.value = null
+
+  const blurHandler = priceAttrs.value.onBlur
+  if (typeof blurHandler === 'function') {
+    blurHandler()
+  }
+}
 
 const previewImage = computed(() => {
   const value = values.image?.trim()
@@ -287,23 +347,38 @@ function onCancel(): void {
               <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
               <span class="sr-only">{{ t('form.required') }}</span>
             </label>
-            <InputNumber
-              v-model="price"
-              v-bind="priceAttrs"
-              input-id="product-price"
-              class="w-full"
-              input-class="w-full"
-              mode="decimal"
-              :min-fraction-digits="2"
-              :max-fraction-digits="2"
-              :min="0"
-              placeholder="0,00"
-              :invalid="Boolean(errors.price)"
-              :disabled="submitting"
-              :aria-required="true"
-              :aria-invalid="errors.price ? true : undefined"
-              :aria-describedby="fieldMessageId('price')"
-            />
+            <InputGroup class="w-full">
+              <InputGroupAddon
+                v-if="priceCurrencyAffix.position === 'prefix'"
+                aria-hidden="true"
+              >
+                {{ priceCurrencyAffix.symbol }}
+              </InputGroupAddon>
+              <InputText
+                id="product-price"
+                :model-value="priceInputDisplay"
+                class="w-full flex-1"
+                type="text"
+                inputmode="decimal"
+                autocomplete="off"
+                :name="priceAttrs.name"
+                :placeholder="pricePlaceholder"
+                :invalid="Boolean(errors.price)"
+                :disabled="submitting"
+                :aria-required="true"
+                :aria-invalid="errors.price ? true : undefined"
+                :aria-describedby="fieldMessageId('price')"
+                @update:model-value="onPriceInput"
+                @focus="onPriceFocus"
+                @blur="onPriceBlur"
+              />
+              <InputGroupAddon
+                v-if="priceCurrencyAffix.position === 'suffix'"
+                aria-hidden="true"
+              >
+                {{ priceCurrencyAffix.symbol }}
+              </InputGroupAddon>
+            </InputGroup>
             <p
               :id="fieldMessageId('price')"
               :class="

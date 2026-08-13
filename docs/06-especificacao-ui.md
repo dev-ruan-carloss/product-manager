@@ -378,11 +378,26 @@ O usuário deverá conseguir visualizar o título completo na página de detalhe
 
 O preço deverá possuir destaque visual.
 
-A apresentação deverá utilizar formato brasileiro:
+A apresentação deverá acompanhar o locale atualmente selecionado, via `formatPrice` (`Intl.NumberFormat`, `style: 'currency'`):
 
-`R$ 99,90`
+| Locale | Moeda | Exemplo (`1234.56`) |
+|---|---|---|
+| `pt-BR` | `BRL` | `R$ 1.234,56` |
+| `en` | `USD` | `$1,234.56` |
+| `es` | `EUR` | `1.234,56 €` |
 
-O valor interno continuará sendo tratado como número.
+O valor interno continuará sendo tratado como `number`. A formatação ocorre somente na camada de apresentação.
+
+A mesma regra deverá ser usada em catálogo (`ProductCard`), favoritos, detalhes (`ProductDetails`) e prévia do `ProductForm`.
+
+No input de preço do formulário:
+
+- o `modelValue` / estado do formulário permanece numérico;
+- o texto editável contém apenas o número com separadores do locale (ex.: `7,95` / `7.95`);
+- o símbolo (`R$`, `$`, `€`) fica fora do campo, em addon do `InputGroup` (prefixo ou sufixo conforme o locale);
+- ao focar, o valor numérico é selecionado para permitir substituição imediata;
+- ao sair do campo, o texto é reformatado;
+- a troca de idioma atualiza símbolo e separadores sem alterar o número enviado no POST/PUT.
 
 ---
 
@@ -612,6 +627,8 @@ O formulário deverá possuir:
 - imagem.
 
 Todos os campos deverão possuir identificação clara.
+
+O campo de preço edita somente o valor numérico. O símbolo de moeda é apresentação (`InputGroupAddon`) e não faz parte do texto digitado nem do payload.
 
 ---
 
@@ -1104,13 +1121,19 @@ A interface será considerada adequada quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.15
+**Versão:** 1.16
 
 **Última atualização:** 2026-08-13
 
 ### Nota — melhoria bônus i18n
 
-Seletor de idioma no Footer (pt-BR / es / en), textos de UI via `vue-i18n`, categorias localizadas na apresentação. Título e descrição dos produtos permanecem no idioma original da FakeStoreAPI. ThemeToggle permanece no Footer.
+Seletor de idioma no Footer (pt-BR / es / en), textos de UI via `vue-i18n`, categorias localizadas na apresentação. Preço formatado com `formatPrice` conforme o locale (`pt-BR`/`BRL`, `en`/`USD`, `es`/`EUR`). Título e descrição dos produtos permanecem no idioma original da FakeStoreAPI. ThemeToggle permanece no Footer.
+
+### Nota — formatação e edição de preço (2026-08-13)
+
+- Uma única regra de apresentação em `src/utils/formatPrice.ts`.
+- Input do `ProductForm`: `InputText` + `InputGroup`; símbolo fora do `value`; seleção do número ao focar.
+- Preview, `ProductCard` e `ProductDetails` consomem o mesmo formatter.
 
 ### Nota — refinamentos de feedback e Favoritos (2026-08-13)
 
