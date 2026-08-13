@@ -8,6 +8,8 @@ import Skeleton from 'primevue/skeleton'
 import EmptyState from '@/components/EmptyState.vue'
 import ErrorState from '@/components/ErrorState.vue'
 import ProductForm from '@/components/products/ProductForm.vue'
+import { isAppError, toAppError } from '@/config/api'
+import { useActionErrorMessage, useErrorPresentation } from '@/composables/useErrorPresentation'
 import { useProductDetails } from '@/composables/useProductDetails'
 import { productService } from '@/services/productService'
 import type { Category } from '@/types/category'
@@ -19,14 +21,17 @@ const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const toast = useToast()
+const { messageFor } = useActionErrorMessage()
 
 const productId = computed(() => parseProductId(route.params.id))
 
-const { product, isLoading, hasError, notFound, loadProduct } = useProductDetails(productId)
+const { product, isLoading, error, hasError, notFound, loadProduct } = useProductDetails(productId)
+const { presentation } = useErrorPresentation(error, 'product')
 
 const categories = ref<Category[]>([])
 const categoriesLoading = ref(false)
 const isSubmitting = ref(false)
+const submitError = ref<string | null>(null)
 
 const formInitialValues = computed<ProductFormData | undefined>(() => {
   if (product.value === null) {
@@ -41,12 +46,13 @@ async function loadCategories(): Promise<void> {
 
   try {
     categories.value = await productService.getCategories()
-  } catch {
+  } catch (caught: unknown) {
     categories.value = []
+    const appError = isAppError(caught) ? caught : toAppError(caught)
     toast.add({
       severity: 'error',
       summary: t('toast.error'),
-      detail: t('toast.categoriesLoadError'),
+      detail: messageFor(appError, 'categories'),
       life: 4000,
     })
   } finally {
@@ -60,6 +66,7 @@ async function handleSubmit(formPayload: ProductCreatePayload): Promise<void> {
   }
 
   isSubmitting.value = true
+  submitError.value = null
 
   const payload: ProductUpdatePayload = {
     title: formPayload.title,
@@ -80,14 +87,10 @@ async function handleSubmit(formPayload: ProductCreatePayload): Promise<void> {
     })
 
     await router.push({ name: 'produtos' })
-  } catch {
-    // Erros da API já chegam como AppError via interceptor em config/api.ts.
-    toast.add({
-      severity: 'error',
-      summary: t('toast.error'),
-      detail: t('toast.updateError'),
-      life: 4000,
-    })
+  } catch (caught: unknown) {
+    // Erros já normalizados; formulário preserva os dados digitados.
+    const appError = isAppError(caught) ? caught : toAppError(caught)
+    submitError.value = messageFor(appError, 'formSave')
   } finally {
     isSubmitting.value = false
   }
@@ -103,6 +106,7 @@ function goToCatalog(): void {
 
 watch(productId, () => {
   isSubmitting.value = false
+  submitError.value = null
 })
 
 onMounted(() => {
@@ -186,10 +190,14 @@ onMounted(() => {
     </div>
 
     <ErrorState
-      v-else-if="hasError"
-      :title="t('product.errorTitle')"
-      :description="t('product.errorDescription')"
+      v-else-if="hasError && presentation"
+      :title="presentation.title"
+      :description="presentation.description"
+      :action-label="presentation.actionLabel"
+      :show-action="presentation.showPrimaryAction"
+      :secondary-action-label="presentation.secondaryActionLabel"
       @retry="loadProduct"
+      @secondary="goToCatalog"
     />
 
     <EmptyState
@@ -206,6 +214,7 @@ onMounted(() => {
       :categories="categories"
       :categories-loading="categoriesLoading"
       :submitting="isSubmitting"
+      :submit-error="submitError"
       :initial-values="formInitialValues"
       :submit-label="t('form.saveChanges')"
       @submit="handleSubmit"

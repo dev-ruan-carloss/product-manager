@@ -7,25 +7,27 @@ import Skeleton from 'primevue/skeleton'
 import EmptyState from '@/components/EmptyState.vue'
 import ErrorState from '@/components/ErrorState.vue'
 import ProductDetails from '@/components/products/ProductDetails.vue'
+import { useErrorPresentation } from '@/composables/useErrorPresentation'
+import { useFavoriteToggle } from '@/composables/useFavoriteToggle'
 import { useProductDetails } from '@/composables/useProductDetails'
-import { useFavoritesStore } from '@/stores/favoritesStore'
 import { parseProductId } from '@/utils/parseProductId'
 
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
-const favoritesStore = useFavoritesStore()
 
 const productId = computed(() => parseProductId(route.params.id))
 
-const { product, isLoading, hasError, notFound, loadProduct } = useProductDetails(productId)
+const { product, isLoading, error, hasError, notFound, loadProduct } = useProductDetails(productId)
+const { presentation } = useErrorPresentation(error, 'product')
+const { isFavorite: checkFavorite, toggleFavorite: toggleFavoriteId } = useFavoriteToggle()
 
 const isFavorite = computed(() => {
   if (product.value === null) {
     return false
   }
 
-  return favoritesStore.isFavorite(product.value.id)
+  return checkFavorite(product.value.id)
 })
 
 function toggleFavorite(): void {
@@ -33,12 +35,7 @@ function toggleFavorite(): void {
     return
   }
 
-  if (favoritesStore.isFavorite(product.value.id)) {
-    favoritesStore.removeFavorite(product.value.id)
-    return
-  }
-
-  favoritesStore.addFavorite(product.value.id)
+  toggleFavoriteId(product.value.id)
 }
 
 function goToCatalog(): void {
@@ -109,10 +106,14 @@ function goToCatalog(): void {
     </div>
 
     <ErrorState
-      v-else-if="hasError"
-      :title="t('product.errorTitle')"
-      :description="t('product.errorDescription')"
+      v-else-if="hasError && presentation"
+      :title="presentation.title"
+      :description="presentation.description"
+      :action-label="presentation.actionLabel"
+      :show-action="presentation.showPrimaryAction"
+      :secondary-action-label="presentation.secondaryActionLabel"
       @retry="loadProduct"
+      @secondary="goToCatalog"
     />
 
     <EmptyState

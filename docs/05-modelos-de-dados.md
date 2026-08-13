@@ -379,7 +379,7 @@ O erro da aplicação deverá ser representado de maneira controlada.
 
 Estrutura conceitual:
 
-    error: string | null
+    error: AppError | null
 
 Quando não existir erro:
 
@@ -541,9 +541,14 @@ Quando necessário, a aplicação poderá utilizar um modelo interno de erro.
 Estrutura conceitual:
 
     AppError
+    ├── kind: AppErrorKind
     ├── message: string
     ├── code?: string
-    └── status?: number
+    ├── status?: number
+    ├── retryable: boolean
+    └── fieldErrors?: Record<string, string>
+
+`kind` classifica o erro para a UI (`network`, `timeout`, `server`, `notFound`, `validation`, `auth`, `conflict`, `rateLimit`, `unexpected`). A mensagem técnica em `message` destina-se a logs/diagnóstico; a interface usa i18n (`errors.*`).
 
 O objetivo é evitar que as camadas superiores dependam diretamente do formato de erro fornecido pela biblioteca HTTP.
 

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import EmptyState from '@/components/EmptyState.vue'
@@ -8,13 +9,15 @@ import ProductFilters from '@/components/products/ProductFilters.vue'
 import ProductGrid from '@/components/products/ProductGrid.vue'
 import ProductPagination from '@/components/products/ProductPagination.vue'
 import ProductSearch from '@/components/products/ProductSearch.vue'
+import { useErrorPresentation } from '@/composables/useErrorPresentation'
+import { useFavoriteToggle } from '@/composables/useFavoriteToggle'
 import { useProductListControls } from '@/composables/useProductListControls'
 import { useProductsCatalog } from '@/composables/useProductsCatalog'
-import { useFavoritesStore } from '@/stores/favoritesStore'
 
 const { t } = useI18n()
-const favoritesStore = useFavoritesStore()
-const { products, categories, isLoading, hasError, loadCatalog } = useProductsCatalog()
+const { products, categories, isLoading, error, hasError, loadCatalog } = useProductsCatalog()
+const { presentation } = useErrorPresentation(error, 'catalog')
+const { isFavorite, toggleFavorite } = useFavoriteToggle()
 
 const {
   searchInput,
@@ -30,18 +33,21 @@ const {
   setPage,
 } = useProductListControls(products)
 
-function toggleFavorite(productId: number): void {
-  if (favoritesStore.isFavorite(productId)) {
-    favoritesStore.removeFavorite(productId)
-    return
+const emptyTitle = computed(() => {
+  const query = searchInput.value.trim()
+  if (query.length > 0) {
+    return t('empty.searchTitle', { query })
   }
+  return t('empty.productsTitle')
+})
 
-  favoritesStore.addFavorite(productId)
-}
-
-function isFavorite(productId: number): boolean {
-  return favoritesStore.isFavorite(productId)
-}
+const emptyDescription = computed(() => {
+  const query = searchInput.value.trim()
+  if (query.length > 0) {
+    return t('empty.searchDescription')
+  }
+  return t('empty.productsDescription')
+})
 </script>
 
 <template>
@@ -62,10 +68,19 @@ function isFavorite(productId: number): boolean {
 
         <LoadingState v-if="isLoading" />
 
-        <ErrorState v-else-if="hasError" @retry="loadCatalog" />
+        <ErrorState
+          v-else-if="hasError && presentation"
+          :title="presentation.title"
+          :description="presentation.description"
+          :action-label="presentation.actionLabel"
+          :show-action="presentation.showPrimaryAction"
+          @retry="loadCatalog"
+        />
 
         <EmptyState
           v-else-if="totalProducts === 0"
+          :title="emptyTitle"
+          :description="emptyDescription"
           @action="clearFilters"
         />
 

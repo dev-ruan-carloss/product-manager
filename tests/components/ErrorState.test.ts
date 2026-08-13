@@ -33,4 +33,31 @@ describe('ErrorState', () => {
     expect(wrapper.text()).toContain('Algo deu errado')
     expect(wrapper.get('button').text()).toBe('Retry')
   })
+
+  it('emite secondary quando a ação secundária é clicada', async () => {
+    const { wrapper } = await mountWithApp(ErrorState, {
+      props: {
+        title: 'Erro',
+        description: 'Falha',
+        secondaryActionLabel: 'Voltar',
+      },
+    })
+
+    const buttons = wrapper.findAll('button')
+    expect(buttons).toHaveLength(2)
+    await buttons[1]!.trigger('click')
+    expect(wrapper.emitted('secondary')).toHaveLength(1)
+  })
+
+  it('permite ocultar a ação principal', async () => {
+    const { wrapper } = await mountWithApp(ErrorState, {
+      props: {
+        showAction: false,
+        secondaryActionLabel: 'Início',
+      },
+    })
+
+    expect(wrapper.findAll('button')).toHaveLength(1)
+    expect(wrapper.get('button').text()).toBe('Início')
+  })
 })

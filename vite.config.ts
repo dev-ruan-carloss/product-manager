@@ -36,7 +36,8 @@ export default defineConfig({
     include: ['tests/**/*.{test,spec}.{ts,tsx}'],
     restoreMocks: true,
     clearMocks: true,
-    pool: 'threads',
+    // forks evita hangs intermitentes do pool threads no Windows/jsdom.
+    pool: 'forks',
     fileParallelism: false,
   },
 })

@@ -3,6 +3,7 @@ import Toast from 'primevue/toast'
 
 import AppFooter from '@/components/AppFooter.vue'
 import AppHeader from '@/components/AppHeader.vue'
+import ErrorBoundary from '@/components/ErrorBoundary.vue'
 import { useThemeStore } from '@/stores/themeStore'
 
 // Garante aplicação do tema persistido/sistema ao montar o layout.
@@ -15,7 +16,9 @@ useThemeStore()
   >
     <AppHeader />
     <main class="min-w-0 flex-1 bg-violet-50 dark:bg-transparent">
-      <RouterView />
+      <ErrorBoundary>
+        <RouterView />
+      </ErrorBoundary>
     </main>
     <AppFooter />
     <Toast position="top-right" />

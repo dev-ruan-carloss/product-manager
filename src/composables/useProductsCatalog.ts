@@ -1,6 +1,8 @@
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
+import { isAppError, toAppError } from '@/config/api'
 import { productService } from '@/services/productService'
+import type { AppError } from '@/types/api'
 import type { Category } from '@/types/category'
 import type { Product } from '@/types/product'
 
@@ -8,11 +10,12 @@ export function useProductsCatalog() {
   const products = ref<Product[]>([])
   const categories = ref<Category[]>([])
   const isLoading = ref(false)
-  const hasError = ref(false)
+  const error = ref<AppError | null>(null)
+  const hasError = computed(() => error.value !== null)
 
   async function loadCatalog(): Promise<void> {
     isLoading.value = true
-    hasError.value = false
+    error.value = null
 
     try {
       const [loadedProducts, loadedCategories] = await Promise.all([
@@ -22,8 +25,8 @@ export function useProductsCatalog() {
 
       products.value = loadedProducts
       categories.value = loadedCategories
-    } catch {
-      hasError.value = true
+    } catch (caught: unknown) {
+      error.value = isAppError(caught) ? caught : toAppError(caught)
       products.value = []
       categories.value = []
     } finally {
@@ -39,6 +42,7 @@ export function useProductsCatalog() {
     products,
     categories,
     isLoading,
+    error,
     hasError,
     loadCatalog,
   }

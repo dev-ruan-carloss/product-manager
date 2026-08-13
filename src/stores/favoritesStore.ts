@@ -48,18 +48,46 @@ export const useFavoritesStore = defineStore('favorites', () => {
     return favoriteProductIds.value.includes(productId)
   }
 
-  function addFavorite(productId: number): void {
+  /**
+   * Adiciona favorito e persiste. Em falha de persistência, reverte o estado
+   * e retorna false — a UI deve informar o usuário (Toast contextual).
+   */
+  function addFavorite(productId: number): boolean {
     if (favoriteProductIds.value.includes(productId)) {
-      return
+      return true
     }
 
+    const previous = [...favoriteProductIds.value]
     favoriteProductIds.value.push(productId)
-    persistFavoriteIds(favoriteProductIds.value)
+
+    try {
+      persistFavoriteIds(favoriteProductIds.value)
+      return true
+    } catch {
+      favoriteProductIds.value = previous
+      return false
+    }
   }
 
-  function removeFavorite(productId: number): void {
+  /**
+   * Remove favorito e persiste. Em falha de persistência, reverte o estado
+   * e retorna false.
+   */
+  function removeFavorite(productId: number): boolean {
+    if (!favoriteProductIds.value.includes(productId)) {
+      return true
+    }
+
+    const previous = [...favoriteProductIds.value]
     favoriteProductIds.value = favoriteProductIds.value.filter((id) => id !== productId)
-    persistFavoriteIds(favoriteProductIds.value)
+
+    try {
+      persistFavoriteIds(favoriteProductIds.value)
+      return true
+    } catch {
+      favoriteProductIds.value = previous
+      return false
+    }
   }
 
   return {

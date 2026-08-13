@@ -5,6 +5,8 @@ import { useRouter } from 'vue-router'
 import { useToast } from 'primevue/usetoast'
 
 import ProductForm from '@/components/products/ProductForm.vue'
+import { isAppError, toAppError } from '@/config/api'
+import { useActionErrorMessage } from '@/composables/useErrorPresentation'
 import { productService } from '@/services/productService'
 import type { Category } from '@/types/category'
 import type { ProductCreatePayload } from '@/types/product'
@@ -12,22 +14,25 @@ import type { ProductCreatePayload } from '@/types/product'
 const { t } = useI18n()
 const router = useRouter()
 const toast = useToast()
+const { messageFor } = useActionErrorMessage()
 
 const categories = ref<Category[]>([])
 const categoriesLoading = ref(false)
 const isSubmitting = ref(false)
+const submitError = ref<string | null>(null)
 
 async function loadCategories(): Promise<void> {
   categoriesLoading.value = true
 
   try {
     categories.value = await productService.getCategories()
-  } catch {
+  } catch (caught: unknown) {
     categories.value = []
+    const appError = isAppError(caught) ? caught : toAppError(caught)
     toast.add({
       severity: 'error',
       summary: t('toast.error'),
-      detail: t('toast.categoriesLoadError'),
+      detail: messageFor(appError, 'categories'),
       life: 4000,
     })
   } finally {
@@ -41,6 +46,7 @@ async function handleSubmit(payload: ProductCreatePayload): Promise<void> {
   }
 
   isSubmitting.value = true
+  submitError.value = null
 
   try {
     await productService.createProduct(payload)
@@ -53,14 +59,10 @@ async function handleSubmit(payload: ProductCreatePayload): Promise<void> {
     })
 
     await router.push({ name: 'produtos' })
-  } catch {
-    // Erros da API já chegam como AppError via interceptor em config/api.ts.
-    toast.add({
-      severity: 'error',
-      summary: t('toast.error'),
-      detail: t('toast.createError'),
-      life: 4000,
-    })
+  } catch (caught: unknown) {
+    // Erros já normalizados via interceptor; formulário preserva os dados.
+    const appError = isAppError(caught) ? caught : toAppError(caught)
+    submitError.value = messageFor(appError, 'formSave')
   } finally {
     isSubmitting.value = false
   }
@@ -114,6 +116,7 @@ onMounted(() => {
       :categories="categories"
       :categories-loading="categoriesLoading"
       :submitting="isSubmitting"
+      :submit-error="submitError"
       @submit="handleSubmit"
       @cancel="handleCancel"
       @retry-categories="loadCategories"

@@ -561,21 +561,27 @@ Não deverão ser adicionadas bibliotecas apenas para resolver problemas triviai
 
 ## Decisão
 
-Os erros serão tratados em diferentes níveis da aplicação.
+Os erros são classificados e normalizados em uma camada central (`toAppError`), depois apresentados pela UI conforme o contexto.
 
-### Service
+### Pipeline
 
-Responsável por lidar com detalhes técnicos da comunicação.
+1. Interceptor Axios → `AppError` (`kind`, `status`, `retryable`, `fieldErrors` opcional).
+2. Composable/view consome `AppError` (sem reescrever mensagens técnicas).
+3. `resolveErrorCopy` + vue-i18n (`errors.*`) geram título/descrição/ação.
+4. Canal visual: `ErrorState` (página), Toast (ação), alerta de formulário (escrita).
 
-### Composable ou Store
+### Retry
 
-Responsável por disponibilizar o estado da operação para a interface.
+- GET / leituras: botão "Tentar novamente" reexecuta apenas a operação.
+- POST/PUT: sem retry automático; o usuário reenvia manualmente com o formulário preservado.
 
-### View ou Component
+### Empty ≠ Error
 
-Responsável por apresentar feedback compreensível ao usuário.
+Falha de API nunca é exibida como lista vazia. Busca sem resultados usa `EmptyState`; falha de carga usa `ErrorState`.
 
-Essa separação evita que componentes precisem conhecer detalhes internos da API.
+### Produção
+
+Logs estruturados sem dados sensíveis. Mensagens ao usuário apenas via i18n (pt-BR, es, en).
 
 ---
 
@@ -1149,6 +1155,33 @@ Produtos são conteúdo externo dinâmico. Nomes podem conter marcas, modelos, n
 
 ---
 
+## 35.14 — Tratamento global de erros (`AppError` + ErrorBoundary)
+
+**Data:** 2026-08-13
+
+**Decisão:**
+
+- Expandir `AppError` com `kind`, `retryable` e `fieldErrors` opcional.
+- Centralizar normalização em `toAppError` (interceptor Axios em `config/api.ts`), com timeout de 15s.
+- Resolver mensagens via `resolveErrorCopy` + chaves i18n `errors.*` (pt-BR, es, en).
+- Logging seguro em `logError.ts` (dev mostra mensagem técnica; produção não expõe stack/payload).
+- Evoluir `ErrorState` com ação secundária e `showAction`.
+- Envolver `RouterView` com `ErrorBoundary`; registrar `app.config.errorHandler` e `unhandledrejection`.
+- Catálogo/detalhes/favoritos expõem `error: AppError | null`; 404 de produto permanece `notFound` + `EmptyState`.
+- Formulários usam `submitError` inline (sem apagar campos); favoritos falhos revertem estado e usam Toast.
+- Retry manual apenas em leituras GET; escritas nunca são repetidas automaticamente.
+
+**Motivo:**
+
+Garantir classificação consistente, Empty ≠ Error, recuperação segura e acessível, sem duplicar mensagens em service/composable/view e sem expor detalhes técnicos ao usuário.
+
+**Impacto:**
+
+- Documentação de arquitetura (§21) e modelos alinhados ao código;
+- Novos testes em `tests/config`, `tests/utils`, composables e `ErrorBoundary`.
+
+---
+
 # 36. Critérios de Aceite
 
 As decisões técnicas serão consideradas definidas quando:
@@ -1176,7 +1209,7 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Em andamento
 
-**Versão:** 1.23
+**Versão:** 1.24
 
 **Última atualização:** 2026-08-13
 
@@ -1184,6 +1217,10 @@ As decisões técnicas serão consideradas definidas quando:
 
 Conteúdo dinâmico de produtos não é traduzido automaticamente. i18n cobre interface e localização de categorias. Fase 11 permanece pendente.
 
+### Nota — tratamento global de erros
+
+Erros HTTP/runtime passam por AppError + i18n errors.*, com ErrorState/Toast/submitError conforme o contexto. Empty ≠ Error. Retry seguro apenas em leituras.
+
 ### Nota — testes de componentes
 
-Suíte de componentes adicionada em `tests/components/` (Vitest + Vue Test Utils), complementar aos testes de stores/composables/services/utils. Total da suíte: **121 testes**. Fase 11 (consistência documental completa) permanece pendente.
+Suíte de componentes adicionada em `tests/components/` (Vitest + Vue Test Utils), complementar aos testes de stores/composables/services/utils. Fase 11 (consistência documental completa) permanece pendente.

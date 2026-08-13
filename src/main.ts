@@ -9,6 +9,7 @@ import App from './App.vue'
 import { i18n } from './i18n'
 import router from './router'
 import { useLocaleStore } from '@/stores/localeStore'
+import { logUnexpectedError } from '@/utils/logError'
 
 import './assets/styles/main.css'
 
@@ -58,6 +59,21 @@ app.use(PrimeVue, {
   },
 })
 app.use(ToastService)
+
+app.config.errorHandler = (error, _instance, info) => {
+  logUnexpectedError(error, {
+    source: 'vue.errorHandler',
+    operation: info,
+  })
+}
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('unhandledrejection', (event) => {
+    logUnexpectedError(event.reason, {
+      source: 'window.unhandledrejection',
+    })
+  })
+}
 
 // Sincroniza idioma persistido com i18n/document no boot.
 useLocaleStore()

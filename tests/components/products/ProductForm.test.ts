@@ -173,6 +173,25 @@ describe('ProductForm', () => {
     expect(wrapper.emitted('retryCategories')).toHaveLength(1)
   })
 
+  it('exibe submitError sem apagar os valores preenchidos', async () => {
+    const { wrapper } = await mountWithApp(ProductForm, {
+      props: {
+        categories,
+        initialValues: validValues,
+        submitError: 'Não foi possível salvar o produto. Verifique sua conexão e tente novamente.',
+      },
+    })
+
+    expect(wrapper.get('#product-form-submit-error').attributes('role')).toBe('alert')
+    expect(wrapper.get('#product-form-submit-error').text()).toContain(
+      'Não foi possível salvar o produto',
+    )
+    expect((wrapper.get('#product-title').element as HTMLInputElement).value).toBe(validValues.title)
+    expect((wrapper.get('#product-description').element as HTMLTextAreaElement).value).toBe(
+      validValues.description,
+    )
+  })
+
   it('atualiza a prévia com o título informado', async () => {
     const { wrapper } = await mountWithApp(ProductForm, {
       props: { categories },

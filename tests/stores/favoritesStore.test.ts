@@ -1,5 +1,5 @@
 import { createPinia, setActivePinia } from 'pinia'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { FAVORITES_STORAGE_KEY, useFavoritesStore } from '@/stores/favoritesStore'
 
@@ -41,5 +41,18 @@ describe('useFavoritesStore', () => {
     const store = useFavoritesStore()
     expect(store.favoriteProductIds).toEqual([1, 4])
     expect(store.favoritesCount).toBe(2)
+  })
+
+  it('reverte estado e retorna false quando a persistência falha', () => {
+    const store = useFavoritesStore()
+    const setItem = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('quota exceeded')
+    })
+
+    expect(store.addFavorite(5)).toBe(false)
+    expect(store.isFavorite(5)).toBe(false)
+    expect(store.favoritesCount).toBe(0)
+
+    setItem.mockRestore()
   })
 })

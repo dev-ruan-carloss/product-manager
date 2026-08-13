@@ -1,27 +1,46 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
+import { useToast } from 'primevue/usetoast'
 
 import EmptyState from '@/components/EmptyState.vue'
 import ErrorState from '@/components/ErrorState.vue'
 import LoadingState from '@/components/LoadingState.vue'
 import ProductGrid from '@/components/products/ProductGrid.vue'
+import { useErrorPresentation } from '@/composables/useErrorPresentation'
 import { useFavoriteProducts } from '@/composables/useFavoriteProducts'
 
 const { t } = useI18n()
 const router = useRouter()
+const toast = useToast()
 
 const {
   favoriteProducts,
   favoritesCount,
   unavailableFavoritesCount,
   isLoading,
+  error,
   hasError,
   isEmpty,
   isFavorite,
-  toggleFavorite,
+  toggleFavorite: toggleFavoriteId,
   loadFavoriteProducts,
 } = useFavoriteProducts()
+
+const { presentation } = useErrorPresentation(error, 'favorites')
+
+function toggleFavorite(productId: number): void {
+  const succeeded = toggleFavoriteId(productId)
+
+  if (!succeeded) {
+    toast.add({
+      severity: 'error',
+      summary: t('toast.error'),
+      detail: t('errors.favoriteToggle'),
+      life: 4000,
+    })
+  }
+}
 
 function goToCatalog(): void {
   void router.push({ name: 'produtos' })
@@ -83,9 +102,11 @@ function goToCatalog(): void {
       />
 
       <ErrorState
-        v-else-if="hasError"
-        :title="t('favorites.errorTitle')"
-        :description="t('favorites.errorDescription')"
+        v-else-if="hasError && presentation"
+        :title="presentation.title"
+        :description="presentation.description"
+        :action-label="presentation.actionLabel"
+        :show-action="presentation.showPrimaryAction"
         @retry="loadFavoriteProducts"
       />
 

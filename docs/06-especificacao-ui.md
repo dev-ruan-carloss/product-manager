@@ -731,13 +731,13 @@ Mensagem:
 
 Caso a API retorne erro:
 
-- apresentar Toast de erro;
+- apresentar alerta inline no formulário (`submitError`);
 - manter os dados do formulário;
-- permitir nova tentativa.
+- permitir nova tentativa manual (sem retry automático de escrita).
 
 Mensagem sugerida:
 
-**Não foi possível criar o produto.**
+**Não foi possível salvar o produto. Verifique sua conexão e tente novamente.**
 
 ---
 
@@ -799,9 +799,9 @@ Mensagem sugerida:
 
 Caso a atualização falhe:
 
-- apresentar Toast de erro;
+- apresentar alerta inline no formulário (`submitError`);
 - manter os dados preenchidos;
-- permitir nova tentativa.
+- permitir nova tentativa manual (sem retry automático de escrita).
 
 ---
 
@@ -825,10 +825,12 @@ O sistema de Toast do PrimeVue deverá ser utilizado para feedback de operaçõe
 
 Exemplos:
 
-- produto criado;
-- produto atualizado;
-- favorito alterado;
-- erro de operação.
+- produto criado (sucesso);
+- produto atualizado (sucesso);
+- falha contextual ao atualizar favoritos;
+- falha ao carregar categorias.
+
+Erros persistentes de carregamento de página devem usar `ErrorState`, não apenas Toast.
 
 As mensagens deverão ser curtas e compreensíveis.
 

@@ -25,12 +25,14 @@ const props = withDefaults(
     submitting?: boolean
     initialValues?: ProductFormData
     submitLabel?: string
+    submitError?: string | null
   }>(),
   {
     categoriesLoading: false,
     submitting: false,
     initialValues: undefined,
     submitLabel: undefined,
+    submitError: null,
   },
 )
 
@@ -187,6 +189,15 @@ function onCancel(): void {
         <h2 id="product-form-heading" class="text-lg font-semibold text-slate-900 dark:text-slate-100">
           {{ t('form.heading') }}
         </h2>
+
+        <div
+          v-if="submitError"
+          id="product-form-submit-error"
+          role="alert"
+          class="mt-4 break-words rounded-lg border border-rose-200 bg-rose-50 px-3 py-3 text-sm text-rose-800 dark:border-rose-900 dark:bg-rose-950/50 dark:text-rose-200"
+        >
+          {{ submitError }}
+        </div>
 
         <div class="mt-4 grid min-w-0 gap-4 sm:mt-5 sm:gap-5 md:grid-cols-2">
           <div class="min-w-0 space-y-1.5 md:col-span-1">

@@ -503,7 +503,10 @@ Exemplos implementados:
     src/utils/
     ├── formatPrice.ts
     ├── parseProductId.ts
-    └── productFormSchema.ts
+    ├── productFormSchema.ts
+    ├── localizeCategory.ts
+    ├── logError.ts
+    └── resolveErrorCopy.ts
 
 Esses arquivos somente deverão existir quando houver uma necessidade real.
 
@@ -732,21 +735,57 @@ A representação exata desses estados será definida durante a implementação.
 
 # 21. Tratamento de Erros
 
-Os erros deverão ser tratados em níveis apropriados.
+Os erros são tratados de forma centralizada e em camadas:
 
-## Service
+```text
+Erro original (Axios / runtime)
+        ↓
+Normalização (toAppError em config/api.ts)
+        ↓
+AppError (kind, status, retryable, fieldErrors)
+        ↓
+Resolução de mensagens (resolveErrorCopy + i18n)
+        ↓
+UI (ErrorState | Toast | alerta de formulário)
+```
 
-Responsável por lidar com detalhes técnicos da requisição.
+## Classificação
 
-## Composable ou Store
+`AppError.kind` diferencia pelo menos:
 
-Responsável por disponibilizar o estado de erro de forma adequada para a interface.
+- `network` — sem resposta / falha de conexão;
+- `timeout` — ECONNABORTED / HTTP 408;
+- `server` — HTTP 5xx;
+- `notFound` — HTTP 404;
+- `validation` — HTTP 400 / 422;
+- `auth` — HTTP 401 / 403;
+- `conflict` — HTTP 409;
+- `rateLimit` — HTTP 429;
+- `unexpected` — demais casos.
 
-## View ou Component
+## Responsabilidades
 
-Responsável por apresentar uma mensagem compreensível ao usuário.
+### `config/api.ts`
 
-A interface não deverá apresentar diretamente mensagens técnicas desnecessárias provenientes da biblioteca HTTP ou do navegador.
+Interceptor Axios normaliza qualquer falha em `AppError` e registra log seguro (sem tokens/payloads).
+
+### Composables
+
+Expoem `error: AppError | null` e `hasError`. Não inventam dados nem usam mock como fallback.
+
+### Views / Components
+
+- Erros de página/carregamento → `ErrorState` persistente + retry seguro em GET;
+- Erros de ação (favorito, categorias) → Toast contextual;
+- Erros de escrita em formulário → alerta inline (`submitError`), preservando os campos;
+- 404 de produto → `EmptyState` de recurso inexistente (não confundir com falha de API);
+- Busca sem resultados → `EmptyState` (não confundir com `ErrorState`).
+
+### Runtime
+
+`app.config.errorHandler`, `unhandledrejection` (log) e `ErrorBoundary` em torno do `RouterView` evitam tela em branco em falhas inesperadas de renderização.
+
+A interface nunca apresenta stack trace, detalhes do Axios ou JSON bruto da API ao usuário final.
 
 ---
 

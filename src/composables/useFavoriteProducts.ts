@@ -1,8 +1,10 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 
+import { isAppError, toAppError } from '@/config/api'
 import { productService } from '@/services/productService'
 import { useFavoritesStore } from '@/stores/favoritesStore'
+import type { AppError } from '@/types/api'
 import type { Product } from '@/types/product'
 
 /**
@@ -15,8 +17,9 @@ export function useFavoriteProducts() {
 
   const catalogProducts = ref<Product[]>([])
   const isLoading = ref(false)
-  const hasError = ref(false)
+  const error = ref<AppError | null>(null)
   const hasLoadedCatalog = ref(false)
+  const hasError = computed(() => error.value !== null)
 
   const productsById = computed(() => {
     const map = new Map<number, Product>()
@@ -53,19 +56,19 @@ export function useFavoriteProducts() {
     if (favoriteProductIds.value.length === 0) {
       catalogProducts.value = []
       isLoading.value = false
-      hasError.value = false
+      error.value = null
       hasLoadedCatalog.value = true
       return
     }
 
     isLoading.value = true
-    hasError.value = false
+    error.value = null
 
     try {
       catalogProducts.value = await productService.getProducts()
       hasLoadedCatalog.value = true
-    } catch {
-      hasError.value = true
+    } catch (caught: unknown) {
+      error.value = isAppError(caught) ? caught : toAppError(caught)
       catalogProducts.value = []
       hasLoadedCatalog.value = false
     } finally {
@@ -77,13 +80,13 @@ export function useFavoriteProducts() {
     return favoritesStore.isFavorite(productId)
   }
 
-  function toggleFavorite(productId: number): void {
+  /** Retorna false quando a persistência falha — o estado não muda silenciosamente. */
+  function toggleFavorite(productId: number): boolean {
     if (favoritesStore.isFavorite(productId)) {
-      favoritesStore.removeFavorite(productId)
-      return
+      return favoritesStore.removeFavorite(productId)
     }
 
-    favoritesStore.addFavorite(productId)
+    return favoritesStore.addFavorite(productId)
   }
 
   onMounted(() => {
@@ -95,7 +98,7 @@ export function useFavoriteProducts() {
     (ids, previousIds = []) => {
       if (ids.length === 0) {
         catalogProducts.value = []
-        hasError.value = false
+        error.value = null
         hasLoadedCatalog.value = true
         return
       }
@@ -117,6 +120,7 @@ export function useFavoriteProducts() {
     favoritesCount,
     unavailableFavoritesCount,
     isLoading,
+    error,
     hasError,
     isEmpty,
     isFavorite,

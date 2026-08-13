@@ -1,12 +1,9 @@
-import { ref, watch, type Ref } from 'vue'
+import { computed, ref, watch, type Ref } from 'vue'
 
+import { isAppError, toAppError } from '@/config/api'
 import { productService } from '@/services/productService'
 import type { AppError } from '@/types/api'
 import type { Product } from '@/types/product'
-
-function isAppError(error: unknown): error is AppError {
-  return typeof error === 'object' && error !== null && 'message' in error
-}
 
 function isValidProduct(data: unknown): data is Product {
   if (typeof data !== 'object' || data === null) {
@@ -32,20 +29,21 @@ function isValidProduct(data: unknown): data is Product {
 export function useProductDetails(productId: Ref<number | null>) {
   const product = ref<Product | null>(null)
   const isLoading = ref(false)
-  const hasError = ref(false)
+  const error = ref<AppError | null>(null)
   const notFound = ref(false)
+  const hasError = computed(() => error.value !== null)
 
   async function loadProduct(): Promise<void> {
     if (productId.value === null) {
       product.value = null
       isLoading.value = false
-      hasError.value = false
+      error.value = null
       notFound.value = true
       return
     }
 
     isLoading.value = true
-    hasError.value = false
+    error.value = null
     notFound.value = false
     product.value = null
 
@@ -58,15 +56,16 @@ export function useProductDetails(productId: Ref<number | null>) {
       }
 
       product.value = data
-    } catch (error: unknown) {
+    } catch (caught: unknown) {
       product.value = null
+      const appError = isAppError(caught) ? caught : toAppError(caught)
 
-      if (isAppError(error) && error.status === 404) {
+      if (appError.kind === 'notFound' || appError.status === 404) {
         notFound.value = true
         return
       }
 
-      hasError.value = true
+      error.value = appError
     } finally {
       isLoading.value = false
     }
@@ -83,6 +82,7 @@ export function useProductDetails(productId: Ref<number | null>) {
   return {
     product,
     isLoading,
+    error,
     hasError,
     notFound,
     loadProduct,
