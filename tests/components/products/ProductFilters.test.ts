@@ -109,7 +109,7 @@ describe('ProductFilters', () => {
     })
 
     const search = wrapper.getComponent(ProductSearch)
-    expect(search.props('modelValue')).toBe('bag')
+    expect(search.props()).toMatchObject({ modelValue: 'bag' })
     await search.vm.$emit('update:modelValue', 'watch')
     expect(wrapper.emitted('update:search')).toEqual([['watch']])
 
@@ -131,5 +131,90 @@ describe('ProductFilters', () => {
 
     expect(wrapper.get('[aria-label="0 produtos"]').text()).toBe('0')
     expect(wrapper.findAll('button[aria-pressed]').length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('omite categorias sem produtos do filtro, inclusive customizadas vazias', async () => {
+    const { wrapper } = await mountWithApp(ProductFilters, {
+      props: {
+        search: '',
+        selectedCategory: ALL_CATEGORIES,
+        sortOrder: DEFAULT_SORT_ORDER,
+        categories: ['electronics', "women's clothing", 'teste'],
+        products: [
+          makeProduct({ id: 1, title: 'Produto A', category: "women's clothing" }),
+          makeProduct({ id: 2, title: 'Produto B', category: 'electronics' }),
+          makeProduct({ id: 3, title: 'Produto C', category: "women's clothing" }),
+        ],
+      },
+    })
+
+    const categoryButtons = wrapper.findAll('button[aria-pressed]')
+    const labels = categoryButtons.map((button) => button.text())
+
+    expect(labels.some((label) => label.includes('Eletrônicos'))).toBe(true)
+    expect(labels.some((label) => label.includes('Moda feminina'))).toBe(true)
+    expect(labels.some((label) => label.includes('teste'))).toBe(false)
+    expect(wrapper.text()).not.toContain('teste')
+  })
+
+  it('passa a exibir a categoria quando um produto passa a utilizá-la', async () => {
+    const { wrapper } = await mountWithApp(ProductFilters, {
+      props: {
+        search: '',
+        selectedCategory: ALL_CATEGORIES,
+        sortOrder: DEFAULT_SORT_ORDER,
+        categories: ['electronics', 'teste'],
+        products: [makeProduct({ id: 1, title: 'Produto B', category: 'electronics' })],
+      },
+    })
+
+    expect(wrapper.text()).not.toContain('teste')
+
+    await wrapper.setProps({
+      products: [
+        makeProduct({ id: 1, title: 'Produto B', category: 'electronics' }),
+        makeProduct({ id: 2, title: 'Produto teste', category: 'teste' }),
+      ],
+    })
+
+    const testeButton = wrapper
+      .findAll('button[aria-pressed]')
+      .find((button) => button.text().includes('teste'))
+
+    expect(testeButton).toBeDefined()
+    expect(testeButton?.text()).toContain('1')
+  })
+
+  it('remove a categoria do filtro quando o último produto deixa de usá-la', async () => {
+    const { wrapper } = await mountWithApp(ProductFilters, {
+      props: {
+        search: '',
+        selectedCategory: ALL_CATEGORIES,
+        sortOrder: DEFAULT_SORT_ORDER,
+        categories: ['electronics', 'teste'],
+        products: [
+          makeProduct({ id: 1, title: 'Produto A', category: 'teste' }),
+          makeProduct({ id: 2, title: 'Produto B', category: 'electronics' }),
+        ],
+      },
+    })
+
+    expect(
+      wrapper.findAll('button[aria-pressed]').some((button) => button.text().includes('teste')),
+    ).toBe(true)
+
+    await wrapper.setProps({
+      products: [makeProduct({ id: 1, title: 'Produto A', category: 'electronics' })],
+    })
+
+    expect(
+      wrapper.findAll('button[aria-pressed]').some((button) => button.text().includes('teste')),
+    ).toBe(false)
+    expect(wrapper.text()).not.toContain('teste')
+    expect(
+      wrapper
+        .findAll('button[aria-pressed]')
+        .some((button) => button.text().includes('Eletrônicos')),
+    ).toBe(true)
   })
 })

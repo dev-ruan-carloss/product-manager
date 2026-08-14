@@ -991,12 +991,12 @@ Consolidar qualidade técnica, estados de interface, testes manuais e, quando ap
 
 - Vitest configurado em `vite.config.ts`.
 - Scripts: `npm test`, `npm run test:watch`.
-- Testes organizados em `tests/` (separados de `src/`), por responsabilidade: `components/`, `composables/`, `services/`, `stores/`, `schemas/`, `security/`, `utils/`, `views/` (+ `helpers/`, `i18n/` e `config/`).
+- Testes organizados em `tests/` (separados de `src/`), por responsabilidade: `components/`, `composables/`, `services/`, `stores/`, `schemas/`, `security/`, `utils/`, `views/` (+ `helpers/`, `i18n/`, `config/` e `branding/`).
 - Cobertura crítica de domínio: favoritos, schema do formulário, filtros/ordenação/paginação, debounce, `parseProductId`, `formatPrice` e `productService`.
 - Cobertura de componentes: AppHeader, AppFooter, FavoriteButton, ProductCard, ProductDetails, ProductImageZoom, ProductForm, ProductFilters, ProductSearch, ProductSort, ProductPagination, ProductGrid, EmptyState, ErrorState, ErrorBoundary, LoadingState, ThemeToggle e LocaleSelector.
 - Estratégia de componentes: comportamento e acessibilidade observáveis (roles, aria-*, labels, emits), com Pinia + vue-i18n + Vue Router + PrimeVue via `tests/helpers/mountComponent.ts`.
 - Também cobertos: `tests/config/` (normalização de erros Axios) e utilitários de apresentação de erro.
-- Resultado atual: **359 testes** passando em **54 arquivos**.
+- Resultado atual: **369 testes** passando em **55 arquivos**.
 
 ---
 
@@ -1208,14 +1208,14 @@ Implementação opcional concluída sem alterar o status das Fases 1–10:
 ### Nota — Fase 11 (2026-08-13)
 
 - Auditoria README × código × desafio × SDD concluída.
-- Suíte atual: **359 testes** / 54 arquivos.
+- Suíte atual: **369 testes** / 55 arquivos.
 - Responsividade documentada de forma coerente: desafio **360px+**, alvo interno **320px+**.
 - Deep links na Vercel retornam HTTP 200.
 
 ### Nota — SEO técnico (2026-08-14)
 
 - Metadados no `index.html` (title, description, canonical da Vercel, robots, Open Graph, Twitter Card).
-- Preview: `public/tela-produtos.png`. Sem SSR, sem `keywords`, sem `googlebot` redundante.
+- Nome oficial: `Product Management`. Preview: `public/tela-produtos.png`. Sem SSR, sem `keywords`, sem `googlebot` redundante.
 - CSP e `theme-init.js` preservados.
 
 ### Nota — catálogo da sessão (CREATE/UPDATE)
@@ -1229,12 +1229,18 @@ Implementação opcional concluída sem alterar o status das Fases 1–10:
 - IDs órfãos são descartados; o contador reflete somente produtos resolvíveis.
 - Decisão 35.25.
 
+### Nota — identidade, contraste do submit e filtro de categorias (2026-08-14)
+
+- Nome oficial `Product Management` nos metadados do `index.html` (URL de produção inalterada).
+- Submit do `ProductForm` com texto branco sobre violeta em Light e Dark.
+- Filtro do catálogo só lista categorias com produtos na sessão. Decisão 35.26.
+
 ---
 
 # 19. Status do Documento
 
 **Status:** Concluído
 
-**Versão:** 1.23
+**Versão:** 1.24
 
 **Última atualização:** 2026-08-14

@@ -477,8 +477,9 @@ Quando houver categoria:
 ### Origem dos dados e filtro
 
 - Produtos: `GET /products` via `productService.getProducts()`.
-- Categorias: `GET /products/categories` via `productService.getCategories()`.
-- Filtro: aplicado no frontend em `useProductListControls` (comparação com `product.category`).
+- Categorias: `GET /products/categories` via `productService.getCategories()`, unidas às customizadas da sessão no cadastro.
+- Opções do filtro (`ProductFilters`): categorias com quantidade de produtos **> 0** na coleção atual da sessão.
+- Filtro aplicado: frontend em `useProductListControls` (comparação com `product.category`).
 
 A FakeStoreAPI disponibiliza `GET /products/category/:category`, porém a aplicação não utiliza esse endpoint. Classificação: **disponível na API, porém não utilizado e não obrigatório** — não é pendência.
 
@@ -905,7 +906,7 @@ Os modelos de dados serão considerados definidos quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.12
+**Versão:** 1.13
 
 **Última atualização:** 2026-08-14
 
@@ -920,3 +921,7 @@ CREATE/UPDATE atualizam `useProductsCatalog` com a resposta da API. Isso não é
 ### Nota — favoritos após reload
 
 IDs persistidos são cruzados com o catálogo disponível. IDs órfãos não permanecem no estado nem no contador. Decisão 35.25.
+
+### Nota — opções do filtro de categoria
+
+O filtro do catálogo lista somente categorias presentes em pelo menos um produto da sessão. Categorias customizadas sem produtos não aparecem como opção. Decisão 35.26.

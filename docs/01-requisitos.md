@@ -96,6 +96,7 @@ O requisito é o **filtro por categoria**, e não o consumo do endpoint `GET /pr
 - A listagem deve apresentar somente produtos correspondentes à categoria selecionada.
 - Deve existir uma opção equivalente a "Todas" ou similar.
 - Ao selecionar a opção de todas as categorias, a listagem deve retornar aos produtos sem o filtro de categoria.
+- O filtro deve listar somente categorias com pelo menos um produto na coleção atual do catálogo. Categorias sem produtos (incluindo customizadas vazias) não aparecem como opção.
 
 ### Status de implementação
 
@@ -860,12 +861,16 @@ Dessa forma, os requisitos permanecem independentes das decisões de implementa�
 
 **Status:** Concluído (requisitos alinhados ao código na Fase 11)
 
-**Versão:** 1.7
+**Versão:** 1.8
 
-**Última atualização:** 2026-08-13
+**Última atualização:** 2026-08-14
 
 ### Nota — preço e locale
 
 O preço exibido na interface acompanha o idioma selecionado (`pt-BR`/`BRL`, `en`/`USD`, `es`/`EUR`). O valor persistido e enviado à API continua sendo numérico; a formatação é apenas apresentação.
 
 O desafio exige **360px+**. O projeto valida também a partir de **320px** como alvo interno de usabilidade.
+
+### Nota — filtro de categorias com produtos
+
+O filtro do catálogo apresenta somente categorias associadas a pelo menos um produto da sessão. O cadastro de categorias não muda. Decisão 35.26.

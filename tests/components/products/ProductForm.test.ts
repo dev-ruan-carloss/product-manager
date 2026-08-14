@@ -215,6 +215,31 @@ describe('ProductForm', () => {
     expect(wrapper.get('#product-title').attributes('disabled')).toBeDefined()
   })
 
+  it('mantém o texto do botão primário branco e legível no dark mode', async () => {
+    document.documentElement.classList.add('dark')
+
+    try {
+      const { wrapper } = await mountWithApp(ProductForm, {
+        props: { categories },
+      })
+
+      const submit = wrapper.get('button[type="submit"]')
+      const className = submit.classes().join(' ')
+      const label = submit.find('.p-button-label')
+
+      expect(submit.text()).toContain('Salvar Produto')
+      expect(submit.classes()).toContain('product-form-submit')
+      expect(submit.classes()).toContain('text-white')
+      expect(className).not.toMatch(/dark:text-(slate|violet|zinc|gray|neutral)-\d+/)
+      expect(label.exists()).toBe(true)
+      expect(label.text()).toBe('Salvar Produto')
+
+      wrapper.unmount()
+    } finally {
+      document.documentElement.classList.remove('dark')
+    }
+  })
+
   it('oferece retryCategories quando não há categorias disponíveis', async () => {
     const { wrapper } = await mountWithApp(ProductForm, {
       props: { categories: [], categoriesLoading: false },

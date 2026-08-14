@@ -1388,7 +1388,7 @@ As categorias vinham exclusivamente de `GET /products/categories`. O formulário
 - O usuário pode criar uma categoria **dentro** do fluxo de cadastro/edição (`ProductForm`), sem sair da tela.
 - Categorias oficiais da API (`API categories`) permanecem intactas e continuam vindo de `productService.getCategories()`.
 - Categorias criadas pelo usuário (`custom categories`) ficam em `useCustomCategories`, persistidas em `localStorage` (`product-management:custom-categories` / `CUSTOM_CATEGORIES_STORAGE_KEY`).
-- O catálogo (`useProductsCatalog.categories`) expõe a **união** das duas fontes, sem duplicar. Filtro, contadores, busca, ordenação, paginação, card, detalhes e edição usam o mesmo valor persistido da categoria.
+- O catálogo (`useProductsCatalog.categories`) expõe a **união** das duas fontes, sem duplicar. O cadastro/edição usa essa união. O filtro do catálogo (`ProductFilters`) lista somente categorias com pelo menos um produto na coleção da sessão (decisão 35.26). Contadores, busca, ordenação, paginação, card, detalhes e edição usam o valor persistido da categoria no produto.
 - Validação da nova categoria: obrigatória, trim, rejeita vazio/somente espaços, máximo 50 caracteres, duplicata por caixa/espaços e por rótulo localizado das categorias da API (`Eletrônicos` ≡ `electronics`). O nome informado pelo usuário é dado, não chave i18n.
 - Não há criação automática de categorias fictícias. Não há endpoint de categorias na FakeStoreAPI; a persistência é só local/sessão (F5 recupera custom categories; o overlay de produtos CREATE/UPDATE continua só na sessão, decisão 35.18).
 - Cancelar na edição permanece a decisão 35.4 atualizada: retorno determinístico para `/produtos/:id`.
@@ -1468,7 +1468,8 @@ O documento inicial da SPA tinha title genérico e não declarava description, c
 **Decisão:**
 
 - Implementar SEO técnico somente em `index.html`: title, meta description, canonical, robots, Open Graph e Twitter Card (`summary_large_image`).
-- Canonical e `og:url` apontam para a URL real de produção: `https://product-manager-eta-seven.vercel.app/`.
+- Nome oficial da aplicação nos metadados: `Product Management` (title, `og:site_name`, `og:title`, `og:image:alt`, `twitter:title`, `twitter:image:alt`). Não usar `Product Manager` como nome da aplicação.
+- Canonical e `og:url` apontam para a URL real de produção: `https://product-manager-eta-seven.vercel.app/`. A URL não muda por causa do nome de exibição.
 - Imagem de preview: asset existente `public/tela-produtos.png` (screenshot real do catálogo), servido em `https://product-manager-eta-seven.vercel.app/tela-produtos.png`. Não criar imagem nova.
 - Locales Open Graph: `pt_BR` (principal), `en_US` e `es_ES` (alternates), alinhados ao i18n da interface.
 - Manter `lang="pt-BR"`, viewport atual, favicon, apple-touch-icon, `theme-color="#7c3aed"` e `color-scheme="light dark"`.
@@ -1529,6 +1530,28 @@ A FakeStoreAPI não persiste POST. Tratar o ID no `localStorage` como favorito v
 
 ---
 
+## 35.26 — Identidade Product Management, contraste do submit e filtro de categorias com produtos
+
+**Data:** 2026-08-14
+
+**Decisão:**
+
+- **Identidade:** o nome oficial da aplicação é `Product Management` em PT-BR, EN e ES (Header, Footer, i18n e metadados do `index.html`). Identificadores técnicos, caminhos (`logo-product-manager.webp`) e a URL de produção não mudam.
+- **Contraste do submit:** o botão primário do `ProductForm` (`Salvar Produto` / `Salvar Alterações`) mantém fundo violeta (`#7c3aed`) e texto branco em Light e Dark. Ajuste local via classe `product-form-submit` e tokens `--p-button-primary-*`; os demais botões PrimeVue não são alterados globalmente.
+- **Filtro de categorias:** `useProductsCatalog.categories` continua sendo a união API + customizadas (cadastro inalterado). `ProductFilters` exibe somente categorias com quantidade de produtos **> 0** na coleção atual da sessão. CREATE/UPDATE atualizam essa coleção; a categoria reaparece ou some conforme existam produtos associados. Não se criam categorias fictícias para preencher o filtro.
+
+**Motivo:**
+
+Alinhar identidade visível e SEO ao nome oficial; garantir contraste do label no dark mode do tema Aura; impedir que categorias customizadas vazias apareçam como opção de filtro sem alterar o cadastro.
+
+**Impacto:**
+
+- `index.html`, `ProductForm`, `main.css`, `ProductFilters`;
+- testes de branding, formulário e filtros;
+- README e SDD (arquitetura, UI, modelos, requisitos, plano, definição de pronto).
+
+---
+
 # 36. Critérios de Aceite
 
 As decisões técnicas serão consideradas definidas quando:
@@ -1556,7 +1579,7 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.37
+**Versão:** 1.38
 
 **Última atualização:** 2026-08-14
 
@@ -1574,7 +1597,7 @@ Erros HTTP/runtime passam por AppError + i18n errors.*, com ErrorState/Toast/sub
 
 ### Nota — testes automatizados
 
-Suíte em `tests/` (components, composables, services, stores, schemas, utils, config, i18n, views, security): **359 testes** passando.
+Suíte em `tests/` (components, composables, services, stores, schemas, utils, config, i18n, views, security, branding): **369 testes** passando.
 
 ### Nota — limites do formulário de produto
 
@@ -1582,7 +1605,7 @@ A decisão 35.20 define máximos de título (150), descrição (1000), preço (9
 
 ### Nota — categorias customizadas
 
-A decisão 35.21 define categorias criadas pelo usuário em `localStorage` (`product-management:custom-categories`), unidas às categorias da FakeStoreAPI no catálogo. O valor persistido é dado; i18n localiza só categorias conhecidas da API.
+A decisão 35.21 define categorias criadas pelo usuário em `localStorage` (`product-management:custom-categories`), unidas às categorias da FakeStoreAPI no catálogo. O valor persistido é dado; i18n localiza só categorias conhecidas da API. A decisão 35.26 restringe as opções do **filtro** às categorias com produtos na sessão; o cadastro continua usando a união completa.
 
 ### Nota — formatação monetária por locale
 
@@ -1606,4 +1629,8 @@ A decisão 35.19 define avaliações de 1 a 5 estrelas persistidas em `localStor
 
 ### Nota — SEO técnico (SPA)
 
-A decisão 35.24 define metadados no `index.html` (canonical da Vercel, Open Graph, Twitter Card, preview `public/tela-produtos.png`). Sem SSR. Sem `keywords` e sem `googlebot` redundante. Compatível com a CSP existente.
+A decisão 35.24 define metadados no `index.html` (canonical da Vercel, Open Graph, Twitter Card, preview `public/tela-produtos.png`). Nome oficial `Product Management`. Sem SSR. Sem `keywords` e sem `googlebot` redundante. Compatível com a CSP existente.
+
+### Nota — identidade, contraste do submit e filtro de categorias
+
+A decisão 35.26 define o nome oficial `Product Management` nos metadados, texto branco no botão primário do `ProductForm` em Light/Dark, e filtro de catálogo apenas com categorias que tenham pelo menos um produto na sessão.

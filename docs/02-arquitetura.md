@@ -230,6 +230,8 @@ A pasta `components/` será responsável pelos componentes reutilizáveis da int
 
 A ordenação da listagem (preço, nome e avaliação) é apresentada por `ProductSort`, integrado em `ProductFilters`.
 
+`ProductFilters` recebe a união de categorias do catálogo e os produtos da sessão. As opções do filtro (lista desktop e select mobile) incluem somente categorias com quantidade de produtos **> 0**. O cadastro de categorias não é filtrado aqui.
+
 A lógica de ordenação permanece em `useProductListControls`, sobre a coleção carregada via `GET /products`.
 
 A estrutura poderá ser organizada em subpastas caso o número de componentes aumente significativamente.
@@ -277,7 +279,8 @@ Deverá:
 - apresentar campos;
 - apresentar mensagens de validação;
 - controlar estados visuais do formulário;
-- emitir ou encaminhar os dados válidos.
+- emitir ou encaminhar os dados válidos;
+- manter o botão primário (salvar) com texto branco sobre fundo violeta em Light e Dark (`product-form-submit`).
 
 As regras de negócio e comunicação com a API deverão permanecer fora do componente quando não forem específicas da apresentação.
 
@@ -326,7 +329,8 @@ Fonte única de verdade do catálogo **na sessão da aplicação**.
 Responsabilidades:
 
 - carregar produtos e categorias via `GET /products` e `GET /products/categories` (fonte inicial);
-- expor a união de categorias da API com categorias customizadas da sessão (`useCustomCategories`);
+- expor a união de categorias da API com categorias customizadas da sessão (`useCustomCategories`) — usada no cadastro/edição;
+- o filtro da listagem (`ProductFilters`) deriva as opções visíveis a partir dos produtos da sessão (somente categorias com quantidade > 0);
 - manter o estado compartilhado entre catálogo, detalhes, edição, criação e favoritos;
 - incorporar o produto retornado por `POST /products` (`addCreatedProduct`);
 - substituir o produto retornado por `PUT /products/:id` (`replaceProduct`);
@@ -1039,7 +1043,7 @@ A arquitetura será considerada adequada quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.15
+**Versão:** 1.16
 
 **Última atualização:** 2026-08-14
 
@@ -1069,4 +1073,8 @@ A FakeStoreAPI é validada em `normalizeProduct` antes da UI. URLs externas pass
 
 ### Nota — SEO no documento inicial
 
-Metadados de SEO e compartilhamento ficam em `index.html` (canonical da Vercel, Open Graph, Twitter Card, preview `public/tela-produtos.png`). A aplicação permanece SPA, sem SSR. Decisão 35.24.
+Metadados de SEO e compartilhamento ficam em `index.html` (canonical da Vercel, Open Graph, Twitter Card, preview `public/tela-produtos.png`, nome oficial `Product Management`). A aplicação permanece SPA, sem SSR. Decisão 35.24.
+
+### Nota — filtro de categorias com produtos
+
+`ProductFilters` lista somente categorias com pelo menos um produto na coleção da sessão. A união API + customizadas em `useProductsCatalog.categories` permanece para o cadastro. Decisão 35.26.

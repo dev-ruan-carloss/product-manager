@@ -134,6 +134,36 @@ html.dark .p-paginator-next:focus-visible {
   outline-color: #a78bfa;
 }
 
+/*
+  ProductForm submit: o tema Aura no dark usa label escuro no botão primary.
+  Tokens locais mantêm fundo violeta + texto branco em light e dark,
+  sem alterar os demais botões PrimeVue.
+*/
+.product-form-submit.p-button {
+  --p-button-primary-background: #7c3aed;
+  --p-button-primary-hover-background: #6d28d9;
+  --p-button-primary-active-background: #6d28d9;
+  --p-button-primary-border-color: #7c3aed;
+  --p-button-primary-hover-border-color: #6d28d9;
+  --p-button-primary-active-border-color: #6d28d9;
+  --p-button-primary-color: #ffffff;
+  --p-button-primary-hover-color: #ffffff;
+  --p-button-primary-active-color: #ffffff;
+  color: #fff;
+}
+
+html.dark .product-form-submit.p-button {
+  --p-button-primary-color: #ffffff;
+  --p-button-primary-hover-color: #ffffff;
+  --p-button-primary-active-color: #ffffff;
+  color: #fff;
+}
+
+.product-form-submit.p-button .p-button-label,
+html.dark .product-form-submit.p-button .p-button-label {
+  color: #fff;
+}
+
 .p-paginator {
   display: flex;
   flex-wrap: wrap;

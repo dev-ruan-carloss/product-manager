@@ -395,7 +395,7 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 
 **Status:** Concluído
 
-**Versão:** 1.18
+**Versão:** 1.19
 
 **Última atualização:** 2026-08-14
 
@@ -403,7 +403,7 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 
 - Qualidade, testes manuais e critérios técnicos da Fase 10 foram validados.
 - Vitest configurado com suíte automatizada em `tests/` (separados de `src/`), incluindo `components/`, `composables/`, `services/`, `stores/`, `utils/`, `config/`, `i18n/`, `schemas/`, `security/` e `views/`.
-- Resultado atual da suíte: **359 testes** passando em **54 arquivos**.
+- Resultado atual da suíte: **369 testes** passando em **55 arquivos**.
 
 ### Nota — melhoria bônus i18n
 
@@ -433,4 +433,10 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 ### Nota — SEO técnico
 
 - Metadados no `index.html`: title, description, canonical `https://product-manager-eta-seven.vercel.app/`, robots, Open Graph e Twitter Card.
-- Preview: `public/tela-produtos.png`. Sem SSR, sem `keywords`, sem `googlebot` redundante. CSP e `theme-init.js` preservados.
+- Nome oficial: `Product Management`. Preview: `public/tela-produtos.png`. Sem SSR, sem `keywords`, sem `googlebot` redundante. CSP e `theme-init.js` preservados.
+
+### Nota — identidade, contraste do submit e filtro de categorias
+
+- Metadados e interface usam `Product Management`; URL e identificadores técnicos não mudam.
+- Botão primário do `ProductForm` com texto branco em Light/Dark.
+- Filtro do catálogo só lista categorias com pelo menos um produto. Decisão 35.26.

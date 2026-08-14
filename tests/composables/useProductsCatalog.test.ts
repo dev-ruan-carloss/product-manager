@@ -183,6 +183,19 @@ describe('useProductsCatalog', () => {
     wrapper.unmount()
   })
 
+  it('reflete CREATE e UPDATE de categoria na coleção da sessão', async () => {
+    const { api, wrapper } = await mountCatalog(false)
+
+    api.addCreatedProduct(makeProduct({ id: 21, title: 'Criado', category: 'teste' }))
+    expect(api.products.value.some((product) => product.category === 'teste')).toBe(true)
+
+    api.replaceProduct(makeProduct({ id: 21, title: 'Criado', category: 'electronics' }))
+    expect(api.products.value.some((product) => product.category === 'teste')).toBe(false)
+    expect(api.products.value.some((product) => product.category === 'electronics')).toBe(true)
+
+    wrapper.unmount()
+  })
+
   it('une categorias da API com categorias customizadas da sessão', async () => {
     vi.mocked(productService.getProducts).mockResolvedValue([makeProduct()])
     vi.mocked(productService.getCategories).mockResolvedValue(['electronics', 'jewelery'])

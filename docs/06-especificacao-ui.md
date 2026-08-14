@@ -99,7 +99,7 @@ O layout deverá ocupar corretamente a tela em desktop, tablet e mobile.
 
 O cabeçalho deverá apresentar:
 
-- identificação da aplicação;
+- identificação da aplicação (`Product Management`);
 - acesso aos produtos;
 - acesso aos favoritos;
 - acesso à criação de produto.
@@ -186,6 +186,7 @@ Regras:
 - PrimeVue utiliza `darkModeSelector: '.dark'`;
 - o tema se aplica a Header, Footer, layout, catálogo, detalhes, formulários, favoritos, loading, erro, vazio e Toast;
 - o `index.html` declara `theme-color="#7c3aed"` e `color-scheme="light dark"` para o chrome do browser e crawlers, sem alterar o `themeStore`.
+- o botão primário do `ProductForm` mantém fundo violeta e **texto branco** em Light e Dark (`product-form-submit`); o ajuste é local, sem mudar os demais botões PrimeVue.
 
 Não deve existir estado de tema independente por tela.
 
@@ -268,6 +269,8 @@ Quando uma categoria for selecionada, somente produtos daquela categoria deverã
 ### Como o filtro é atendido
 
 A FakeStoreAPI disponibiliza `GET /products/category/:category`, porém a aplicação não utiliza esse endpoint. O requisito de filtro por categoria é atendido através do carregamento do catálogo via `GET /products` e filtragem dos produtos no frontend (`useProductListControls`, comparando `product.category`).
+
+`ProductFilters` lista somente categorias com **pelo menos um produto** na coleção atual do catálogo da sessão. Categorias customizadas sem produtos não aparecem como opção; passam a aparecer quando um produto as utiliza (CREATE/UPDATE). O cadastro de categorias permanece inalterado. Decisão 35.26.
 
 Classificação de `GET /products/category/:category`: **disponível na API, porém não utilizado e não obrigatório** — não é pendência de implementação.
 
@@ -747,6 +750,7 @@ O formulário deverá possuir:
 Durante o envio:
 
 - o botão de salvar deverá indicar carregamento;
+- o label do botão primário permanece branco sobre o fundo violeta em Light e Dark;
 - múltiplos envios deverão ser evitados;
 - os dados preenchidos deverão permanecer no formulário em caso de erro.
 
@@ -1179,7 +1183,7 @@ A interface será considerada adequada quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.21
+**Versão:** 1.22
 
 **Última atualização:** 2026-08-14
 
@@ -1213,4 +1217,8 @@ Auditoria final de documentação concluída: README e SDD alinhados ao código,
 
 ### Nota — SEO no documento inicial
 
-Title, description, canonical, Open Graph e Twitter Card ficam no `index.html`. Preview: `public/tela-produtos.png`. A UI das rotas não muda; não há SSR. Decisão 35.24.
+Title, description, canonical, Open Graph e Twitter Card ficam no `index.html`. Nome oficial: `Product Management`. Preview: `public/tela-produtos.png`. A UI das rotas não muda; não há SSR. Decisão 35.24.
+
+### Nota — identidade, contraste do submit e filtro de categorias
+
+Nome oficial `Product Management` nos metadados. Submit do `ProductForm` com texto branco em Light/Dark. Filtro do catálogo só lista categorias com produtos na sessão. Decisão 35.26.

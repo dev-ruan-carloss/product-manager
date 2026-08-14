@@ -38,12 +38,33 @@ const categoryCounts = computed(() => {
 
 const totalCount = computed(() => props.products.length)
 
+const filterableCategories = computed(() => {
+  const counts = categoryCounts.value
+  const seen = new Set<string>()
+  const result: Category[] = []
+
+  for (const category of props.categories) {
+    if ((counts.get(category) ?? 0) > 0) {
+      seen.add(category)
+      result.push(category)
+    }
+  }
+
+  for (const [category, count] of counts) {
+    if (count > 0 && !seen.has(category)) {
+      result.push(category)
+    }
+  }
+
+  return result
+})
+
 const categoryOptions = computed(() => {
   void locale.value
 
   return [
     { label: t('catalog.allCategories'), value: ALL_CATEGORIES },
-    ...props.categories.map((category) => ({
+    ...filterableCategories.value.map((category) => ({
       label: getLocalizedCategory(category),
       value: category,
     })),
@@ -135,7 +156,7 @@ function localizedCategory(category: string): string {
             </span>
           </button>
         </li>
-        <li v-for="category in categories" :key="category">
+        <li v-for="category in filterableCategories" :key="category">
           <button
             type="button"
             class="flex w-full min-w-0 items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-left text-sm outline-none transition focus-visible:ring-2 focus-visible:ring-violet-500"

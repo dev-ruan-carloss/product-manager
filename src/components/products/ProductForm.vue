@@ -660,7 +660,7 @@ function onCreateCategoryConfirm(created: Category): void {
         type="submit"
         :label="resolvedSubmitLabel"
         severity="primary"
-        class="min-h-11 w-full !border-violet-600 !bg-violet-600 hover:!bg-violet-700 sm:w-auto"
+        class="product-form-submit min-h-11 w-full text-white hover:text-white sm:w-auto"
         :loading="submitting"
         :disabled="submitting"
         :aria-busy="submitting"
