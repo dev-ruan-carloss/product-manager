@@ -1457,6 +1457,44 @@ Reduzir XSS via imagem/URL e quebra de UI por JSON inesperado, alinhado ao taman
 
 ---
 
+## 35.24 — SEO técnico e previews no `index.html` (SPA, sem SSR)
+
+**Data:** 2026-08-14
+
+**Problema:**
+
+O documento inicial da SPA tinha title genérico e não declarava description, canonical, Open Graph nem Twitter Card. Compartilhamento e crawlers não recebiam URL canônica de produção nem imagem de preview.
+
+**Decisão:**
+
+- Implementar SEO técnico somente em `index.html`: title, meta description, canonical, robots, Open Graph e Twitter Card (`summary_large_image`).
+- Canonical e `og:url` apontam para a URL real de produção: `https://product-manager-eta-seven.vercel.app/`.
+- Imagem de preview: asset existente `public/tela-produtos.png` (screenshot real do catálogo), servido em `https://product-manager-eta-seven.vercel.app/tela-produtos.png`. Não criar imagem nova.
+- Locales Open Graph: `pt_BR` (principal), `en_US` e `es_ES` (alternates), alinhados ao i18n da interface.
+- Manter `lang="pt-BR"`, viewport atual, favicon, apple-touch-icon, `theme-color="#7c3aed"` e `color-scheme="light dark"`.
+- Manter o boot de tema em `/theme-init.js` (arquivo externo). Sem script inline, sem JSON-LD inline, sem alteração da CSP, sem origens externas novas.
+- Não implementar SSR, Nuxt nem páginas HTML estáticas extras. A aplicação permanece SPA Vue/Vite; o Vue Router e o fallback da Vercel (35.15) não mudam.
+- Não usar `meta keywords`.
+- Não manter `meta name="googlebot"` separado: a diretiva `robots` (`index, follow`) já cobre os crawlers.
+
+**Motivo:**
+
+- **`index.html`:** é o único documento HTML servido aos crawlers e ao primeiro paint da SPA. Metadados estáticos no shell cobrem title, description e previews sem mudar arquitetura.
+- **Canonical na Vercel:** é a URL pública real do deploy; canonical relativo ou de localhost geraria URLs canônicas incorretas.
+- **Screenshot existente:** representa o produto real (catálogo) e já está em `public/`; duplicar ou gerar arte nova não agrega.
+- **Sem SSR:** o objetivo desta entrega é SEO técnico/metadados e previews, não indexação profunda de rotas dinâmicas. SSR/Nuxt seria mudança arquitetural fora de escopo.
+- **Sem `keywords`:** mecanismos modernos ignoram a tag; stuffing não é estratégia do projeto.
+- **Sem `googlebot` separado:** duplica `robots` sem comportamento adicional.
+
+**Impacto:**
+
+- `index.html` e cópia em `dist/` após o build;
+- `public/tela-produtos.png` copiado para `dist/tela-produtos.png` pelo Vite;
+- README e SDD (arquitetura, decisões, UI, plano, definição de pronto);
+- nenhuma alteração de CRUD, API, favoritos, avaliações, categorias, i18n, tema ou CSP.
+
+---
+
 # 36. Critérios de Aceite
 
 As decisões técnicas serão consideradas definidas quando:
@@ -1484,9 +1522,9 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.35
+**Versão:** 1.36
 
-**Última atualização:** 2026-08-13
+**Última atualização:** 2026-08-14
 
 ### Nota — zoom da imagem nos detalhes
 
@@ -1527,3 +1565,7 @@ A decisão 35.18 define o catálogo da sessão: GET inicial da FakeStoreAPI + ov
 ### Nota — avaliação local do usuário
 
 A decisão 35.19 define avaliações de 1 a 5 estrelas persistidas em `localStorage` (`product-management:product-ratings`), vinculadas ao ID, sem alterar o contrato da FakeStoreAPI nem o `rating` original do produto. O modal de avaliação mantém as estrelas em uma linha e respiro lateral em viewports estreitas (320–450px).
+
+### Nota — SEO técnico (SPA)
+
+A decisão 35.24 define metadados no `index.html` (canonical da Vercel, Open Graph, Twitter Card, preview `public/tela-produtos.png`). Sem SSR. Sem `keywords` e sem `googlebot` redundante. Compatível com a CSP existente.

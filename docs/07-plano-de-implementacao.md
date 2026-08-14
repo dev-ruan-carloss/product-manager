@@ -1020,6 +1020,7 @@ O README deverá apresentar:
 - limitações da FakeStoreAPI;
 - comandos disponíveis;
 - demo/deploy público;
+- SEO técnico e previews de compartilhamento (`index.html`);
 - bônus e extras;
 - o que faria diferente com mais tempo.
 
@@ -1038,6 +1039,7 @@ O README deverá apresentar:
 
 - [x] README com link de produção: https://product-manager-eta-seven.vercel.app/
 - [x] Fallback SPA na Vercel (`vercel.json`) validado (deep links `/produtos`, `/favoritos`, `/produtos/:id`, `/produtos/novo` retornam HTTP 200).
+- [x] SEO técnico no `index.html`: title, description, canonical, robots, Open Graph, Twitter Card e preview `public/tela-produtos.png` (decisão 35.24). Sem SSR.
 - [x] Validação técnica: `npm test`, `npm run type-check`, `npm run lint`, `npm run build`.
 
 ---
@@ -1174,6 +1176,7 @@ Resumo do acompanhamento:
 | Internacionalização (melhoria bônus) | concluída (`vue-i18n`, pt-BR/es/en, seletor no Footer; categorias localizadas) |
 | Localização dinâmica de title/description (bônus) | removida — conteúdo dinâmico permanece no idioma original da API |
 | Deploy público (Vercel) | concluído — https://product-manager-eta-seven.vercel.app/ (SPA rewrite validado) |
+| SEO técnico (`index.html`) | concluído — canonical, Open Graph, Twitter Card, preview `tela-produtos.png`; sem SSR (35.24) |
 
 ### Próxima fase
 
@@ -1204,6 +1207,12 @@ Implementação opcional concluída sem alterar o status das Fases 1–10:
 - Responsividade documentada de forma coerente: desafio **360px+**, alvo interno **320px+**.
 - Deep links na Vercel retornam HTTP 200.
 
+### Nota — SEO técnico (2026-08-14)
+
+- Metadados no `index.html` (title, description, canonical da Vercel, robots, Open Graph, Twitter Card).
+- Preview: `public/tela-produtos.png`. Sem SSR, sem `keywords`, sem `googlebot` redundante.
+- CSP e `theme-init.js` preservados.
+
 ### Nota — catálogo da sessão (CREATE/UPDATE)
 
 - FakeStoreAPI não persiste POST/PUT; o frontend aplica a resposta no estado de `useProductsCatalog`.
@@ -1215,6 +1224,6 @@ Implementação opcional concluída sem alterar o status das Fases 1–10:
 
 **Status:** Concluído
 
-**Versão:** 1.21
+**Versão:** 1.22
 
-**Última atualização:** 2026-08-13
+**Última atualização:** 2026-08-14

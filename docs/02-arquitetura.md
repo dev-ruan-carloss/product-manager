@@ -146,6 +146,8 @@ A estrutura planejada para o projeto será:
     ├── vercel.json
     └── vite.config.ts
 
+O `index.html` é o documento inicial da SPA Vue/Vite. Concentra title, meta description, canonical, robots, Open Graph, Twitter Card, `theme-color` e `color-scheme`. Assets estáticos de preview e ícones ficam em `public/` (incluindo `tela-produtos.png`). Não há SSR nem páginas HTML estáticas adicionais — o Vue Router resolve as rotas no cliente, com fallback SPA na Vercel (decisão 35.15). Detalhes de SEO: decisão **35.24**.
+
 A estrutura poderá ser ajustada durante a implementação caso surja uma necessidade real.
 
 Alterações estruturais relevantes deverão ser registradas em `03-decisoes-tecnicas.md`.
@@ -1024,9 +1026,9 @@ A arquitetura será considerada adequada quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.13
+**Versão:** 1.14
 
-**Última atualização:** 2026-08-13
+**Última atualização:** 2026-08-14
 
 ### Nota — melhoria bônus i18n
 
@@ -1047,3 +1049,7 @@ A imagem de `/produtos/:id` usa zoom in-place no desktop (`ProductImageZoom` + `
 ### Nota — hardening de segurança
 
 A FakeStoreAPI é validada em `normalizeProduct` antes da UI. URLs externas passam por `httpUrl.ts`. Headers de segurança na Vercel. Especificação em `docs/test/`.
+
+### Nota — SEO no documento inicial
+
+Metadados de SEO e compartilhamento ficam em `index.html` (canonical da Vercel, Open Graph, Twitter Card, preview `public/tela-produtos.png`). A aplicação permanece SPA, sem SSR. Decisão 35.24.

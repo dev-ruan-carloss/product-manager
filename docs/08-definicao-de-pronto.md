@@ -312,6 +312,7 @@ Os principais fluxos deverão ser executados manualmente.
 O projeto será considerado documentado quando:
 
 - [x] README estiver atualizado.
+- [x] SEO técnico e previews de compartilhamento estiverem documentados (`index.html`, decisão 35.24).
 - [x] Requisitos estiverem documentados.
 - [x] Arquitetura estiver documentada.
 - [x] Decisões técnicas estiverem documentadas.
@@ -361,6 +362,7 @@ O projeto somente será considerado pronto quando:
 - [x] Lint estiver passando.
 - [x] Build estiver passando.
 - [x] README estiver atualizado.
+- [x] SEO técnico no `index.html` (canonical, Open Graph, Twitter Card, preview existente) estiver configurado, sem SSR.
 - [x] Documentação estiver consistente com o código.
 
 ---
@@ -391,9 +393,9 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 
 **Status:** Concluído
 
-**Versão:** 1.16
+**Versão:** 1.17
 
-**Última atualização:** 2026-08-13
+**Última atualização:** 2026-08-14
 
 ### Nota da Fase 10 (QA final)
 
@@ -419,3 +421,8 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 
 - POST/PUT bem-sucedidos atualizam `useProductsCatalog`; GET posterior da FakeStoreAPI não precisa persistir a alteração para a UX funcionar.
 - DELETE permanece fora do escopo.
+
+### Nota — SEO técnico
+
+- Metadados no `index.html`: title, description, canonical `https://product-manager-eta-seven.vercel.app/`, robots, Open Graph e Twitter Card.
+- Preview: `public/tela-produtos.png`. Sem SSR, sem `keywords`, sem `googlebot` redundante. CSP e `theme-init.js` preservados.

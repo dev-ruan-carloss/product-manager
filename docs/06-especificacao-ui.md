@@ -184,7 +184,8 @@ Regras:
 - resolução inicial: preferência salva → preferência do sistema → Light Mode;
 - TailwindCSS utiliza a variante `dark:` com classe `.dark` no `<html>`;
 - PrimeVue utiliza `darkModeSelector: '.dark'`;
-- o tema se aplica a Header, Footer, layout, catálogo, detalhes, formulários, favoritos, loading, erro, vazio e Toast.
+- o tema se aplica a Header, Footer, layout, catálogo, detalhes, formulários, favoritos, loading, erro, vazio e Toast;
+- o `index.html` declara `theme-color="#7c3aed"` e `color-scheme="light dark"` para o chrome do browser e crawlers, sem alterar o `themeStore`.
 
 Não deve existir estado de tema independente por tela.
 
@@ -1170,9 +1171,9 @@ A interface será considerada adequada quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.19
+**Versão:** 1.20
 
-**Última atualização:** 2026-08-13
+**Última atualização:** 2026-08-14
 
 ### Nota — zoom da imagem nos detalhes (2026-08-13)
 
@@ -1200,3 +1201,7 @@ Seletor de idioma no Footer (pt-BR / es / en), textos de UI via `vue-i18n`, cate
 ### Nota — Fase 11
 
 Auditoria final de documentação concluída: README e SDD alinhados ao código, ao desafio (360px+) e ao alvo interno (320px+).
+
+### Nota — SEO no documento inicial
+
+Title, description, canonical, Open Graph e Twitter Card ficam no `index.html`. Preview: `public/tela-produtos.png`. A UI das rotas não muda; não há SSR. Decisão 35.24.
