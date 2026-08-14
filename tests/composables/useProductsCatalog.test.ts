@@ -36,6 +36,7 @@ async function mountCatalog(autoLoad = true) {
 
 describe('useProductsCatalog', () => {
   beforeEach(() => {
+    localStorage.clear()
     setActivePinia(createPinia())
     resetProductsCatalogState()
     vi.clearAllMocks()
@@ -43,6 +44,7 @@ describe('useProductsCatalog', () => {
 
   afterEach(() => {
     resetProductsCatalogState()
+    localStorage.clear()
     vi.restoreAllMocks()
   })
 

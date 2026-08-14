@@ -192,7 +192,7 @@ Configurados em `vercel.json` para a SPA na Vercel. Arquivos estáticos reais em
 
 | Chave | Dados | Por que existe | Validação na leitura |
 |---|---|---|---|
-| `product-management:favorites` | IDs de produto | favoritos entre sessões | somente inteiros positivos; demais entradas ignoradas |
+| `product-management:favorites` | IDs de produto | favoritos entre sessões | somente inteiros positivos na leitura; IDs órfãos descartados após cruzamento com o catálogo |
 | `product-management:product-ratings` | mapa `id → 1..5` | avaliação local (API não tem endpoint) | ID positivo + nota 1–5 |
 | `product-management:custom-categories` | nomes de categoria | categorias criadas pelo usuário | string, trim, não vazia, máximo 50, dedupe |
 | `product-management:theme` | `'light'` \| `'dark'` | preferência de tema | allowlist; senão, tema do sistema |
@@ -227,6 +227,7 @@ Conteúdo com aparência de HTML (ex.: `<script>…</script>` numa categoria) po
 - Ausência de `v-html` e de HTML dinâmico — manter interpolação.
 - Sanitização HTML — desnecessária.
 - Favoritos, ratings, tema e locale já validavam a leitura do `localStorage`.
+- IDs de favoritos ainda passam por validação de inteiro positivo; após o catálogo carregar, IDs órfãos são descartados (decisão 35.25).
 - `parseProductId` já rejeitava parâmetros de rota não numéricos.
 - Pipeline global de erros (`AppError`) — reutilizado para payload inválido, sem canal paralelo.
 - Sem DELETE, sem mudança de regras de catálogo/favoritos/i18n além da validação de entrada.

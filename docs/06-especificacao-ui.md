@@ -622,6 +622,14 @@ Ao favoritar ou desfavoritar:
 
 Na página de favoritos, um produto desfavoritado deverá desaparecer da lista.
 
+O contador deverá representar a quantidade de favoritos **resolvíveis** no catálogo disponível — não a quantidade bruta de IDs no `localStorage`.
+
+Após reload:
+
+- IDs persistidos são cruzados com os produtos disponíveis;
+- IDs órfãos são descartados;
+- se não restar nenhum favorito válido, a página apresenta o estado vazio (“Você ainda não possui favoritos.”), sem erro.
+
 ---
 
 # 31. Página de Criação
@@ -1171,7 +1179,7 @@ A interface será considerada adequada quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.20
+**Versão:** 1.21
 
 **Última atualização:** 2026-08-14
 
@@ -1193,6 +1201,7 @@ Seletor de idioma no Footer (pt-BR / es / en), textos de UI via `vue-i18n`, cate
 
 - Estado inválido: placeholder neutro; destaque na borda e na mensagem de erro; texto digitado sem vermelho indevido.
 - Contador de Favoritos no Header: associado ao texto via `inline-flex` (não ancorado no ícone com `absolute`).
+- Após reload, o contador só inclui IDs que ainda existem no catálogo disponível; IDs órfãos são descartados (decisão 35.25).
 
 ### Nota — modal de avaliação (2026-08-13)
 

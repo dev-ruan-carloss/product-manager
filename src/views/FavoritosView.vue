@@ -75,7 +75,7 @@ function goToCatalog(): void {
 
     <section class="min-w-0 space-y-3 sm:space-y-5" :aria-label="t('favorites.sectionAria')">
       <div
-        v-if="!isEmpty && !hasError"
+        v-if="!isLoading && !isEmpty && !hasError"
         class="flex min-w-0 flex-wrap items-center gap-2 rounded-xl border border-slate-200 bg-white px-2.5 py-2.5 shadow-sm sm:gap-3 sm:px-4 sm:py-3 dark:border-slate-700 dark:bg-slate-950"
       >
         <span

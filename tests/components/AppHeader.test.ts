@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import AppHeader from '@/components/AppHeader.vue'
-import { useFavoritesStore } from '@/stores/favoritesStore'
+import { FAVORITES_STORAGE_KEY, useFavoritesStore } from '@/stores/favoritesStore'
 import { mountWithApp } from '../helpers/mountComponent'
 
 describe('AppHeader', () => {
@@ -45,6 +45,15 @@ describe('AppHeader', () => {
 
     const favoritesLink = wrapper.get('a[href="/favoritos"]')
     expect(favoritesLink.attributes('aria-current')).toBe('page')
+  })
+
+  it('não exibe contador só porque o localStorage contém um ID', async () => {
+    localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify([21]))
+
+    const { wrapper } = await mountWithApp(AppHeader)
+
+    expect(wrapper.find('[data-testid="favorites-count"]').exists()).toBe(false)
+    expect(wrapper.get('a[href="/favoritos"]').attributes('aria-label')).toBe('Favoritos (0)')
   })
 
   it('exibe contador de favoritos e aria-label com count', async () => {

@@ -386,12 +386,19 @@ Não houve alteração no contrato da API.
 
 ### Produtos indisponíveis
 
-Decisão adotada na implementação (sem transformar em novo requisito global):
+Decisão original da Fase 6 (superada pela decisão 35.25):
 
-- IDs existentes na store, mas sem correspondência na API, não quebram a página.
-- IDs órfãos não são removidos automaticamente da store; permanecem até remoção explícita pelo usuário.
-- Quando existem produtos disponíveis e indisponíveis, é exibido um aviso discreto.
-- Quando nenhum favorito está disponível na API, é apresentado um estado adequado.
+- IDs existentes na store, mas sem correspondência na API, não quebravam a página.
+- IDs órfãos permaneciam na store até remoção explícita pelo usuário.
+- Quando existiam produtos disponíveis e indisponíveis, era exibido um aviso discreto.
+
+Comportamento atual (decisão 35.25):
+
+- IDs do `localStorage` são candidatos até o catálogo estar disponível.
+- Após o cruzamento com os produtos resolvíveis, IDs órfãos são descartados da store e do storage.
+- O contador representa somente favoritos disponíveis para exibição.
+- Se todos os IDs persistidos forem órfãos, `/favoritos` usa o EmptyState de lista vazia (não erro).
+- Produto criado na sessão continua resolvível pelo overlay enquanto a sessão estiver ativa.
 
 ### Estados da interface
 
@@ -469,9 +476,7 @@ Foi corrigido para realizar novas buscas somente quando existem IDs novos ausent
 
 A página utiliza `getProducts()` + filtro pelos IDs favoritos, realizando uma única requisição em vez de executar uma requisição `getProductById` para cada favorito.
 
-IDs órfãos permanecem na store até que o usuário os remova explicitamente.
-
-Essa decisão permanece registrada neste plano; `docs/03-decisoes-tecnicas.md` não foi alterado nesta sincronização.
+A decisão original desta fase (IDs órfãos permaneciam até remoção explícita) foi superada pela decisão **35.25**: IDs órfãos são descartados após o cruzamento com o catálogo disponível, e o contador deixa de antecipar IDs não resolvíveis.
 
 ### Validações da fase
 
@@ -991,7 +996,7 @@ Consolidar qualidade técnica, estados de interface, testes manuais e, quando ap
 - Cobertura de componentes: AppHeader, AppFooter, FavoriteButton, ProductCard, ProductDetails, ProductImageZoom, ProductForm, ProductFilters, ProductSearch, ProductSort, ProductPagination, ProductGrid, EmptyState, ErrorState, ErrorBoundary, LoadingState, ThemeToggle e LocaleSelector.
 - Estratégia de componentes: comportamento e acessibilidade observáveis (roles, aria-*, labels, emits), com Pinia + vue-i18n + Vue Router + PrimeVue via `tests/helpers/mountComponent.ts`.
 - Também cobertos: `tests/config/` (normalização de erros Axios) e utilitários de apresentação de erro.
-- Resultado atual: **343 testes** passando em **53 arquivos**.
+- Resultado atual: **359 testes** passando em **54 arquivos**.
 
 ---
 
@@ -1203,7 +1208,7 @@ Implementação opcional concluída sem alterar o status das Fases 1–10:
 ### Nota — Fase 11 (2026-08-13)
 
 - Auditoria README × código × desafio × SDD concluída.
-- Suíte atual: **343 testes** / 53 arquivos.
+- Suíte atual: **359 testes** / 54 arquivos.
 - Responsividade documentada de forma coerente: desafio **360px+**, alvo interno **320px+**.
 - Deep links na Vercel retornam HTTP 200.
 
@@ -1218,12 +1223,18 @@ Implementação opcional concluída sem alterar o status das Fases 1–10:
 - FakeStoreAPI não persiste POST/PUT; o frontend aplica a resposta no estado de `useProductsCatalog`.
 - Sem DELETE. Sem mock de catálogo.
 
+### Nota — consistência dos favoritos após reload (2026-08-14)
+
+- IDs do `localStorage` são cruzados com o catálogo disponível antes de contar como favoritos.
+- IDs órfãos são descartados; o contador reflete somente produtos resolvíveis.
+- Decisão 35.25.
+
 ---
 
 # 19. Status do Documento
 
 **Status:** Concluído
 
-**Versão:** 1.22
+**Versão:** 1.23
 
 **Última atualização:** 2026-08-14

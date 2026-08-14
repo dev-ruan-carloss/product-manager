@@ -83,6 +83,8 @@ A funcionalidade de favoritos será considerada pronta quando:
 - [x] Favoritos forem armazenados no Pinia.
 - [x] IDs dos favoritos forem persistidos no localStorage.
 - [x] Estado for restaurado após recarregar a aplicação.
+- [x] IDs órfãos do `localStorage` forem descartados após cruzamento com o catálogo.
+- [x] O contador refletir somente favoritos resolvíveis.
 - [x] Página `/favoritos` estiver funcionando.
 - [x] Produto removido dos favoritos desaparecer da página de favoritos.
 - [x] Estado vazio estiver implementado.
@@ -393,7 +395,7 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 
 **Status:** Concluído
 
-**Versão:** 1.17
+**Versão:** 1.18
 
 **Última atualização:** 2026-08-14
 
@@ -401,7 +403,7 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 
 - Qualidade, testes manuais e critérios técnicos da Fase 10 foram validados.
 - Vitest configurado com suíte automatizada em `tests/` (separados de `src/`), incluindo `components/`, `composables/`, `services/`, `stores/`, `utils/`, `config/`, `i18n/`, `schemas/`, `security/` e `views/`.
-- Resultado atual da suíte: **343 testes** passando em **53 arquivos**.
+- Resultado atual da suíte: **359 testes** passando em **54 arquivos**.
 
 ### Nota — melhoria bônus i18n
 
@@ -421,6 +423,12 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 
 - POST/PUT bem-sucedidos atualizam `useProductsCatalog`; GET posterior da FakeStoreAPI não precisa persistir a alteração para a UX funcionar.
 - DELETE permanece fora do escopo.
+
+### Nota — consistência dos favoritos após reload
+
+- IDs do `localStorage` só incrementam o contador depois do cruzamento com o catálogo.
+- IDs órfãos são descartados; `/favoritos` vazio usa EmptyState, não erro.
+- Decisão 35.25.
 
 ### Nota — SEO técnico
 

@@ -27,9 +27,14 @@ describe('localStorage tratado como fonte não confiável', () => {
     setActivePinia(createPinia())
 
     const store = useFavoritesStore()
-    expect(store.favoriteProductIds).toEqual([1, 4])
+    expect(store.favoriteProductIds).toEqual([])
+    expect(store.favoritesCount).toBe(0)
     expect(store.addFavorite(0)).toBe(false)
     expect(store.addFavorite(-1)).toBe(false)
+
+    store.syncWithAvailableProductIds([1, 4])
+    expect(store.favoriteProductIds).toEqual([1, 4])
+    expect(store.favoritesCount).toBe(2)
   })
 
   it('ignora avaliações fora de 1–5 e chaves que não são IDs', () => {

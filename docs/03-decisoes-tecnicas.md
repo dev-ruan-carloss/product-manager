@@ -1495,6 +1495,40 @@ O documento inicial da SPA tinha title genérico e não declarava description, c
 
 ---
 
+## 35.25 — Consistência dos favoritos após reload (IDs órfãos)
+
+**Data:** 2026-08-14
+
+**Decisão anterior (Fase 6):**
+
+IDs persistidos no `localStorage` eram restaurados direto em `favoriteProductIds`. O contador (`favoritesCount`) era o comprimento dessa lista. IDs sem correspondência no catálogo permaneciam na store até remoção explícita do usuário. A página `/favoritos` podia ficar vazia enquanto o Header mostrava `1`.
+
+**Nova decisão:**
+
+- O `localStorage` continua armazenando **somente IDs** e continua sendo tratado como fonte não confiável.
+- IDs lidos do storage são candidatos. Só entram no estado visível de favoritos depois de cruzados com os produtos disponíveis no catálogo da sessão (GET inicial da FakeStoreAPI + overlay de CREATE/UPDATE).
+- O contador do Header e de `/favoritos` representa favoritos **resolvíveis**, não a quantidade bruta de IDs no storage.
+- Após um GET bem-sucedido, IDs órfãos são descartados da store e o `localStorage` é sincronizado com a lista válida.
+- Se o catálogo falhar, os candidatos não são descartados (a aplicação ainda não sabe se o produto existe).
+- Produto criado e favoritado **na mesma sessão** continua resolvível pelo overlay. Depois de F5, se o `GET /products` não devolver esse ID, o favorito deixa de ser válido.
+- Não persistir o produto completo no `localStorage`. Não criar lista mockada para recuperar o produto.
+- A hidratação ocorre no shell (`DefaultLayout` via `hydrateFavoritesFromCatalog`) e em `useFavoriteProducts`, depois que o catálogo necessário estiver disponível, para evitar corrida `storage → store → catálogo → contador`.
+- IDs órfãos sincronizados resultam no EmptyState de lista vazia (“Você ainda não possui favoritos.”), não em erro.
+
+**Motivo:**
+
+A FakeStoreAPI não persiste POST. Tratar o ID no `localStorage` como favorito válido após reload produz estado divergente (`contador = 1`, lista vazia). O contador precisa refletir o que a UI consegue exibir.
+
+**Impacto:**
+
+- `favoritesStore` (`syncWithAvailableProductIds`, candidatos pendentes, `favoritesCount` após cruzamento);
+- `useFavoriteProducts` e `DefaultLayout`;
+- testes do store, do composable, de `/favoritos`, do Header e de `localStorage`;
+- documentação de arquitetura, modelos, UI, plano e definição de pronto;
+- CRUD, i18n, tema, avaliações, categorias e contrato da API permanecem inalterados.
+
+---
+
 # 36. Critérios de Aceite
 
 As decisões técnicas serão consideradas definidas quando:
@@ -1522,7 +1556,7 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.36
+**Versão:** 1.37
 
 **Última atualização:** 2026-08-14
 
@@ -1540,7 +1574,7 @@ Erros HTTP/runtime passam por AppError + i18n errors.*, com ErrorState/Toast/sub
 
 ### Nota — testes automatizados
 
-Suíte em `tests/` (components, composables, services, stores, schemas, utils, config, i18n, views, security): **343 testes** passando.
+Suíte em `tests/` (components, composables, services, stores, schemas, utils, config, i18n, views, security): **359 testes** passando.
 
 ### Nota — limites do formulário de produto
 
@@ -1561,6 +1595,10 @@ History Mode + `vercel.json` rewrite para `index.html`. Deep links e F5 em rotas
 ### Nota — estado do catálogo (CREATE/UPDATE)
 
 A decisão 35.18 define o catálogo da sessão: GET inicial da FakeStoreAPI + overlay das respostas de POST/PUT. Sem DELETE. Sem mock de catálogo.
+
+### Nota — consistência dos favoritos após reload
+
+A decisão 35.25 define que IDs do `localStorage` só contam como favoritos após cruzamento com o catálogo disponível. IDs órfãos são descartados e o contador reflete somente produtos resolvíveis.
 
 ### Nota — avaliação local do usuário
 

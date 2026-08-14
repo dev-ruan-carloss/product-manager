@@ -201,6 +201,8 @@ Armazenar o objeto completo poderia gerar:
 
 Armazenar apenas o ID mantém o estado simples.
 
+Na inicialização, esses IDs são tratados como candidatos. Somente os que puderem ser resolvidos no catálogo da sessão (GET da FakeStoreAPI + overlay de CREATE/UPDATE) permanecem como favoritos válidos. IDs órfãos são descartados e o `localStorage` é sincronizado. O contador não incrementa só porque o ID existe no storage. Decisão 35.25.
+
 ---
 
 # 11. Chave de Persistência
@@ -903,9 +905,9 @@ Os modelos de dados serão considerados definidos quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.11
+**Versão:** 1.12
 
-**Última atualização:** 2026-08-13
+**Última atualização:** 2026-08-14
 
 ### Nota — conteúdo dinâmico de produtos
 
@@ -914,3 +916,7 @@ Os modelos de dados serão considerados definidos quando:
 ### Nota — catálogo da sessão
 
 CREATE/UPDATE atualizam `useProductsCatalog` com a resposta da API. Isso não é persistência no backend nem mock do catálogo. Recarregar a página volta ao GET da FakeStoreAPI.
+
+### Nota — favoritos após reload
+
+IDs persistidos são cruzados com o catálogo disponível. IDs órfãos não permanecem no estado nem no contador. Decisão 35.25.

@@ -378,9 +378,9 @@ Regras:
 
 - `useProductListControls` — busca, filtro por categoria, ordenação e paginação locais sobre a coleção do catálogo da sessão (não utiliza `GET /products/category/:category`).
 - `useProductDetails` — carrega um produto por ID; prefere o catálogo da sessão quando o produto já estiver lá (CREATE/UPDATE) e usa `GET /products/:id` quando não houver cópia local.
-- `useFavoriteProducts` — resolve IDs favoritos em produtos a partir do catálogo da sessão (não faz GET independente que ignoraria mutações locais).
+- `useFavoriteProducts` — resolve IDs favoritos em produtos a partir do catálogo da sessão (não faz GET independente que ignoraria mutações locais). IDs lidos do `localStorage` só entram no contador após cruzamento com os produtos disponíveis (`hydrateFavoritesFromCatalog` / `syncWithAvailableProductIds`).
 
-A store Pinia (`useFavoritesStore`) permanece a fonte de verdade dos IDs favoritos.
+A store Pinia (`useFavoritesStore`) permanece a fonte de verdade dos IDs favoritos **válidos** (resolvíveis no catálogo atual). O `localStorage` não é suficiente para incrementar o contador.
 
 ---
 
@@ -471,7 +471,10 @@ O store de favoritos poderá ser responsável por:
 - verificar se um produto está favoritado;
 - adicionar favorito;
 - remover favorito;
-- sincronizar favoritos com `localStorage`.
+- sincronizar favoritos com `localStorage`;
+- cruzar IDs persistidos com os produtos disponíveis no catálogo e descartar IDs órfãos.
+
+O `localStorage` guarda apenas IDs. Na inicialização, esses IDs são candidatos até o catálogo da sessão estar disponível. `favoritesCount` reflete somente os IDs que puderam ser resolvidos.
 
 O store não deverá ser utilizado para armazenar indiscriminadamente todos os estados da aplicação.
 
@@ -666,6 +669,16 @@ Quando o usuário favoritar um produto:
 3. O identificador do produto é persistido localmente.
 4. As partes interessadas da aplicação recebem o novo estado.
 5. A interface é atualizada.
+
+Ao recarregar a aplicação:
+
+1. Os IDs são lidos do `localStorage` como candidatos (conteúdo não confiável).
+2. O catálogo da sessão é carregado (`GET /products` + overlay da sessão, se ainda existir).
+3. Somente IDs presentes nos produtos disponíveis permanecem como favoritos.
+4. IDs órfãos são descartados e o `localStorage` é reescrito com a lista válida.
+5. O contador e `/favoritos` passam a refletir apenas favoritos resolvíveis.
+
+Essa hidratação ocorre no `DefaultLayout` (`hydrateFavoritesFromCatalog`) para o Header não antecipar um contador inválido em qualquer rota. Decisão 35.25.
 
 ---
 
@@ -1026,7 +1039,7 @@ A arquitetura será considerada adequada quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.14
+**Versão:** 1.15
 
 **Última atualização:** 2026-08-14
 
@@ -1045,6 +1058,10 @@ A imagem de `/produtos/:id` usa zoom in-place no desktop (`ProductImageZoom` + `
 ### Nota — estado do catálogo após CREATE/UPDATE
 
 `useProductsCatalog` é a fonte única de verdade do catálogo na sessão. GET inicial carrega a FakeStoreAPI; respostas bem-sucedidas de POST/PUT atualizam o estado local. A API de demonstração não é tratada como banco persistente. Sem DELETE (fora do escopo).
+
+### Nota — consistência dos favoritos após reload
+
+IDs do `localStorage` são cruzados com o catálogo disponível antes de contar como favoritos. IDs órfãos são descartados. Decisão 35.25.
 
 ### Nota — hardening de segurança
 

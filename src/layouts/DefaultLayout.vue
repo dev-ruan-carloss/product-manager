@@ -1,13 +1,19 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import Toast from 'primevue/toast'
 
 import AppFooter from '@/components/AppFooter.vue'
 import AppHeader from '@/components/AppHeader.vue'
 import ErrorBoundary from '@/components/ErrorBoundary.vue'
+import { hydrateFavoritesFromCatalog } from '@/composables/useFavoriteProducts'
 import { useThemeStore } from '@/stores/themeStore'
 
 // Garante aplicação do tema persistido/sistema ao montar o layout.
 useThemeStore()
+
+onMounted(() => {
+  void hydrateFavoritesFromCatalog()
+})
 </script>
 
 <template>

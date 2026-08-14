@@ -4,13 +4,41 @@ import { storeToRefs } from 'pinia'
 import { useProductsCatalog } from '@/composables/useProductsCatalog'
 import { useFavoritesStore } from '@/stores/favoritesStore'
 
+function syncResolvedFavorites(): void {
+  const favoritesStore = useFavoritesStore()
+  const { products, hasLoaded, hasError } = useProductsCatalog({ autoLoad: false })
+
+  if (!hasLoaded.value || hasError.value) {
+    return
+  }
+
+  favoritesStore.syncWithAvailableProductIds(products.value.map((product) => product.id))
+}
+
+/**
+ * Carrega o catálogo quando há IDs persistidos ainda não cruzados com produtos.
+ * Deve rodar no shell da aplicação para o contador do Header não ficar defasado.
+ */
+export async function hydrateFavoritesFromCatalog(): Promise<void> {
+  const favoritesStore = useFavoritesStore()
+
+  if (!favoritesStore.needsCatalogSync) {
+    return
+  }
+
+  const { loadCatalog } = useProductsCatalog({ autoLoad: false })
+  await loadCatalog()
+  syncResolvedFavorites()
+}
+
 /**
  * Resolve IDs favoritos em produtos a partir do catálogo da sessão.
  * A store permanece a fonte de verdade dos IDs; objetos completos não são persistidos.
+ * IDs lidos do localStorage só entram no contador após cruzamento com o catálogo.
  */
 export function useFavoriteProducts() {
   const favoritesStore = useFavoritesStore()
-  const { favoriteProductIds, favoritesCount } = storeToRefs(favoritesStore)
+  const { favoriteProductIds, favoritesCount, needsCatalogSync } = storeToRefs(favoritesStore)
 
   const {
     isLoading: catalogLoading,
@@ -29,27 +57,40 @@ export function useFavoriteProducts() {
   )
 
   const unavailableFavoritesCount = computed(() => {
-    if (catalogLoading.value || hasError.value || !hasLoaded.value) {
+    if (catalogLoading.value || hasError.value || !hasLoaded.value || needsCatalogSync.value) {
       return 0
     }
 
     return Math.max(0, favoritesCount.value - favoriteProducts.value.length)
   })
 
-  const isLoading = computed(
-    () => favoriteProductIds.value.length > 0 && catalogLoading.value && !hasLoaded.value,
-  )
+  const isLoading = computed(() => {
+    if (hasError.value) {
+      return false
+    }
+
+    if (needsCatalogSync.value) {
+      return !hasLoaded.value
+    }
+
+    return favoriteProductIds.value.length > 0 && catalogLoading.value && !hasLoaded.value
+  })
 
   const isEmpty = computed(
-    () => !isLoading.value && !hasError.value && favoritesCount.value === 0,
+    () =>
+      !isLoading.value &&
+      !hasError.value &&
+      !needsCatalogSync.value &&
+      favoritesCount.value === 0,
   )
 
   async function loadFavoriteProducts(): Promise<void> {
-    if (favoriteProductIds.value.length === 0) {
+    if (favoriteProductIds.value.length === 0 && !needsCatalogSync.value) {
       return
     }
 
     await loadCatalog()
+    syncResolvedFavorites()
   }
 
   function isFavorite(productId: number): boolean {
@@ -70,9 +111,16 @@ export function useFavoriteProducts() {
   })
 
   watch(
-    favoriteProductIds,
-    (ids) => {
-      if (ids.length === 0 || hasLoaded.value) {
+    [favoriteProductIds, needsCatalogSync],
+    () => {
+      if (hasLoaded.value) {
+        if (needsCatalogSync.value) {
+          syncResolvedFavorites()
+        }
+        return
+      }
+
+      if (favoriteProductIds.value.length === 0 && !needsCatalogSync.value) {
         return
       }
 
