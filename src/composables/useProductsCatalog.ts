@@ -129,11 +129,13 @@ export function useProductsCatalog(options: UseProductsCatalogOptions = {}) {
   const autoLoad = options.autoLoad ?? true
   const hasError = computed(() => error.value !== null)
 
-  onMounted(() => {
-    if (autoLoad && !hasLoaded.value) {
-      void loadCatalog()
-    }
-  })
+  if (autoLoad) {
+    onMounted(() => {
+      if (!hasLoaded.value) {
+        void loadCatalog()
+      }
+    })
+  }
 
   return {
     products,

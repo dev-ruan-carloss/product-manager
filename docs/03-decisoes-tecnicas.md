@@ -1005,7 +1005,7 @@ Vitest e Vue Test Utils estavam previstos, porém ainda não instalados/configur
 **Nova decisão:**
 
 - Instalar e configurar Vitest + Vue Test Utils + jsdom na Fase 10.
-- Integrar a configuração de testes em `vite.config.ts` (`environment: 'jsdom'`, `pool: 'threads'`).
+- Integrar a configuração de testes em `vite.config.ts` (`environment: 'jsdom'`, `pool: 'forks'`, `fileParallelism: false` — o pool `threads` hangava de forma intermitente no Windows/jsdom).
 - Scripts: `npm test` e `npm run test:watch`.
 - Priorizar testes de comportamento crítico: store de favoritos, schema Yup, filtros/ordenação/paginação, debounce, utilitários e `productService`.
 - Manter os testes automatizados em `tests/`, separados do código de produção em `src/`, organizados por responsabilidade (`composables/`, `services/`, `stores/`, `utils/`; `components/` quando houver testes de componentes).

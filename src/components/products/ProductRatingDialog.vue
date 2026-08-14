@@ -99,16 +99,21 @@ function selectStar(star: UserRatingValue): void {
   starRefs.value[star - 1]?.focus()
 }
 
+function adjacentStar(star: UserRatingValue, delta: 1 | -1): UserRatingValue {
+  const next = star + delta
+  return isUserRatingValue(next) ? next : star
+}
+
 function onStarKeydown(event: KeyboardEvent, star: UserRatingValue): void {
   if (event.key === 'ArrowRight' || event.key === 'ArrowUp') {
     event.preventDefault()
-    selectStar(Math.min(5, star + 1) as UserRatingValue)
+    selectStar(adjacentStar(star, 1))
     return
   }
 
   if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') {
     event.preventDefault()
-    selectStar(Math.max(1, star - 1) as UserRatingValue)
+    selectStar(adjacentStar(star, -1))
     return
   }
 

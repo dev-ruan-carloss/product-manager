@@ -1,11 +1,11 @@
-import { onScopeDispose, ref, watch, type Ref } from 'vue'
+import { onScopeDispose, shallowRef, watch, type Ref } from 'vue'
 
 /**
  * Espelha um ref com atraso, evitando reprocessar a cada alteração imediata.
  * Valores vazios (após trim, quando string) sincronizam imediatamente.
  */
 export function useDebouncedRef<T>(source: Ref<T>, delayMs = 300): Ref<T> {
-  const debounced = ref(source.value) as Ref<T>
+  const debounced = shallowRef(source.value)
   let timer: ReturnType<typeof setTimeout> | undefined
 
   watch(source, (value) => {

@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import Select from 'primevue/select'
 
 import { useLocaleStore } from '@/stores/localeStore'
-import { SUPPORTED_LOCALES, type AppLocale } from '@/types/locale'
+import { isAppLocale, SUPPORTED_LOCALES, type AppLocale } from '@/types/locale'
 
 const { t } = useI18n()
 const localeStore = useLocaleStore()
@@ -50,7 +50,7 @@ function onLocaleChange(value: AppLocale): void {
           v-if="value"
           class="inline-flex min-w-0 items-center gap-1.5"
         >
-          <span aria-hidden="true">{{ FLAG_BY_LOCALE[value as AppLocale] }}</span>
+          <span aria-hidden="true">{{ isAppLocale(value) ? FLAG_BY_LOCALE[value] : '' }}</span>
           <span class="sm:hidden">{{ t(`locale.short.${value}`) }}</span>
           <span class="hidden sm:inline">{{ t(`locale.medium.${value}`) }}</span>
           <span class="sr-only">

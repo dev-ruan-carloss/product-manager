@@ -41,7 +41,7 @@ export function useProductDetails(productId: Ref<number | null>) {
     product.value = null
 
     try {
-      const data: unknown = await productService.getProductById(productId.value)
+      const data = await productService.getProductById(productId.value)
 
       if (!isValidProduct(data)) {
         error.value = invalidProductResponseError()

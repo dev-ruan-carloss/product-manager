@@ -32,8 +32,11 @@ const resolvedInputId = computed(() => props.inputId ?? 'product-search')
 useInitialFocus(resolvedInputId, { enabled: () => props.autofocus })
 
 function onInput(event: Event): void {
-  const target = event.target as HTMLInputElement
-  emit('update:modelValue', target.value)
+  if (!(event.target instanceof HTMLInputElement)) {
+    return
+  }
+
+  emit('update:modelValue', event.target.value)
 }
 </script>
 

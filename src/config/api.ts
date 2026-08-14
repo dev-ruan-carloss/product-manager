@@ -3,31 +3,28 @@ import axios, { isAxiosError, type AxiosError } from 'axios'
 import type { AppError, AppErrorKind } from '@/types/api'
 import { logAppError } from '@/utils/logError'
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
 export function isAppError(error: unknown): error is AppError {
+  if (!isRecord(error) || !('kind' in error) || !('message' in error) || !('retryable' in error)) {
+    return false
+  }
+
   return (
-    typeof error === 'object' &&
-    error !== null &&
-    'kind' in error &&
-    'message' in error &&
-    'retryable' in error &&
-    typeof (error as AppError).kind === 'string' &&
-    typeof (error as AppError).message === 'string' &&
-    typeof (error as AppError).retryable === 'boolean'
+    typeof error.kind === 'string' &&
+    typeof error.message === 'string' &&
+    typeof error.retryable === 'boolean'
   )
 }
 
 function extractFieldErrors(data: unknown): Record<string, string> | undefined {
-  if (typeof data !== 'object' || data === null) {
+  if (!isRecord(data)) {
     return undefined
   }
 
-  const record = data as Record<string, unknown>
-  const source =
-    typeof record.errors === 'object' && record.errors !== null
-      ? (record.errors as Record<string, unknown>)
-      : typeof record.message === 'object' && record.message !== null
-        ? (record.message as Record<string, unknown>)
-        : null
+  const source = isRecord(data.errors) ? data.errors : isRecord(data.message) ? data.message : null
 
   if (source === null) {
     return undefined

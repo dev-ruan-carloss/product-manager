@@ -1,29 +1,5 @@
 {
-  "cSpell.language": "en,pt-BR",
-  "cSpell.enabled": true,
-  "cSpell.allowCompoundWords": true,
-  "cSpell.ignorePaths": [
-    "docs/**"
-  ],
-  "cSpell.words": [
-    "Axios",
-    "FakeStoreAPI",
-    "Pinia",
-    "PrimeVue",
-    "primevue",
-    "primeuix",
-    "TypeScript",
-    "Vue",
-    "Vite",
-    "Tailwind",
-    "tailwindcss",
-    "Yup",
-    "vee-validate",
-    "localStorage",
-    "debounce",
-    "Fjallraven",
-    "testid"
-  ],
+  "cSpell.enabled": false,
   "files.encoding": "utf8",
   "files.autoGuessEncoding": true,
   "editor.formatOnSave": true,

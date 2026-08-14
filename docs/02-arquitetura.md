@@ -103,7 +103,11 @@ A estrutura planejada para o projeto será:
     product-management/
     ├── .cursorignore
     ├── .gitignore
+    ├── .github/
+    │   └── workflows/
+    │       └── ci.yml
     ├── .vscode/
+    │   ├── extensions.json
     │   └── settings.json
     ├── docs/
     │   ├── 01-requisitos.md
@@ -134,9 +138,12 @@ A estrutura planejada para o projeto será:
     │   ├── views/
     │   ├── App.vue
     │   └── main.ts
+    ├── tests/
+    ├── eslint.config.js
     ├── index.html
     ├── package.json
     ├── tsconfig.json
+    ├── vercel.json
     └── vite.config.ts
 
 A estrutura poderá ser ajustada durante a implementação caso surja uma necessidade real.
@@ -441,12 +448,14 @@ Estrutura prevista:
 
     src/stores/
     ├── favoritesStore.ts
+    ├── localeStore.ts
     ├── ratingsStore.ts
     └── themeStore.ts
 
 Estados globais implementados:
 
 - favoritos (`favoritesStore`);
+- idioma (`localeStore`);
 - avaliações locais do usuário (`ratingsStore`);
 - tema Light/Dark (`themeStore`).
 
@@ -550,13 +559,16 @@ A pasta `utils/` será utilizada para funções auxiliares puras e reutilizávei
 Exemplos implementados:
 
     src/utils/
+    ├── customCategory.ts
     ├── formatPrice.ts
-    ├── parseProductId.ts
+    ├── httpUrl.ts
+    ├── imageZoom.ts
     ├── localizeCategory.ts
     ├── logError.ts
-    ├── resolveErrorCopy.ts
-    ├── httpUrl.ts
-    └── normalizeProduct.ts
+    ├── normalizeProduct.ts
+    ├── parseProductId.ts
+    ├── resolveDisplayedRating.ts
+    └── resolveErrorCopy.ts
 
 `formatPrice.ts` é o único ponto de formatação monetária. Componentes de apresentação (`ProductCard`, `ProductDetails`, prévia do `ProductForm`) chamam `formatPrice`; o input de preço usa `formatPriceInput` / `parsePriceInput` e `getCurrencyAffix`. O locale segue `vue-i18n` (`pt-BR`/`BRL`, `en`/`USD`, `es`/`EUR`).
 
