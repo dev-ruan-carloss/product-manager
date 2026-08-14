@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 import { useImageZoom } from '@/composables/useImageZoom'
+import { toSafeHttpUrl } from '@/utils/httpUrl'
 import { IMAGE_ZOOM_SCALE } from '@/utils/imageZoom'
 
-defineProps<{
+const props = defineProps<{
   src: string
   alt: string
 }>()
@@ -14,6 +15,7 @@ const emit = defineEmits<{
 }>()
 
 const frameRef = ref<HTMLElement | null>(null)
+const safeSrc = computed(() => toSafeHttpUrl(props.src))
 const { isZoomed, onPointerEnter, onPointerMove, onPointerLeave, onPointerCancel } =
   useImageZoom(frameRef)
 
@@ -39,7 +41,8 @@ function onImageError(): void {
     @pointercancel="onPointerCancel"
   >
     <img
-      :src="src"
+      v-if="safeSrc"
+      :src="safeSrc"
       :alt="alt"
       class="product-image-zoom__image mx-auto block max-h-52 w-full max-w-full object-contain select-none sm:max-h-72 lg:max-h-80"
       width="320"

@@ -10,6 +10,7 @@ import {
   PRODUCT_TITLE_MAX_LENGTH,
 } from '@/schemas/productFormLimits'
 import { formatPrice } from '@/utils/formatPrice'
+import { isAllowedHttpUrl } from '@/utils/httpUrl'
 
 function t(key: string, values?: Record<string, unknown>): string {
   if (values) {
@@ -93,5 +94,11 @@ export const productFormSchema = yup.object({
     .string()
     .trim()
     .required(() => t('validation.imageRequired'))
-    .url(() => t('validation.imageUrl')),
+    .test('image-http-url', () => t('validation.imageUrl'), (value) => {
+      if (value === undefined || value === null || value === '') {
+        return true
+      }
+
+      return isAllowedHttpUrl(value)
+    }),
 })

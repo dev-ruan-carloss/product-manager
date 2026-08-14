@@ -10,6 +10,7 @@ import { useDisplayedRating } from '@/composables/useDisplayedRating'
 import { useSaveProductRating } from '@/composables/useSaveProductRating'
 import type { Product, UserRatingValue } from '@/types/product'
 import { formatPrice } from '@/utils/formatPrice'
+import { toSafeHttpUrl } from '@/utils/httpUrl'
 import { getLocalizedCategory } from '@/utils/localizeCategory'
 
 const props = defineProps<{
@@ -24,6 +25,7 @@ const emit = defineEmits<{
 const { t, locale } = useI18n()
 const imageFailed = ref(false)
 const ratingDialogOpen = ref(false)
+const imageSrc = computed(() => toSafeHttpUrl(props.product.image))
 
 const { displayedRating, hasUserRating, userRating } = useDisplayedRating(() => props.product)
 const { saveRating } = useSaveProductRating()
@@ -84,8 +86,8 @@ function onConfirmRating(rating: UserRatingValue): void {
 
         <div class="flex items-center justify-center py-4 sm:py-6 lg:py-8">
           <ProductImageZoom
-            v-if="!imageFailed"
-            :src="product.image"
+            v-if="!imageFailed && imageSrc"
+            :src="imageSrc"
             :alt="imageAlt"
             @error="onImageError"
           />

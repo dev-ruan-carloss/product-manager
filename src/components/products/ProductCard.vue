@@ -7,6 +7,7 @@ import FavoriteButton from '@/components/FavoriteButton.vue'
 import { useDisplayedRating } from '@/composables/useDisplayedRating'
 import type { Product } from '@/types/product'
 import { formatPrice } from '@/utils/formatPrice'
+import { toSafeHttpUrl } from '@/utils/httpUrl'
 import { getLocalizedCategory } from '@/utils/localizeCategory'
 
 const props = defineProps<{
@@ -20,6 +21,7 @@ const emit = defineEmits<{
 
 const { t, locale } = useI18n()
 const imageFailed = ref(false)
+const imageSrc = computed(() => toSafeHttpUrl(props.product.image))
 const { displayedRating } = useDisplayedRating(() => props.product)
 
 const categoryLabel = computed(() => {
@@ -55,8 +57,8 @@ function onImageError(): void {
         class="flex h-28 w-full shrink-0 items-center justify-center bg-white px-3 pt-3 sm:h-36 sm:px-4 sm:pt-4 dark:bg-slate-800"
       >
         <img
-          v-if="!imageFailed"
-          :src="product.image"
+          v-if="!imageFailed && imageSrc"
+          :src="imageSrc"
           alt=""
           class="max-h-full w-full max-w-[7.5rem] object-contain sm:max-w-[9rem]"
           width="144"

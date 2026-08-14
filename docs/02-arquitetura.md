@@ -113,7 +113,10 @@ A estrutura planejada para o projeto será:
     │   ├── 05-modelos-de-dados.md
     │   ├── 06-especificacao-ui.md
     │   ├── 07-plano-de-implementacao.md
-    │   └── 08-definicao-de-pronto.md
+    │   ├── 08-definicao-de-pronto.md
+    │   └── test/
+    │       ├── README.md
+    │       └── auditoria-seguranca.md
     ├── public/
     ├── src/
     │   ├── assets/
@@ -552,11 +555,12 @@ Exemplos implementados:
     ├── localizeCategory.ts
     ├── logError.ts
     ├── resolveErrorCopy.ts
+    ├── httpUrl.ts
     └── normalizeProduct.ts
 
 `formatPrice.ts` é o único ponto de formatação monetária. Componentes de apresentação (`ProductCard`, `ProductDetails`, prévia do `ProductForm`) chamam `formatPrice`; o input de preço usa `formatPriceInput` / `parsePriceInput` e `getCurrencyAffix`. O locale segue `vue-i18n` (`pt-BR`/`BRL`, `en`/`USD`, `es`/`EUR`).
 
-`normalizeProduct.ts` valida e normaliza respostas de produto (POST/PUT podem omitir `rating`). Não duplicar essa transformação em views ou no service além da chamada a `toProduct`.
+`httpUrl.ts` valida URLs externas (`http:` / `https:`). `normalizeProduct.ts` é a fronteira entre a FakeStoreAPI e o modelo `Product`: valida tipos, limites, rating e URL da imagem. GET usa `toProductList` / `isValidProduct`; POST/PUT usam `toProduct` (rating omitido recebe fallback). Não duplicar essa transformação em views ou no service além da chamada a essas funções.
 
 Esses arquivos somente deverão existir quando houver uma necessidade real.
 
@@ -1008,7 +1012,7 @@ A arquitetura será considerada adequada quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.12
+**Versão:** 1.13
 
 **Última atualização:** 2026-08-13
 
@@ -1027,3 +1031,7 @@ A imagem de `/produtos/:id` usa zoom in-place no desktop (`ProductImageZoom` + `
 ### Nota — estado do catálogo após CREATE/UPDATE
 
 `useProductsCatalog` é a fonte única de verdade do catálogo na sessão. GET inicial carrega a FakeStoreAPI; respostas bem-sucedidas de POST/PUT atualizam o estado local. A API de demonstração não é tratada como banco persistente. Sem DELETE (fora do escopo).
+
+### Nota — hardening de segurança
+
+A FakeStoreAPI é validada em `normalizeProduct` antes da UI. URLs externas passam por `httpUrl.ts`. Headers de segurança na Vercel. Especificação em `docs/test/`.

@@ -135,6 +135,8 @@ Cada produto deverá possuir informações equivalentes a:
 
 A estrutura final deverá ser representada através de tipos TypeScript.
 
+A FakeStoreAPI é fonte externa. `getProducts()` valida a resposta com `toProductList` antes de expor o catálogo. Itens inválidos são excluídos; payload irrecuperável segue o pipeline `AppError`.
+
 ---
 
 # 7. Buscar Produto por ID
@@ -170,6 +172,8 @@ Exemplo conceitual:
 ## Resposta
 
 Retorna um objeto `Product`.
+
+A resposta passa por `isValidProduct` / `toProduct`. Estrutura incompatível não é tratada como 404: vira `AppError` `unexpected`.
 
 ## Comportamento esperado
 

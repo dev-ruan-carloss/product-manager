@@ -22,12 +22,21 @@ describe('productService', () => {
   })
 
   it('lista produtos via GET /products', async () => {
-    vi.mocked(api.get).mockResolvedValueOnce({ data: [{ id: 1 }] })
+    const product = {
+      id: 1,
+      title: 'Sample',
+      price: 10,
+      description: 'desc',
+      category: 'electronics',
+      image: 'https://example.com/a.jpg',
+      rating: { rate: 3, count: 10 },
+    }
+    vi.mocked(api.get).mockResolvedValueOnce({ data: [product] })
 
     const result = await productService.getProducts()
 
     expect(api.get).toHaveBeenCalledWith('/products')
-    expect(result).toEqual([{ id: 1 }])
+    expect(result).toEqual([product])
   })
 
   it('busca categorias via GET /products/categories', async () => {
@@ -40,12 +49,21 @@ describe('productService', () => {
   })
 
   it('busca produto por ID via GET /products/:id', async () => {
-    vi.mocked(api.get).mockResolvedValueOnce({ data: { id: 7 } })
+    const product = {
+      id: 7,
+      title: 'Sample',
+      price: 10,
+      description: 'desc',
+      category: 'electronics',
+      image: 'https://example.com/a.jpg',
+      rating: { rate: 3, count: 10 },
+    }
+    vi.mocked(api.get).mockResolvedValueOnce({ data: product })
 
     const result = await productService.getProductById(7)
 
     expect(api.get).toHaveBeenCalledWith('/products/7')
-    expect(result).toEqual({ id: 7 })
+    expect(result).toEqual(product)
   })
 
   it('cria produto via POST /products e normaliza a resposta para Product', async () => {

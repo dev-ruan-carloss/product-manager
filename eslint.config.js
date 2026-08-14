@@ -9,6 +9,16 @@ export default defineConfig(
   {
     ignores: ['dist/**', 'node_modules/**', 'coverage/**'],
   },
+  {
+    files: ['public/**/*.js'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'script',
+      globals: {
+        ...globals.browser,
+      },
+    },
+  },
   eslint.configs.recommended,
   ...typescriptEslint.configs.recommended,
   ...eslintPluginVue.configs['flat/recommended'],

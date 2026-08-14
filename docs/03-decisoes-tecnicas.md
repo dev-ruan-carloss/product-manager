@@ -621,6 +621,8 @@ A aplicação deverá:
 
 Como a Fake Store API não exige credenciais privadas para o escopo previsto, nenhuma chave secreta deverá ser incluída no código.
 
+A auditoria, as proteções e os testes estão em `docs/test/` (decisão 35.23). O frontend valida a interface; não substitui validação no servidor.
+
 ---
 
 # 30. Performance
@@ -1428,6 +1430,33 @@ Reproduzir a experiência conceitual de marketplaces (região sob o cursor ↔ �
 
 ---
 
+## 35.23 — Hardening de segurança (XSS, URLs, payload, headers)
+
+**Data:** 2026-08-13
+
+**Decisão:**
+
+- Tratar a FakeStoreAPI como fonte externa. Validar GET/POST/PUT em `normalizeProduct` (`toProduct`, `toProductList`, `toCategoryList`) antes do estado da UI.
+- Centralizar URLs externas em `httpUrl.ts`: somente `http:` e `https:`; rejeitar `javascript:`, `data:`, `vbscript:` e equivalentes.
+- Não instalar sanitizador HTML: não há `v-html` nem renderização de HTML dinâmico. Escaping nativo do Vue para texto.
+- Security Headers na Vercel (`vercel.json`): CSP, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `frame-ancestors 'none'` + `X-Frame-Options: DENY`.
+- CSP sem `unsafe-eval` e sem `script-src *`. Exceção documentada: `style-src 'unsafe-inline'` (PrimeVue + CSSOM). Boot de tema em `public/theme-init.js` para evitar script inline.
+- `localStorage` continua só com preferências/IDs; leitura sempre validada.
+- Testes em `tests/security/` e especificação em `docs/test/`.
+- O frontend reduz a superfície da interface; não é fronteira de confiança para o servidor. Sem auth/criptografia/rate-limit fictícios.
+
+**Motivo:**
+
+Reduzir XSS via imagem/URL e quebra de UI por JSON inesperado, alinhado ao tamanho do projeto e ao deploy real.
+
+**Impacto:**
+
+- `productService` deixa de devolver JSON cru de GET;
+- imagem inválida não recebe `:src`;
+- documentação de segurança em `docs/test/`.
+
+---
+
 # 36. Critérios de Aceite
 
 As decisões técnicas serão consideradas definidas quando:
@@ -1455,7 +1484,7 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.34
+**Versão:** 1.35
 
 **Última atualização:** 2026-08-13
 
@@ -1473,7 +1502,7 @@ Erros HTTP/runtime passam por AppError + i18n errors.*, com ErrorState/Toast/sub
 
 ### Nota — testes automatizados
 
-Suíte em `tests/` (components, composables, services, stores, schemas, utils, config, i18n, views): **314 testes** passando.
+Suíte em `tests/` (components, composables, services, stores, schemas, utils, config, i18n, views, security): **343 testes** passando.
 
 ### Nota — limites do formulário de produto
 

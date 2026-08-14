@@ -96,7 +96,13 @@ export function parseStoredCustomCategories(value: unknown): Category[] {
       continue
     }
 
-    parsed.push(item)
+    const category = normalizeCategoryName(item)
+
+    if (category.length === 0 || category.length > PRODUCT_CATEGORY_MAX_LENGTH) {
+      continue
+    }
+
+    parsed.push(category)
   }
 
   return mergeCategories(parsed)

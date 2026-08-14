@@ -5,7 +5,7 @@ import { useProductsCatalog } from '@/composables/useProductsCatalog'
 import { productService } from '@/services/productService'
 import type { AppError } from '@/types/api'
 import type { Product } from '@/types/product'
-import { isValidProduct } from '@/utils/normalizeProduct'
+import { invalidProductResponseError, isValidProduct } from '@/utils/normalizeProduct'
 
 export function useProductDetails(productId: Ref<number | null>) {
   const { getCatalogProduct } = useProductsCatalog({ autoLoad: false })
@@ -44,7 +44,7 @@ export function useProductDetails(productId: Ref<number | null>) {
       const data: unknown = await productService.getProductById(productId.value)
 
       if (!isValidProduct(data)) {
-        notFound.value = true
+        error.value = invalidProductResponseError()
         return
       }
 

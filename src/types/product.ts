@@ -12,6 +12,11 @@ export function isUserRatingValue(value: unknown): value is UserRatingValue {
   return typeof value === 'number' && Number.isInteger(value) && value >= 1 && value <= 5
 }
 
+/** ID de produto aceito pela aplicação: inteiro positivo seguro. */
+export function isProductId(value: unknown): value is number {
+  return typeof value === 'number' && Number.isSafeInteger(value) && value > 0
+}
+
 export interface Product {
   id: number
   title: string

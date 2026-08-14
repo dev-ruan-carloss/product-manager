@@ -33,6 +33,7 @@ import {
   isAllowedPriceInput,
   parsePriceInput,
 } from '@/utils/formatPrice'
+import { toSafeHttpUrl } from '@/utils/httpUrl'
 import { getLocalizedCategory } from '@/utils/localizeCategory'
 
 const props = withDefaults(
@@ -202,10 +203,7 @@ function onPriceBlur(): void {
   }
 }
 
-const previewImage = computed(() => {
-  const value = values.image?.trim()
-  return value && value.length > 0 ? value : null
-})
+const previewImage = computed(() => toSafeHttpUrl(values.image))
 
 watch(
   () => values.image,

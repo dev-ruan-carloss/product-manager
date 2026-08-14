@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
+import { isProductId } from '@/types/product'
+
 /** Chave centralizada para persistência dos IDs favoritos no localStorage. */
 export const FAVORITES_STORAGE_KEY = 'product-management:favorites'
 
@@ -12,7 +14,7 @@ function parseFavoriteIds(value: unknown): number[] {
   const uniqueIds = new Set<number>()
 
   for (const item of value) {
-    if (typeof item === 'number' && Number.isInteger(item)) {
+    if (isProductId(item)) {
       uniqueIds.add(item)
     }
   }
@@ -53,6 +55,10 @@ export const useFavoritesStore = defineStore('favorites', () => {
    * e retorna false — a UI deve informar o usuário (Toast contextual).
    */
   function addFavorite(productId: number): boolean {
+    if (!isProductId(productId)) {
+      return false
+    }
+
     if (favoriteProductIds.value.includes(productId)) {
       return true
     }
@@ -74,6 +80,10 @@ export const useFavoritesStore = defineStore('favorites', () => {
    * e retorna false.
    */
   function removeFavorite(productId: number): boolean {
+    if (!isProductId(productId)) {
+      return false
+    }
+
     if (!favoriteProductIds.value.includes(productId)) {
       return true
     }

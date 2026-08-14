@@ -20,7 +20,9 @@
     "Yup",
     "vee-validate",
     "localStorage",
-    "debounce"
+    "debounce",
+    "Fjallraven",
+    "testid"
   ],
   "files.encoding": "utf8",
   "files.autoGuessEncoding": true,
