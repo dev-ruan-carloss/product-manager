@@ -9,6 +9,8 @@ export const PRODUCT_TITLE_MAX_LENGTH = 150
 export const PRODUCT_DESCRIPTION_MAX_LENGTH = 1000
 export const PRODUCT_PRICE_MAX = 999_999.99
 export const PRODUCT_PRICE_FRACTION_DIGITS = 2
+/** Máximo coerente para nome de categoria (API ≤ 16; folga para categorias criadas pelo usuário). */
+export const PRODUCT_CATEGORY_MAX_LENGTH = 50
 
 /**
  * Aceita inteiros e até `digits` casas decimais (ex.: 10, 10.5, 10.50).

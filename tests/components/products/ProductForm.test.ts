@@ -1,8 +1,9 @@
 import { flushPromises } from '@vue/test-utils'
 import { nextTick } from 'vue'
-import { describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 import ProductForm from '@/components/products/ProductForm.vue'
+import { resetCustomCategoriesState } from '@/composables/useCustomCategories'
 import { i18n } from '@/i18n'
 import {
   PRODUCT_DESCRIPTION_MAX_LENGTH,
@@ -58,6 +59,15 @@ async function setPrice(
 }
 
 describe('ProductForm', () => {
+  beforeEach(() => {
+    resetCustomCategoriesState()
+    localStorage.clear()
+  })
+
+  afterEach(() => {
+    resetCustomCategoriesState()
+  })
+
   it('renderiza campos, labels e hints auxiliares', async () => {
     const { wrapper } = await mountWithApp(ProductForm, {
       props: { categories },
@@ -565,5 +575,140 @@ describe('ProductForm', () => {
         max: PRODUCT_TITLE_MAX_LENGTH,
       })),
     )
+  })
+
+  it('oferece ação para criar nova categoria', async () => {
+    const { wrapper } = await mountWithApp(ProductForm, {
+      props: { categories },
+    })
+
+    const createButton = wrapper
+      .findAll('button')
+      .find((btn) => btn.text().includes('Criar categoria'))
+    expect(createButton).toBeDefined()
+
+    const labelRow = wrapper.get('label[for="product-category"]').element.parentElement
+    expect(labelRow).not.toBeNull()
+    expect(labelRow?.className).toContain('justify-between')
+    expect(labelRow?.contains(createButton!.element)).toBe(true)
+  })
+
+  it('cria categoria, seleciona no formulário e inclui no payload de submit', async () => {
+    const { wrapper } = await mountWithApp(ProductForm, {
+      props: { categories, initialValues: { ...validValues, category: undefined } },
+      attachTo: document.body,
+    })
+
+    const createButton = wrapper
+      .findAll('button')
+      .find((btn) => btn.text().includes('Criar categoria'))
+    await createButton!.trigger('click')
+    await nextTick()
+
+    const dialog = document.querySelector('[role="dialog"]')
+    expect(dialog).not.toBeNull()
+    expect(dialog?.textContent).toContain('Nova categoria')
+
+    const input = document.getElementById('new-category-name') as HTMLInputElement
+    input.value = 'Esportes'
+    input.dispatchEvent(new Event('input', { bubbles: true }))
+    await nextTick()
+
+    const confirm = Array.from(dialog!.querySelectorAll('button')).find((button) =>
+      button.textContent?.includes('Confirmar'),
+    )
+    confirm?.click()
+    await flushPromises()
+    await nextTick()
+
+    expect(wrapper.text()).toContain('Esportes')
+    await submitForm(wrapper)
+
+    expect(wrapper.emitted('submit')?.[0]?.[0]).toMatchObject({
+      title: validValues.title,
+      category: 'Esportes',
+    })
+    wrapper.unmount()
+  })
+
+  it('preserva categoria customizada na edição', async () => {
+    const { wrapper } = await mountWithApp(ProductForm, {
+      props: {
+        categories,
+        initialValues: { ...validValues, category: 'Esportes' },
+        submitLabel: 'Salvar Alterações',
+      },
+    })
+
+    expect(wrapper.text()).toContain('Esportes')
+    await submitForm(wrapper)
+    expect(wrapper.emitted('submit')?.[0]?.[0]).toMatchObject({ category: 'Esportes' })
+  })
+
+  it('cancela a criação de categoria sem emitir cancel do formulário', async () => {
+    const { wrapper } = await mountWithApp(ProductForm, {
+      props: { categories },
+      attachTo: document.body,
+    })
+
+    const createButton = wrapper
+      .findAll('button')
+      .find((btn) => btn.text().includes('Criar categoria'))
+    await createButton!.trigger('click')
+    await nextTick()
+
+    const dialog = document.querySelector('[role="dialog"]')
+    expect(dialog).not.toBeNull()
+
+    const cancel = Array.from(dialog!.querySelectorAll('button')).find((button) =>
+      button.textContent?.includes('Cancelar'),
+    )
+    cancel?.click()
+    await nextTick()
+
+    expect(document.querySelector('[role="dialog"]')).toBeNull()
+    expect(wrapper.emitted('cancel')).toBeUndefined()
+    wrapper.unmount()
+  })
+
+  it('rejeita categoria vazia, somente espaços e duplicada no diálogo', async () => {
+    const { wrapper } = await mountWithApp(ProductForm, {
+      props: { categories },
+      attachTo: document.body,
+    })
+
+    const createButton = wrapper
+      .findAll('button')
+      .find((btn) => btn.text().includes('Criar categoria'))
+    await createButton!.trigger('click')
+    await nextTick()
+
+    const dialog = document.querySelector('[role="dialog"]')!
+    const confirm = () =>
+      Array.from(dialog.querySelectorAll('button')).find((button) =>
+        button.textContent?.includes('Confirmar'),
+      )
+
+    confirm()?.click()
+    await nextTick()
+    expect(dialog.textContent).toContain('A categoria é obrigatória.')
+
+    const input = document.getElementById('new-category-name') as HTMLInputElement
+    input.value = '   '
+    input.dispatchEvent(new Event('input', { bubbles: true }))
+    await nextTick()
+    confirm()?.click()
+    await nextTick()
+    expect(dialog.textContent).toContain('A categoria é obrigatória.')
+
+    input.value = 'electronics'
+    input.dispatchEvent(new Event('input', { bubbles: true }))
+    await nextTick()
+    confirm()?.click()
+    await nextTick()
+    expect(dialog.textContent).toContain('Esta categoria já existe.')
+
+    expect(wrapper.emitted('submit')).toBeUndefined()
+    wrapper.unmount()
   })
 })

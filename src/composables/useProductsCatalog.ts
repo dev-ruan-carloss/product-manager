@@ -1,10 +1,12 @@
 import { computed, onMounted, ref } from 'vue'
 
 import { isAppError, toAppError } from '@/config/api'
+import { resetCustomCategoriesState, useCustomCategories } from '@/composables/useCustomCategories'
 import { productService } from '@/services/productService'
 import type { AppError } from '@/types/api'
 import type { Category } from '@/types/category'
 import type { Product } from '@/types/product'
+import { mergeCategories } from '@/utils/customCategory'
 
 /**
  * Estado compartilhado do catálogo na sessão.
@@ -12,11 +14,14 @@ import type { Product } from '@/types/product'
  * porque a FakeStoreAPI não persiste escritas em GETs posteriores.
  */
 const products = ref<Product[]>([])
-const categories = ref<Category[]>([])
+const apiCategories = ref<Category[]>([])
 const isLoading = ref(false)
 const error = ref<AppError | null>(null)
 const hasLoaded = ref(false)
 const localMutations = ref<Record<number, Product>>({})
+
+const { customCategories } = useCustomCategories()
+const categories = computed(() => mergeCategories(apiCategories.value, customCategories.value))
 
 let inFlight: Promise<void> | null = null
 
@@ -70,12 +75,12 @@ async function loadCatalog(): Promise<void> {
       ])
 
       products.value = mergeRemoteWithMutations(loadedProducts)
-      categories.value = loadedCategories
+      apiCategories.value = loadedCategories
       hasLoaded.value = true
     } catch (caught: unknown) {
       error.value = isAppError(caught) ? caught : toAppError(caught)
       products.value = []
-      categories.value = []
+      apiCategories.value = []
     } finally {
       isLoading.value = false
     }
@@ -111,12 +116,13 @@ function getCatalogProduct(id: number): Product | undefined {
 /** Reinicia o estado da sessão — uso exclusivo da suíte de testes. */
 export function resetProductsCatalogState(): void {
   products.value = []
-  categories.value = []
+  apiCategories.value = []
   isLoading.value = false
   error.value = null
   hasLoaded.value = false
   localMutations.value = {}
   inFlight = null
+  resetCustomCategoriesState()
 }
 
 export function useProductsCatalog(options: UseProductsCatalogOptions = {}) {

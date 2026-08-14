@@ -140,4 +140,27 @@ describe('ProdutoCriarView', () => {
     expect(wrapper.getComponent(ProductForm).props('submitting')).toBe(false)
     wrapper.unmount()
   })
+
+  it('salva produto com categoria customizada no catálogo da sessão', async () => {
+    const customPayload: ProductCreatePayload = {
+      ...payload,
+      category: 'Esportes',
+    }
+    const customCreated = makeProduct({
+      id: 22,
+      ...customPayload,
+      rating: { rate: 0, count: 0 },
+    })
+    vi.mocked(productService.createProduct).mockResolvedValueOnce(customCreated)
+
+    const { wrapper } = await mountWithApp(ProdutoCriarView, { route: '/produtos/novo' })
+    await flushPromises()
+
+    await wrapper.getComponent(ProductForm).vm.$emit('submit', customPayload)
+    await flushPromises()
+
+    const catalog = useProductsCatalog({ autoLoad: false })
+    expect(catalog.getCatalogProduct(22)?.category).toBe('Esportes')
+    wrapper.unmount()
+  })
 })

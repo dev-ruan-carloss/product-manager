@@ -71,6 +71,32 @@ describe('ProductFilters', () => {
     expect(wrapper.emitted('update:selectedCategory')).toEqual([['jewelery']])
   })
 
+  it('inclui categoria customizada no filtro com contador correto', async () => {
+    const customProducts = [
+      ...products,
+      makeProduct({ id: 4, title: 'Tênis de corrida', category: 'Esportes' }),
+    ]
+
+    const { wrapper } = await mountWithApp(ProductFilters, {
+      props: {
+        search: '',
+        selectedCategory: ALL_CATEGORIES,
+        sortOrder: DEFAULT_SORT_ORDER,
+        categories: [...categories, 'Esportes'],
+        products: customProducts,
+      },
+    })
+
+    expect(wrapper.text()).toContain('Esportes')
+    expect(wrapper.get('[aria-label="1 produtos"]').text()).toBe('1')
+
+    const sportsButton = wrapper
+      .findAll('button[aria-pressed]')
+      .find((btn) => btn.text().includes('Esportes'))
+    await sportsButton!.trigger('click')
+    expect(wrapper.emitted('update:selectedCategory')).toEqual([['Esportes']])
+  })
+
   it('repassa busca e ordenação dos filhos', async () => {
     const { wrapper } = await mountWithApp(ProductFilters, {
       props: {

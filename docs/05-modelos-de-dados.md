@@ -150,7 +150,7 @@ Não será criado um `enum` contendo categorias fixas enquanto a API continuar s
 
 ## Justificativa
 
-As categorias são fornecidas externamente pela API.
+As categorias oficiais são fornecidas pela FakeStoreAPI. O usuário também pode criar categorias customizadas no formulário; essas categorias são dados da sessão persistidos em `localStorage` e unidos às da API no catálogo. Não há `enum` fixo de categorias.
 
 Criar um conjunto fixo no frontend poderia gerar inconsistência caso a API disponibilize uma nova categoria.
 
@@ -258,6 +258,24 @@ O `rating` original da FakeStoreAPI permanece no modelo `Product`. A média e a 
 
 ---
 
+# 11.3 — Persistência das Categorias Customizadas
+
+Categorias criadas pelo usuário são persistidas no `localStorage`.
+
+Somente a lista de nomes (`string[]`) é armazenada. Produtos associados continuam no overlay da sessão (decisão 35.18).
+
+Chave:
+
+    product-management:custom-categories
+
+Centralizada na constante `CUSTOM_CATEGORIES_STORAGE_KEY` em `src/composables/useCustomCategories.ts`.
+
+Não misturar com favoritos, locale, tema, avaliações ou com o overlay de CREATE/UPDATE do catálogo.
+
+Duplicatas são evitadas por trim + comparação case-insensitive, inclusive contra rótulos localizados das categorias da API. O nome persistido é o valor informado pelo usuário após trim; i18n da UI não reescreve categorias dinâmicas.
+
+---
+
 # 12. Modelo de Criação
 
 O modelo utilizado para criação de produto será diferente do modelo completo retornado pela API quando necessário.
@@ -320,7 +338,7 @@ Limites de domínio (fonte: `src/schemas/productFormLimits.ts`), aplicados pelo 
 | `title` | Sim | trim nas pontas; `"   "` inválido; espaços internos preservados | 150 caracteres |
 | `description` | Sim | idem | 1000 caracteres |
 | `price` | Sim | valor `number` | 999.999,99; 2 casas decimais; maior que zero |
-| `category` | Sim | não aceita vazio/`null`/`undefined`/somente espaços | categorias da FakeStoreAPI |
+| `category` | Sim | trim; não aceita vazio/`null`/`undefined`/somente espaços | 50 caracteres; API ou categoria customizada |
 | `image` | Sim | trim; URL válida | — |
 
 O payload enviado permanece `{ title, price, description, category, image }` com `price: number`.
@@ -334,7 +352,8 @@ O contrato `Product` da FakeStoreAPI é a fonte de verdade na UI para `title` e 
 Regras:
 
 - `title` e `description` são exibidos como retornados pela API;
-- categorias conhecidas podem receber rótulo localizado na apresentação (`getLocalizedCategory`), preservando o valor original da API em filtros e payloads;
+- categorias conhecidas da API podem receber rótulo localizado na apresentação (`getLocalizedCategory`), preservando o valor original em filtros e payloads;
+- categorias customizadas são dados: o nome informado é exibido como está, sem chave i18n;
 - criação/edição continuam usando `Product` / payloads originais;
 - não há cache de tradução de título/descrição.
 
@@ -685,6 +704,7 @@ Inicialmente:
     localStorage
         ├── favoritos (`product-management:favorites`)
         ├── avaliações (`product-management:product-ratings`)
+        ├── categorias customizadas (`product-management:custom-categories`)
         └── tema (`product-management:theme`)
 
 Não deverão ser persistidos automaticamente:

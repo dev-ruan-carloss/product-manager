@@ -128,4 +128,44 @@ describe('ProdutoEditarView', () => {
     expect(wrapper.getComponent(ProductForm).props('submitError')).toBeTruthy()
     wrapper.unmount()
   })
+
+  it('cancela a edição e volta para os detalhes sem PUT nem alteração local', async () => {
+    const { wrapper, router } = await mountWithApp(ProdutoEditarView, {
+      route: '/produtos/1/editar',
+    })
+    await flushPromises()
+
+    const form = wrapper.getComponent(ProductForm)
+    expect(
+      form.findAll('button').some((btn) => btn.text().includes('Cancelar')),
+    ).toBe(true)
+
+    await form.vm.$emit('cancel')
+    await flushPromises()
+
+    expect(productService.updateProduct).not.toHaveBeenCalled()
+    expect(router.currentRoute.value.name).toBe('produto-detalhes')
+    expect(router.currentRoute.value.params).toMatchObject({ id: '1' })
+    expect(router.currentRoute.value.path).toBe('/produtos/1')
+
+    const catalog = useProductsCatalog({ autoLoad: false })
+    expect(catalog.getCatalogProduct(1)).toBeUndefined()
+    wrapper.unmount()
+  })
+
+  it('preserva categoria customizada nos valores iniciais da edição', async () => {
+    const customProduct = makeProduct({
+      ...original,
+      category: 'Esportes',
+    })
+    vi.mocked(productService.getProductById).mockResolvedValue(customProduct)
+
+    const { wrapper } = await mountWithApp(ProdutoEditarView, {
+      route: '/produtos/1/editar',
+    })
+    await flushPromises()
+
+    expect(wrapper.getComponent(ProductForm).props('initialValues')?.category).toBe('Esportes')
+    wrapper.unmount()
+  })
 })

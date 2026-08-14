@@ -10,7 +10,10 @@ import InputText from 'primevue/inputtext'
 import Select from 'primevue/select'
 import Textarea from 'primevue/textarea'
 import TimesIcon from '@primevue/icons/times'
+import { useToast } from 'primevue/usetoast'
 
+import CreateCategoryDialog from '@/components/products/CreateCategoryDialog.vue'
+import { useCustomCategories } from '@/composables/useCustomCategories'
 import { useInitialFocus } from '@/composables/useInitialFocus'
 import type { Category } from '@/types/category'
 import type { ProductCreatePayload } from '@/types/product'
@@ -22,6 +25,7 @@ import {
   PRODUCT_TITLE_MAX_LENGTH,
 } from '@/schemas/productFormLimits'
 import { productFormSchema } from '@/schemas/productFormSchema'
+import { mergeCategories } from '@/utils/customCategory'
 import {
   formatPrice,
   formatPriceInput,
@@ -56,6 +60,9 @@ const emit = defineEmits<{
 }>()
 
 const { t, locale } = useI18n()
+const toast = useToast()
+const { customCategories, addCustomCategory } = useCustomCategories()
+const createCategoryOpen = ref(false)
 
 useInitialFocus('product-title')
 
@@ -98,14 +105,19 @@ const resolvedSubmitLabel = computed(() => props.submitLabel ?? t('form.save'))
 const categoryOptions = computed(() => {
   void locale.value
 
-  return props.categories.map((item) => ({
+  const current =
+    typeof category.value === 'string' && category.value.length > 0 ? [category.value] : []
+
+  return mergeCategories(props.categories, customCategories.value, current).map((item) => ({
     label: getLocalizedCategory(item),
     value: item,
   }))
 })
 
+const knownCategories = computed(() => mergeCategories(props.categories, customCategories.value))
+
 const categoriesUnavailable = computed(
-  () => props.categories.length === 0 && !props.categoriesLoading,
+  () => knownCategories.value.length === 0 && !props.categoriesLoading,
 )
 
 const previewTitle = computed(() => {
@@ -268,6 +280,31 @@ function onCancel(): void {
 
   emit('cancel')
 }
+
+function openCreateCategory(): void {
+  if (props.submitting) {
+    return
+  }
+
+  createCategoryOpen.value = true
+}
+
+function onCreateCategoryConfirm(created: Category): void {
+  const result = addCustomCategory(created, knownCategories.value)
+
+  if (!result.ok) {
+    return
+  }
+
+  category.value = result.category
+  createCategoryOpen.value = false
+  toast.add({
+    severity: 'success',
+    summary: t('toast.success'),
+    detail: t('toast.categoryCreated'),
+    life: 3000,
+  })
+}
 </script>
 
 <template>
@@ -337,11 +374,21 @@ function onCancel(): void {
           </div>
 
           <div class="min-w-0 space-y-1.5 md:col-span-1">
-            <label for="product-category" class="block text-sm font-medium text-slate-700 dark:text-slate-200">
-              {{ t('form.category') }}
-              <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
-              <span class="sr-only">{{ t('form.required') }}</span>
-            </label>
+            <div class="flex min-w-0 items-center justify-between gap-2">
+              <label for="product-category" class="min-w-0 text-sm font-medium text-slate-700 dark:text-slate-200">
+                {{ t('form.category') }}
+                <span class="text-red-600 dark:text-red-400" aria-hidden="true">*</span>
+                <span class="sr-only">{{ t('form.required') }}</span>
+              </label>
+              <button
+                type="button"
+                class="shrink-0 text-sm font-medium text-violet-700 outline-none hover:text-violet-800 focus-visible:ring-2 focus-visible:ring-violet-500 disabled:cursor-not-allowed disabled:text-slate-400 dark:text-violet-300 dark:hover:text-violet-200 dark:disabled:text-slate-500"
+                :disabled="submitting"
+                @click="openCreateCategory"
+              >
+                {{ t('form.createCategory') }}
+              </button>
+            </div>
             <Select
               v-model="category"
               v-bind="categoryAttrs"
@@ -621,5 +668,12 @@ function onCancel(): void {
         :aria-busy="submitting"
       />
     </div>
+
+    <CreateCategoryDialog
+      v-if="createCategoryOpen"
+      v-model:visible="createCategoryOpen"
+      :existing-categories="knownCategories"
+      @confirm="onCreateCategoryConfirm"
+    />
   </form>
 </template>

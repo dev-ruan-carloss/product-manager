@@ -164,4 +164,64 @@ describe('ProductCard', () => {
     expect(detailsWrapper.text()).toContain('4.5')
     expect(detailsWrapper.text()).toContain('147')
   })
+
+  it('ancora preço, categoria e avaliação na área inferior com títulos curtos e longos', async () => {
+    const shortProduct = makeProduct({
+      id: 1,
+      title: 'Tênis',
+      price: 199.9,
+      category: 'Esportes',
+      rating: { rate: 4.2, count: 10 },
+    })
+    const longProduct = makeProduct({
+      id: 2,
+      title: 'Tênis esportivo masculino para corrida profissional com amortecimento',
+      price: 349.9,
+      category: 'Esportes',
+      rating: { rate: 4.8, count: 32 },
+    })
+
+    const { wrapper: shortCard } = await mountWithApp(ProductCard, {
+      props: { product: shortProduct, favorited: false },
+    })
+    const { wrapper: longCard } = await mountWithApp(ProductCard, {
+      props: { product: longProduct, favorited: false },
+    })
+
+    for (const wrapper of [shortCard, longCard]) {
+      const body = wrapper.get('[data-testid="product-card-body"]')
+      const main = wrapper.get('[data-testid="product-card-main"]')
+      const summary = wrapper.get('[data-testid="product-card-summary"]')
+
+      expect(body.classes()).toEqual(expect.arrayContaining(['flex', 'flex-1', 'flex-col']))
+      expect(summary.classes()).toContain('mt-auto')
+      expect(summary.get('[data-testid="product-card-price"]').exists()).toBe(true)
+      expect(summary.get('[data-testid="product-card-category"]').exists()).toBe(true)
+      expect(summary.get('[data-testid="product-card-rating"]').exists()).toBe(true)
+      expect(main.find('[data-testid="product-card-price"]').exists()).toBe(false)
+      expect(main.find('[data-testid="product-card-category"]').exists()).toBe(false)
+      expect(main.find('[data-testid="product-card-rating"]').exists()).toBe(false)
+    }
+
+    expect(shortCard.get('[data-testid="product-card-main"]').text()).toBe('Tênis')
+    expect(longCard.get('[data-testid="product-card-main"]').text()).toContain(
+      'Tênis esportivo masculino',
+    )
+    expect(shortCard.get('[data-testid="product-card-category"]').text()).toBe('Esportes')
+    expect(longCard.get('[data-testid="product-card-category"]').text()).toBe('Esportes')
+  })
+
+  it('exibe categoria customizada como dado, sem chave i18n', async () => {
+    const customProduct = makeProduct({
+      id: 30,
+      title: 'Tênis de corrida',
+      category: 'Esportes',
+    })
+
+    const { wrapper } = await mountWithApp(ProductCard, {
+      props: { product: customProduct, favorited: false },
+    })
+
+    expect(wrapper.get('[data-testid="product-card-category"]').text()).toBe('Esportes')
+  })
 })

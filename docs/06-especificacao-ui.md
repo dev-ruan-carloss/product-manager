@@ -349,6 +349,8 @@ O card deverá apresentar:
 
 A estrutura visual deverá ser consistente entre todos os produtos.
 
+O card separa a área superior (imagem e título) da área inferior (preço, categoria e avaliação). A área inferior permanece no final do card (`flex` em coluna + `mt-auto`), para que títulos curtos e longos não desloquem o alinhamento entre cards. A altura da linha do grid não é aumentada artificialmente.
+
 ---
 
 # 15. Imagem
@@ -904,7 +906,7 @@ Ajustes aplicados na camada de apresentação:
 - Header/Footer reorganizados com wrap e hierarquia preservada (sem `justify-between` gerando vazio no mobile);
 - catálogo, favoritos, detalhes e formulários com paddings compactos em telas estreitas;
 - grid fluido (`auto-fill` + `minmax(min(100%, 14rem), 1fr)`), validado sem overflow de 320px a 1920px;
-- cards com altura de linha alinhada (`auto-rows-fr` + `h-full`) e conteúdo empilhado no topo (sem `mt-auto`);
+- cards com altura de linha alinhada (`auto-rows-fr` + `h-full`); conteúdo inferior (preço, categoria, avaliação) ancorado com `mt-auto` para alinhar cards de títulos curtos e longos;
 - paginação com wrap;
 - controles PrimeVue com `max-width: 100%`;
 - ausência de `overflow-x-hidden` como solução genérica;

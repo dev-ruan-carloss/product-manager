@@ -100,7 +100,14 @@ async function handleSubmit(formPayload: ProductCreatePayload): Promise<void> {
 }
 
 function handleCancel(): void {
-  void router.push({ name: 'produtos' })
+  const id = product.value?.id ?? productId.value
+
+  if (id === null || id === undefined) {
+    void router.push({ name: 'produtos' })
+    return
+  }
+
+  void router.push({ name: 'produto-detalhes', params: { id } })
 }
 
 function goToCatalog(): void {

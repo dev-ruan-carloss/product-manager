@@ -237,8 +237,11 @@ Responsabilidades:
 - apresentar título;
 - apresentar preço;
 - apresentar categoria;
+- apresentar avaliação;
 - disponibilizar acesso aos detalhes;
 - apresentar estado de favorito.
+
+A área superior (imagem + título) e a área inferior (preço, categoria, avaliação) são regiões distintas. A inferior usa `mt-auto` para permanecer alinhada entre cards da mesma linha, sem aumentar artificialmente a altura.
 
 ---
 
@@ -289,6 +292,7 @@ Exemplos possíveis:
 
     src/composables/
     ├── useProductsCatalog.ts
+    ├── useCustomCategories.ts
     ├── useProductListControls.ts
     ├── useDebouncedRef.ts
     ├── useInitialFocus.ts
@@ -308,6 +312,7 @@ Fonte única de verdade do catálogo **na sessão da aplicação**.
 Responsabilidades:
 
 - carregar produtos e categorias via `GET /products` e `GET /products/categories` (fonte inicial);
+- expor a união de categorias da API com categorias customizadas da sessão (`useCustomCategories`);
 - manter o estado compartilhado entre catálogo, detalhes, edição, criação e favoritos;
 - incorporar o produto retornado por `POST /products` (`addCreatedProduct`);
 - substituir o produto retornado por `PUT /products/:id` (`replaceProduct`);
@@ -316,7 +321,22 @@ Responsabilidades:
 
 O GET continua sendo a fonte inicial. Após CREATE/UPDATE, a aplicação **não** depende de um GET posterior para refletir a operação, porque a FakeStoreAPI pode não persistir escritas.
 
-Não é um store Pinia: o estado vive no composable (módulo compartilhado) enquanto a aplicação estiver em execução. Recarregar a página descarta as mutações locais.
+Não é um store Pinia: o estado vive no composable (módulo compartilhado) enquanto a aplicação estiver em execução. Recarregar a página descarta as mutações locais de produtos. Categorias customizadas são persistidas à parte (ver §7.1.1).
+
+---
+
+## 7.1.1 — useCustomCategories
+
+Estado das categorias criadas pelo usuário na sessão, persistido em `localStorage`.
+
+Responsabilidades:
+
+- carregar categorias customizadas ao iniciar;
+- adicionar uma nova categoria validada (trim, não vazia, máximo, sem duplicata);
+- não modificar as categorias originais da FakeStoreAPI;
+- persistir em `product-management:custom-categories`.
+
+O catálogo consome esse estado na união com as categorias da API. O `ProductForm` usa o mesmo composable para criar e selecionar. O valor da categoria no produto permanece a string informada (dado), não uma chave i18n.
 
 ---
 

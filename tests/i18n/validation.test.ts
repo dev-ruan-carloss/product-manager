@@ -18,6 +18,8 @@ const requiredValidationKeys = [
   'descriptionMax',
   'categoryRequired',
   'categoryInvalid',
+  'categoryMax',
+  'categoryDuplicate',
   'imageRequired',
   'imageUrl',
 ] as const
@@ -35,6 +37,7 @@ describe('i18n validation catalog', () => {
     expect(ptBR.validation.titleMax).toContain('{max}')
     expect(ptBR.validation.descriptionMax).toContain('{max}')
     expect(ptBR.validation.priceMax).toContain('{max}')
+    expect(ptBR.validation.categoryMax).toContain('{max}')
     expect(en.validation.titleMax).toContain('{max}')
     expect(es.validation.titleMax).toContain('{max}')
   })

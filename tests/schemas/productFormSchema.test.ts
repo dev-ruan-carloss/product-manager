@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { i18n } from '@/i18n'
 import {
   hasAtMostFractionDigits,
+  PRODUCT_CATEGORY_MAX_LENGTH,
   PRODUCT_DESCRIPTION_MAX_LENGTH,
   PRODUCT_PRICE_FRACTION_DIGITS,
   PRODUCT_PRICE_MAX,
@@ -17,6 +18,7 @@ describe('productFormLimits', () => {
     expect(PRODUCT_DESCRIPTION_MAX_LENGTH).toBe(1000)
     expect(PRODUCT_PRICE_MAX).toBe(999_999.99)
     expect(PRODUCT_PRICE_FRACTION_DIGITS).toBe(2)
+    expect(PRODUCT_CATEGORY_MAX_LENGTH).toBe(50)
     expect(PRODUCT_TITLE_MAX_LENGTH).toBeGreaterThanOrEqual(97)
     expect(PRODUCT_DESCRIPTION_MAX_LENGTH).toBeGreaterThanOrEqual(772)
     expect(PRODUCT_PRICE_MAX).toBeGreaterThanOrEqual(999.99)
@@ -235,6 +237,19 @@ describe('productFormSchema', () => {
       await expect(productFormSchema.validate(validPayload)).resolves.toMatchObject({
         category: "men's clothing",
       })
+    })
+
+    it('aceita categoria customizada e rejeita acima do máximo', async () => {
+      await expect(
+        productFormSchema.validate({ ...validPayload, category: 'Esportes' }),
+      ).resolves.toMatchObject({ category: 'Esportes' })
+
+      expect(
+        await messageFor({
+          ...validPayload,
+          category: 'A'.repeat(PRODUCT_CATEGORY_MAX_LENGTH + 1),
+        }),
+      ).toBe(String(i18n.global.t('validation.categoryMax', { max: PRODUCT_CATEGORY_MAX_LENGTH })))
     })
   })
 

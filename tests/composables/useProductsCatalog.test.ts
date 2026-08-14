@@ -14,6 +14,7 @@ import {
   resetProductsCatalogState,
   useProductsCatalog,
 } from '@/composables/useProductsCatalog'
+import { useCustomCategories } from '@/composables/useCustomCategories'
 import { productService } from '@/services/productService'
 import type { AppError } from '@/types/api'
 import { makeProduct } from '../helpers/makeProduct'
@@ -177,6 +178,19 @@ describe('useProductsCatalog', () => {
     expect(api.getCatalogProduct(1)?.price).toBe(15.9)
     expect(api.getCatalogProduct(21)?.title).toBe('Criado na sessão')
     expect(api.products.value).toHaveLength(2)
+    wrapper.unmount()
+  })
+
+  it('une categorias da API com categorias customizadas da sessão', async () => {
+    vi.mocked(productService.getProducts).mockResolvedValue([makeProduct()])
+    vi.mocked(productService.getCategories).mockResolvedValue(['electronics', 'jewelery'])
+
+    const { addCustomCategory } = useCustomCategories()
+    addCustomCategory('Esportes')
+
+    const { api, wrapper } = await mountCatalog()
+
+    expect(api.categories.value).toEqual(['electronics', 'jewelery', 'Esportes'])
     wrapper.unmount()
   })
 })

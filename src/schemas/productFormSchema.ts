@@ -3,6 +3,7 @@ import * as yup from 'yup'
 import { i18n } from '@/i18n'
 import {
   hasAtMostFractionDigits,
+  PRODUCT_CATEGORY_MAX_LENGTH,
   PRODUCT_DESCRIPTION_MAX_LENGTH,
   PRODUCT_PRICE_FRACTION_DIGITS,
   PRODUCT_PRICE_MAX,
@@ -84,7 +85,10 @@ export const productFormSchema = yup.object({
       return value
     })
     .required(() => t('validation.categoryRequired'))
-    .min(1, () => t('validation.categoryInvalid')),
+    .min(1, () => t('validation.categoryInvalid'))
+    .max(PRODUCT_CATEGORY_MAX_LENGTH, () =>
+      t('validation.categoryMax', { max: PRODUCT_CATEGORY_MAX_LENGTH }),
+    ),
   image: yup
     .string()
     .trim()

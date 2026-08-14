@@ -94,6 +94,16 @@ describe('useProductListControls', () => {
     expect(controls.filteredProducts.value.map((item) => item.id)).toEqual([3])
   })
 
+  it('filtra por categoria customizada', () => {
+    const controls = createControls([
+      ...catalog,
+      makeProduct({ id: 4, title: 'Tênis de corrida', category: 'Esportes' }),
+    ])
+
+    controls.selectedCategory.value = 'Esportes'
+    expect(controls.filteredProducts.value.map((item) => item.id)).toEqual([4])
+  })
+
   it('ordena por nome A–Z e Z–A usando product.title', () => {
     const controls = createControls()
 

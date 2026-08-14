@@ -195,4 +195,19 @@ describe('ProductDetails', () => {
     expect(wrapper.get('[aria-label="Avaliação 4.1 de 5, com 11 avaliações"]').exists()).toBe(true)
     expect(store.getRating(rateableProduct.id)).toBe(3)
   })
+
+  it('exibe categoria customizada com o mesmo fluxo das categorias da API', async () => {
+    const customProduct = makeProduct({
+      ...product,
+      id: 21,
+      category: 'Esportes',
+    })
+
+    const { wrapper } = await mountWithApp(ProductDetails, {
+      props: { product: customProduct, favorited: false },
+    })
+
+    expect(wrapper.text()).toContain('Esportes')
+    expect(wrapper.find('a[href="/produtos/21/editar"]').exists()).toBe(true)
+  })
 })

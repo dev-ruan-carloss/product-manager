@@ -806,7 +806,7 @@ A especificação de UI exige Toast de sucesso/erro e navegação para uma pági
 - Reutilizar `ToastService` / `Toast` já registrados na Fase 7.
 - Após atualização bem-sucedida: Toast **Produto atualizado com sucesso.** e navegação para `/produtos`.
 - Em erro de atualização: Toast **Não foi possível atualizar o produto.**, sem redirecionamento, preservando os dados.
-- Cancelar na edição retorna para `/produtos`.
+- Cancelar na edição retorna para `/produtos/:id` (detalhes do produto em edição), usando o ID atual de forma determinística. Não utiliza `history.back()`. Cancelar não executa PUT, não altera o estado local e não dispara Toast de sucesso.
 - Carregamento inicial reutiliza `useProductDetails` + `parseProductId`; formulário só monta após o produto válido.
 - `ProductForm` permanece único; prop `submitLabel` diferencia o texto do botão ("Salvar Produto" / "Salvar Alterações").
 
@@ -1351,7 +1351,7 @@ Limites de domínio centralizados em `src/schemas/productFormLimits.ts` e aplica
 | Título | sim | 150 caracteres | trim; `"   "` inválido; espaços internos preservados |
 | Descrição | sim | 1000 caracteres | trim; sem mínimo extra além de não vazio |
 | Preço | sim | 999.999,99 | `number`; > 0; 2 casas decimais; limite no valor, não na máscara |
-| Categoria | sim | — | valor selecionado; sem categorias fictícias |
+| Categoria | sim | 50 caracteres | valor selecionado ou criado pelo usuário; trim; sem categorias fictícias |
 | Imagem | sim | — | URL válida; sem upload |
 
 Diferença entre camadas:
@@ -1370,6 +1370,35 @@ Evitar payloads excessivos ou inválidos antes de POST/PUT, com UX previsível e
 - `productFormSchema`, `ProductForm`, mensagens i18n (pt-BR, en, es);
 - testes em `tests/schemas/` e no formulário;
 - documentação de requisitos, UI, modelos e arquitetura.
+
+---
+
+## 35.21 — Categorias customizadas na sessão (localStorage)
+
+**Data:** 2026-08-13
+
+**Decisão anterior:**
+
+As categorias vinham exclusivamente de `GET /products/categories`. O formulário só permitia selecionar valores da API. A FakeStoreAPI não persiste categorias novas.
+
+**Nova decisão:**
+
+- O usuário pode criar uma categoria **dentro** do fluxo de cadastro/edição (`ProductForm`), sem sair da tela.
+- Categorias oficiais da API (`API categories`) permanecem intactas e continuam vindo de `productService.getCategories()`.
+- Categorias criadas pelo usuário (`custom categories`) ficam em `useCustomCategories`, persistidas em `localStorage` (`product-management:custom-categories` / `CUSTOM_CATEGORIES_STORAGE_KEY`).
+- O catálogo (`useProductsCatalog.categories`) expõe a **união** das duas fontes, sem duplicar. Filtro, contadores, busca, ordenação, paginação, card, detalhes e edição usam o mesmo valor persistido da categoria.
+- Validação da nova categoria: obrigatória, trim, rejeita vazio/somente espaços, máximo 50 caracteres, duplicata por caixa/espaços e por rótulo localizado das categorias da API (`Eletrônicos` ≡ `electronics`). O nome informado pelo usuário é dado, não chave i18n.
+- Não há criação automática de categorias fictícias. Não há endpoint de categorias na FakeStoreAPI; a persistência é só local/sessão (F5 recupera custom categories; o overlay de produtos CREATE/UPDATE continua só na sessão, decisão 35.18).
+- Cancelar na edição permanece a decisão 35.4 atualizada: retorno determinístico para `/produtos/:id`.
+
+**Motivo:**
+
+Permitir cadastro realista sem tratar a FakeStoreAPI como banco. Separar API × local evita misturar fontes e duplicar estado.
+
+**Impacto:**
+
+- `useCustomCategories`, `customCategory.ts`, `CreateCategoryDialog`, `ProductForm`, catálogo/filtros;
+- i18n pt-BR/en/es; testes de validação, formulário, catálogo, detalhes e persistência.
 
 ---
 
@@ -1400,7 +1429,7 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.32
+**Versão:** 1.33
 
 **Última atualização:** 2026-08-13
 
@@ -1418,7 +1447,11 @@ Suíte em `tests/` (components, composables, services, stores, schemas, utils, c
 
 ### Nota — limites do formulário de produto
 
-A decisão 35.20 define máximos de título (150), descrição (1000) e preço (999.999,99 / 2 casas). Yup é a fonte da regra; `maxlength` e a restrição do input de preço são UX.
+A decisão 35.20 define máximos de título (150), descrição (1000), preço (999.999,99 / 2 casas) e categoria (50). Yup é a fonte da regra; `maxlength` e a restrição do input de preço são UX.
+
+### Nota — categorias customizadas
+
+A decisão 35.21 define categorias criadas pelo usuário em `localStorage` (`product-management:custom-categories`), unidas às categorias da FakeStoreAPI no catálogo. O valor persistido é dado; i18n localiza só categorias conhecidas da API.
 
 ### Nota — formatação monetária por locale
 

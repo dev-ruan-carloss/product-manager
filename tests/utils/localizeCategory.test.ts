@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import { i18n } from '@/i18n'
-import { getLocalizedCategory } from '@/utils/localizeCategory'
+import { getCategoryPresentationAliases, getLocalizedCategory } from '@/utils/localizeCategory'
 import type { AppLocale } from '@/types/locale'
 
 function setLocale(locale: AppLocale): void {
@@ -50,5 +50,13 @@ describe('getLocalizedCategory', () => {
     const original = "men's clothing"
     getLocalizedCategory(original)
     expect(original).toBe("men's clothing")
+  })
+
+  it('preserva categoria customizada como dado, sem chave i18n', () => {
+    expect(getLocalizedCategory('Esportes')).toBe('Esportes')
+    expect(getCategoryPresentationAliases('Esportes')).toEqual([])
+    expect(getCategoryPresentationAliases('electronics')).toEqual(
+      expect.arrayContaining(['Eletrônicos', 'Electronics', 'Electrónica']),
+    )
   })
 })

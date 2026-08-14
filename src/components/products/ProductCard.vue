@@ -73,23 +73,43 @@ function onImageError(): void {
         </div>
       </div>
 
-      <div class="flex min-w-0 flex-col gap-1.5 px-3 py-3 sm:gap-2 sm:px-4">
-        <h3 class="line-clamp-2 break-words text-sm font-semibold leading-5 text-slate-900 dark:text-slate-100">
-          {{ product.title }}
-        </h3>
+      <div
+        data-testid="product-card-body"
+        class="flex min-w-0 flex-1 flex-col gap-1.5 px-3 py-3 sm:gap-2 sm:px-4"
+      >
+        <div data-testid="product-card-main" class="min-w-0">
+          <h3 class="line-clamp-2 break-words text-sm font-semibold leading-5 text-slate-900 dark:text-slate-100">
+            {{ product.title }}
+          </h3>
+        </div>
 
-        <p class="break-words text-base font-bold leading-6 text-violet-700 dark:text-violet-300">
-          {{ formatPrice(product.price, locale) }}
-        </p>
+        <div
+          data-testid="product-card-summary"
+          class="mt-auto flex min-w-0 flex-col gap-1.5 sm:gap-2"
+        >
+          <p
+            data-testid="product-card-price"
+            class="break-words text-base font-bold leading-6 text-violet-700 dark:text-violet-300"
+          >
+            {{ formatPrice(product.price, locale) }}
+          </p>
 
-        <p class="break-words text-xs leading-4 text-slate-500 dark:text-slate-400">
-          {{ categoryLabel }}
-        </p>
+          <p
+            data-testid="product-card-category"
+            class="break-words text-xs leading-4 text-slate-500 dark:text-slate-400"
+          >
+            {{ categoryLabel }}
+          </p>
 
-        <div class="flex flex-wrap items-center gap-x-1 gap-y-0.5" :aria-label="ratingLabel">
-          <StarFillIcon class="h-3.5 w-3.5 shrink-0 text-amber-400" aria-hidden="true" />
-          <span class="text-xs font-medium text-slate-700 dark:text-slate-200">{{ displayedRating.rate.toFixed(1) }}</span>
-          <span class="text-xs text-slate-500 dark:text-slate-400">({{ displayedRating.count }})</span>
+          <div
+            data-testid="product-card-rating"
+            class="flex flex-wrap items-center gap-x-1 gap-y-0.5"
+            :aria-label="ratingLabel"
+          >
+            <StarFillIcon class="h-3.5 w-3.5 shrink-0 text-amber-400" aria-hidden="true" />
+            <span class="text-xs font-medium text-slate-700 dark:text-slate-200">{{ displayedRating.rate.toFixed(1) }}</span>
+            <span class="text-xs text-slate-500 dark:text-slate-400">({{ displayedRating.count }})</span>
+          </div>
         </div>
       </div>
     </RouterLink>
