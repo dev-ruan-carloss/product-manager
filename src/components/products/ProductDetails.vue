@@ -4,7 +4,10 @@ import { useI18n } from 'vue-i18n'
 import StarFillIcon from '@primevue/icons/starfill'
 
 import FavoriteButton from '@/components/FavoriteButton.vue'
-import type { Product } from '@/types/product'
+import ProductRatingDialog from '@/components/products/ProductRatingDialog.vue'
+import { useDisplayedRating } from '@/composables/useDisplayedRating'
+import { useSaveProductRating } from '@/composables/useSaveProductRating'
+import type { Product, UserRatingValue } from '@/types/product'
 import { formatPrice } from '@/utils/formatPrice'
 import { getLocalizedCategory } from '@/utils/localizeCategory'
 
@@ -19,6 +22,10 @@ const emit = defineEmits<{
 
 const { t, locale } = useI18n()
 const imageFailed = ref(false)
+const ratingDialogOpen = ref(false)
+
+const { displayedRating, hasUserRating, userRating } = useDisplayedRating(() => props.product)
+const { saveRating } = useSaveProductRating()
 
 const imageAlt = computed(() => props.product.title)
 
@@ -29,8 +36,8 @@ const categoryLabel = computed(() => {
 
 const ratingLabel = computed(() =>
   t('product.ratingLabel', {
-    rate: props.product.rating.rate.toFixed(1),
-    count: props.product.rating.count,
+    rate: displayedRating.value.rate.toFixed(1),
+    count: displayedRating.value.count,
   }),
 )
 
@@ -38,12 +45,26 @@ const favoriteActionLabel = computed(() =>
   props.favorited ? t('favorites.remove') : t('favorites.add'),
 )
 
+const ratingActionLabel = computed(() =>
+  hasUserRating.value ? t('rating.change') : t('rating.add'),
+)
+
 const ratingCountLabel = computed(() =>
-  props.product.rating.count === 1 ? t('product.ratingOne') : t('product.ratingMany'),
+  displayedRating.value.count === 1 ? t('product.ratingOne') : t('product.ratingMany'),
 )
 
 function onImageError(): void {
   imageFailed.value = true
+}
+
+function openRatingDialog(): void {
+  ratingDialogOpen.value = true
+}
+
+function onConfirmRating(rating: UserRatingValue): void {
+  if (saveRating(props.product.id, rating)) {
+    ratingDialogOpen.value = false
+  }
 }
 </script>
 
@@ -117,9 +138,9 @@ function onImageError(): void {
 
           <div class="flex flex-wrap items-center gap-x-1.5 gap-y-1" :aria-label="ratingLabel">
             <StarFillIcon class="h-4 w-4 shrink-0 text-amber-400" aria-hidden="true" />
-            <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ product.rating.rate.toFixed(1) }}</span>
+            <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ displayedRating.rate.toFixed(1) }}</span>
             <span class="text-sm text-slate-500 dark:text-slate-400">
-              ({{ product.rating.count }} {{ ratingCountLabel }})
+              ({{ displayedRating.count }} {{ ratingCountLabel }})
             </span>
           </div>
 
@@ -137,10 +158,10 @@ function onImageError(): void {
           </p>
         </section>
 
-        <div class="mt-auto flex flex-col gap-2 border-t border-slate-100 pt-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3 sm:pt-5 dark:border-slate-800">
+        <div class="mt-auto flex flex-row flex-wrap items-center gap-2 border-t border-slate-100 pt-4 sm:gap-3 sm:pt-5 dark:border-slate-800">
           <button
             type="button"
-            class="inline-flex min-h-11 w-full flex-wrap items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium outline-none transition focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950 sm:w-auto sm:max-w-full sm:px-4"
+            class="inline-flex min-h-11 max-w-full grow shrink-0 items-center justify-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium outline-none transition focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950 sm:px-4"
             :class="
               favorited
                 ? 'border border-violet-300 bg-white text-violet-700 hover:bg-violet-50 dark:border-violet-700 dark:bg-slate-950 dark:text-violet-300 dark:hover:bg-violet-950/40'
@@ -166,9 +187,39 @@ function onImageError(): void {
             <span class="text-center">{{ favoriteActionLabel }}</span>
           </button>
 
+          <button
+            type="button"
+            class="inline-flex min-h-11 max-w-full grow shrink-0 items-center justify-center gap-2 rounded-lg border px-3 py-2.5 text-sm font-medium outline-none transition focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950 sm:px-4"
+            :class="
+              hasUserRating
+                ? 'border-amber-300 bg-white text-amber-800 hover:bg-amber-50 dark:border-amber-700 dark:bg-slate-950 dark:text-amber-300 dark:hover:bg-amber-950/40'
+                : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-800'
+            "
+            aria-haspopup="dialog"
+            :aria-expanded="ratingDialogOpen"
+            :aria-label="ratingActionLabel"
+            @click="openRatingDialog"
+          >
+            <svg
+              class="h-5 w-5 shrink-0"
+              viewBox="0 0 24 24"
+              :fill="hasUserRating ? 'currentColor' : 'none'"
+              stroke="currentColor"
+              stroke-width="1.8"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 3.2 14.4 8l5.4.8-3.9 3.8.9 5.4L12 15.8 7.2 18l.9-5.4L4.2 8.8 9.6 8 12 3.2Z"
+              />
+            </svg>
+            <span class="text-center">{{ ratingActionLabel }}</span>
+          </button>
+
           <RouterLink
             :to="{ name: 'produto-editar', params: { id: product.id } }"
-            class="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 outline-none transition hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-800 dark:focus-visible:ring-offset-slate-950 sm:w-auto sm:max-w-full"
+            class="inline-flex min-h-11 max-w-full grow shrink-0 items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 outline-none transition hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 dark:border-slate-600 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-800 dark:focus-visible:ring-offset-slate-950"
           >
             <svg
               class="h-5 w-5 shrink-0"
@@ -189,5 +240,11 @@ function onImageError(): void {
         </div>
       </div>
     </div>
+
+    <ProductRatingDialog
+      v-model:visible="ratingDialogOpen"
+      :initial-rating="userRating"
+      @confirm="onConfirmRating"
+    />
   </article>
 </template>

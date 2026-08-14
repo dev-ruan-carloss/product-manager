@@ -1,9 +1,12 @@
 import { nextTick } from 'vue'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
+import type { VueWrapper } from '@vue/test-utils'
 
 import FavoriteButton from '@/components/FavoriteButton.vue'
 import ProductDetails from '@/components/products/ProductDetails.vue'
+import ProductRatingDialog from '@/components/products/ProductRatingDialog.vue'
 import { i18n } from '@/i18n'
+import { RATINGS_STORAGE_KEY, useRatingsStore } from '@/stores/ratingsStore'
 import { formatPrice } from '@/utils/formatPrice'
 import { makeProduct } from '../../helpers/makeProduct'
 import { mountWithApp } from '../../helpers/mountComponent'
@@ -18,11 +21,30 @@ const product = makeProduct({
   rating: { rate: 4.6, count: 400 },
 })
 
+const rateableProduct = makeProduct({
+  id: 21,
+  title: 'Fjallraven Backpack',
+  price: 109.95,
+  category: "men's clothing",
+  description: 'Your perfect pack for everyday use.',
+  image: 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_t.png',
+  rating: { rate: 4.2, count: 10 },
+})
+
 function normalizeSpaces(value: string): string {
   return value.replace(/\u00a0|\u202f/g, ' ')
 }
 
+function findRatingButton(wrapper: VueWrapper) {
+  return wrapper
+    .findAll('button')
+    .find((btn) => btn.text().includes('Adicionar avaliação') || btn.text().includes('Alterar avaliação'))
+}
+
 describe('ProductDetails', () => {
+  beforeEach(() => {
+    localStorage.clear()
+  })
   it('renderiza título, descrição, preço, categoria e avaliação', async () => {
     const { wrapper } = await mountWithApp(ProductDetails, {
       props: { product, favorited: false },
@@ -115,5 +137,62 @@ describe('ProductDetails', () => {
     )
 
     expect(product.price).toBe(695)
+  })
+
+  it('exibe o botão Adicionar avaliação na seção de ações', async () => {
+    const { wrapper } = await mountWithApp(ProductDetails, {
+      props: { product: rateableProduct, favorited: false },
+    })
+
+    const ratingButton = findRatingButton(wrapper)
+    expect(ratingButton?.text()).toContain('Adicionar avaliação')
+    expect(ratingButton?.attributes('aria-haspopup')).toBe('dialog')
+    expect(ratingButton?.attributes('aria-expanded')).toBe('false')
+    expect(wrapper.getComponent(ProductRatingDialog).props('visible')).toBe(false)
+  })
+
+  it('abre o modal de avaliação ao clicar no botão', async () => {
+    const { wrapper } = await mountWithApp(ProductDetails, {
+      props: { product: rateableProduct, favorited: false },
+    })
+
+    await findRatingButton(wrapper)!.trigger('click')
+    expect(wrapper.getComponent(ProductRatingDialog).props('visible')).toBe(true)
+    expect(findRatingButton(wrapper)?.attributes('aria-expanded')).toBe('true')
+  })
+
+  it('atualiza nota, quantidade e rótulo do botão após confirmar avaliação', async () => {
+    const originalRating = { ...rateableProduct.rating }
+    const { wrapper } = await mountWithApp(ProductDetails, {
+      props: { product: rateableProduct, favorited: false },
+    })
+
+    expect(wrapper.text()).toContain('4.2')
+
+    await wrapper.getComponent(ProductRatingDialog).vm.$emit('confirm', 5)
+    await nextTick()
+
+    expect(wrapper.get('[aria-label="Avaliação 4.3 de 5, com 11 avaliações"]').exists()).toBe(true)
+    expect(findRatingButton(wrapper)?.text()).toContain('Alterar avaliação')
+    expect(rateableProduct.rating).toEqual(originalRating)
+    expect(JSON.parse(localStorage.getItem(RATINGS_STORAGE_KEY) ?? '{}')).toEqual({ '21': 5 })
+  })
+
+  it('substitui avaliação existente sem incrementar o count novamente', async () => {
+    const { wrapper, pinia } = await mountWithApp(ProductDetails, {
+      props: { product: rateableProduct, favorited: false },
+    })
+    const store = useRatingsStore(pinia)
+    store.setRating(rateableProduct.id, 5)
+    await nextTick()
+
+    expect(wrapper.get('[aria-label="Avaliação 4.3 de 5, com 11 avaliações"]').exists()).toBe(true)
+    expect(findRatingButton(wrapper)?.text()).toContain('Alterar avaliação')
+
+    await wrapper.getComponent(ProductRatingDialog).vm.$emit('confirm', 3)
+    await nextTick()
+
+    expect(wrapper.get('[aria-label="Avaliação 4.1 de 5, com 11 avaliações"]').exists()).toBe(true)
+    expect(store.getRating(rateableProduct.id)).toBe(3)
   })
 })

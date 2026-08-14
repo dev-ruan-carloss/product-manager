@@ -110,6 +110,7 @@ const en = {
     pageDescription: 'An unexpected error occurred while displaying this content.',
     favoriteToggle: 'Could not update favorites.',
     formSave: 'Could not save the product. Check your connection and try again.',
+    ratingSave: 'Could not save the rating.',
   },
   loading: {
     productsTitle: 'Loading products',
@@ -158,6 +159,21 @@ const en = {
     notFoundTitle: 'Product not found.',
     notFoundDescription: 'The requested product does not exist or is no longer available.',
     backToProducts: 'Back to products',
+  },
+  rating: {
+    add: 'Add rating',
+    change: 'Change rating',
+    modalTitle: 'Rate product',
+    modalInstruction: 'Select from 1 to 5 stars.',
+    confirm: 'Confirm',
+    cancel: 'Cancel',
+    closeAria: 'Close rating',
+    starsGroupAria: 'Select a rating from 1 to 5 stars',
+    starOne: '1 star',
+    starMany: '{count} stars',
+    selectedNoneAria: 'No stars selected',
+    selectedOneAria: '1 star selected',
+    selectedManyAria: '{count} stars selected',
   },
   form: {
     createTitle: 'New Product',
@@ -214,6 +230,8 @@ const en = {
     createError: 'Could not create the product.',
     updateSuccess: 'Product updated successfully.',
     updateError: 'Could not update the product.',
+    ratingSuccess: 'Rating saved successfully.',
+    ratingUpdateSuccess: 'Rating updated successfully.',
   },
 } as const
 

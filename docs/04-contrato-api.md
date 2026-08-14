@@ -771,6 +771,26 @@ A API não será chamada para favoritar ou desfavoritar produtos.
 
 ---
 
+# 31.1 — Contrato de Avaliações do Usuário
+
+Avaliações feitas pelo usuário **não** fazem parte do contrato da FakeStoreAPI.
+
+Não existe `POST /products/:id/reviews` nem qualquer outro endpoint de review. O `productService` não envia avaliações.
+
+O fluxo é exclusivamente local:
+
+    Product
+       ↓
+    ProductRatingDialog
+       ↓
+    Ratings Store
+       ↓
+    localStorage (`product-management:product-ratings`)
+
+O `rating` retornado pela API permanece a fonte original. A UI combina esse valor com a avaliação local para exibir média e quantidade.
+
+---
+
 # 32. Regras de Integração
 
 A implementação deverá seguir as seguintes regras:
@@ -786,6 +806,7 @@ A implementação deverá seguir as seguintes regras:
 - [x] URLs não são duplicadas nos componentes.
 - [x] Credenciais não são armazenadas no código.
 - [x] Favoritos permanecem como responsabilidade exclusiva do frontend.
+- [x] Avaliações do usuário permanecem como responsabilidade exclusiva do frontend (sem endpoint na API).
 
 ---
 

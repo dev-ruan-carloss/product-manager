@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import StarFillIcon from '@primevue/icons/starfill'
 
 import FavoriteButton from '@/components/FavoriteButton.vue'
+import { useDisplayedRating } from '@/composables/useDisplayedRating'
 import type { Product } from '@/types/product'
 import { formatPrice } from '@/utils/formatPrice'
 import { getLocalizedCategory } from '@/utils/localizeCategory'
@@ -19,6 +20,7 @@ const emit = defineEmits<{
 
 const { t, locale } = useI18n()
 const imageFailed = ref(false)
+const { displayedRating } = useDisplayedRating(() => props.product)
 
 const categoryLabel = computed(() => {
   void locale.value
@@ -27,8 +29,8 @@ const categoryLabel = computed(() => {
 
 const ratingLabel = computed(() =>
   t('product.ratingLabel', {
-    rate: props.product.rating.rate.toFixed(1),
-    count: props.product.rating.count,
+    rate: displayedRating.value.rate.toFixed(1),
+    count: displayedRating.value.count,
   }),
 )
 
@@ -86,8 +88,8 @@ function onImageError(): void {
 
         <div class="flex flex-wrap items-center gap-x-1 gap-y-0.5" :aria-label="ratingLabel">
           <StarFillIcon class="h-3.5 w-3.5 shrink-0 text-amber-400" aria-hidden="true" />
-          <span class="text-xs font-medium text-slate-700 dark:text-slate-200">{{ product.rating.rate.toFixed(1) }}</span>
-          <span class="text-xs text-slate-500 dark:text-slate-400">({{ product.rating.count }})</span>
+          <span class="text-xs font-medium text-slate-700 dark:text-slate-200">{{ displayedRating.rate.toFixed(1) }}</span>
+          <span class="text-xs text-slate-500 dark:text-slate-400">({{ displayedRating.count }})</span>
         </div>
       </div>
     </RouterLink>

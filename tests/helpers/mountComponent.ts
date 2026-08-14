@@ -1,6 +1,7 @@
 import { mount, type ComponentMountingOptions, type VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia, type Pinia } from 'pinia'
 import PrimeVue from 'primevue/config'
+import ToastService from 'primevue/toastservice'
 import { createMemoryHistory, createRouter, type Router, type RouteRecordRaw } from 'vue-router'
 import type { Component } from 'vue'
 
@@ -111,7 +112,7 @@ export async function mountWithApp<C>(
     ...rest,
     global: {
       ...global,
-      plugins: [pinia, i18n, router, PrimeVue, ...(global?.plugins ?? [])],
+      plugins: [pinia, i18n, router, PrimeVue, ToastService, ...(global?.plugins ?? [])],
     },
   })
 

@@ -110,6 +110,7 @@ const ptBR = {
     pageDescription: 'Ocorreu um erro inesperado ao exibir este conteúdo.',
     favoriteToggle: 'Não foi possível atualizar os favoritos.',
     formSave: 'Não foi possível salvar o produto. Verifique sua conexão e tente novamente.',
+    ratingSave: 'Não foi possível salvar a avaliação.',
   },
   loading: {
     productsTitle: 'Carregando produtos',
@@ -159,6 +160,21 @@ const ptBR = {
     notFoundTitle: 'Produto não encontrado.',
     notFoundDescription: 'O produto solicitado não existe ou não está mais disponível.',
     backToProducts: 'Voltar aos produtos',
+  },
+  rating: {
+    add: 'Adicionar avaliação',
+    change: 'Alterar avaliação',
+    modalTitle: 'Avaliar produto',
+    modalInstruction: 'Selecione de 1 a 5 estrelas.',
+    confirm: 'Confirmar',
+    cancel: 'Cancelar',
+    closeAria: 'Fechar avaliação',
+    starsGroupAria: 'Selecionar avaliação de 1 a 5 estrelas',
+    starOne: '1 estrela',
+    starMany: '{count} estrelas',
+    selectedNoneAria: 'Nenhuma estrela selecionada',
+    selectedOneAria: '1 estrela selecionada',
+    selectedManyAria: '{count} estrelas selecionadas',
   },
   form: {
     createTitle: 'Novo Produto',
@@ -215,6 +231,8 @@ const ptBR = {
     createError: 'Não foi possível criar o produto.',
     updateSuccess: 'Produto atualizado com sucesso.',
     updateError: 'Não foi possível atualizar o produto.',
+    ratingSuccess: 'Avaliação registrada com sucesso.',
+    ratingUpdateSuccess: 'Avaliação atualizada com sucesso.',
   },
 } as const
 

@@ -240,6 +240,24 @@ A preferência somente é gravada após ação explícita do usuário.
 
 ---
 
+# 11.2 — Persistência das Avaliações do Usuário
+
+A avaliação local (1 a 5 estrelas) é persistida no `localStorage`.
+
+Somente o mapa `productId → rating` é armazenado. O objeto completo do produto não é persistido.
+
+Chave:
+
+    product-management:product-ratings
+
+Centralizada na constante `RATINGS_STORAGE_KEY` em `src/stores/ratingsStore.ts`.
+
+Não misturar com favoritos, locale, tema ou com o overlay de CREATE/UPDATE do catálogo.
+
+O `rating` original da FakeStoreAPI permanece no modelo `Product`. A média e a quantidade exibidas são calculadas na apresentação.
+
+---
+
 # 12. Modelo de Criação
 
 O modelo utilizado para criação de produto será diferente do modelo completo retornado pela API quando necessário.
@@ -609,6 +627,7 @@ A origem de cada informação deverá ser clara.
 | Criação de produto | API (`POST /products`) + estado da sessão |
 | Atualização de produto | API (`PUT /products/:id`) + estado da sessão |
 | Favoritos | `localStorage` (somente IDs) |
+| Avaliação local do usuário | `localStorage` (mapa `productId → rating`) |
 | Tema (Light/Dark) | `localStorage` |
 | Pesquisa | Estado da interface |
 | Filtro | Estado da interface |
@@ -653,6 +672,7 @@ Inicialmente:
 
     localStorage
         ├── favoritos (`product-management:favorites`)
+        ├── avaliações (`product-management:product-ratings`)
         └── tema (`product-management:theme`)
 
 Não deverão ser persistidos automaticamente:

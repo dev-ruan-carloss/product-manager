@@ -1306,6 +1306,34 @@ A UX de CREATE/UPDATE precisa ser funcional. Tratar a FakeStoreAPI como banco re
 
 ---
 
+# 35.19 — Avaliação local do usuário (sem endpoint na FakeStoreAPI)
+
+## Decisão
+
+A FakeStoreAPI **não** possui endpoint para avaliações feitas pelo usuário. A avaliação de 1 a 5 estrelas é uma extensão **local** da aplicação:
+
+- persistência em `localStorage` com a chave `product-management:product-ratings` (`RATINGS_STORAGE_KEY`);
+- mapa `productId → rating` (somente o ID e a quantidade de estrelas; nunca o produto completo);
+- estado reativo em `ratingsStore` (Pinia); cálculo reutilizável em `resolveDisplayedRating`; apresentação via `useDisplayedRating`;
+- CREATE/UPDATE da avaliação **não** utiliza a API (`productService` permanece inalterado; não existe `POST /products/:id/reviews`);
+- o `rating.rate` / `rating.count` originais da FakeStoreAPI **não** são sobrescritos no objeto `Product`;
+- a média e a quantidade **exibidas** combinam o rating da API com a avaliação local:
+  - primeira avaliação: `count + 1` e média ponderada;
+  - alteração: substitui a estrela anterior **sem** incrementar `count` de novo;
+- funciona para produtos da API e para produtos criados na sessão (a chave é o ID);
+- F5 recupera a avaliação do `localStorage`.
+
+**Motivo:** o contrato da API de demonstração não persiste reviews do usuário. Misturar isso com favoritos, locale, tema ou com o overlay de CREATE/UPDATE do catálogo geraria acoplamento e perda do rating original.
+
+**Impacto:**
+
+- catálogo (`ProductCard`) e detalhes (`ProductDetails`) compartilham a mesma camada de resolução;
+- Toast de sucesso/erro segue o padrão existente;
+- o modal (`ProductRatingDialog`) usa Dialog do PrimeVue: somente estrelas, sempre em uma linha; em 320–450px há respiro lateral; as ações do detalhe (Favoritar / Avaliar / Editar) ficam na mesma linha e quebram com largura total quando necessário;
+- DELETE de avaliação fica fora do escopo.
+
+---
+
 # 36. Critérios de Aceite
 
 As decisões técnicas serão consideradas definidas quando:
@@ -1333,7 +1361,7 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.29
+**Versão:** 1.31
 
 **Última atualização:** 2026-08-13
 
@@ -1360,3 +1388,7 @@ History Mode + `vercel.json` rewrite para `index.html`. Deep links e F5 em rotas
 ### Nota — estado do catálogo (CREATE/UPDATE)
 
 A decisão 35.18 define o catálogo da sessão: GET inicial da FakeStoreAPI + overlay das respostas de POST/PUT. Sem DELETE. Sem mock de catálogo.
+
+### Nota — avaliação local do usuário
+
+A decisão 35.19 define avaliações de 1 a 5 estrelas persistidas em `localStorage` (`product-management:product-ratings`), vinculadas ao ID, sem alterar o contrato da FakeStoreAPI nem o `rating` original do produto. O modal de avaliação mantém as estrelas em uma linha e respiro lateral em viewports estreitas (320–450px).

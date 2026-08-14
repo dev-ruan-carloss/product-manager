@@ -411,6 +411,10 @@ A utilização de estrelas deverá possuir informação acessível equivalente.
 
 A interface exibe uma estrela preenchida seguida da nota numérica (ex.: `4.8`).
 
+A nota e a quantidade **exibidas** consideram a avaliação local do usuário, quando existir (`useDisplayedRating`). A primeira avaliação incrementa o `count`; alterar a nota não incrementa de novo.
+
+No detalhe do produto, o usuário avalia em um Dialog (`ProductRatingDialog`): somente 1 a 5 estrelas, sem comentário nem outros campos.
+
 ---
 
 # 19. Favoritos
@@ -533,7 +537,10 @@ A página deverá apresentar:
 - descrição;
 - avaliação;
 - favorito;
+- ação de avaliação (adicionar / alterar);
 - ação de edição.
+
+As ações do rodapé do detalhe (Favoritar, Avaliar, Editar) permanecem na mesma linha quando há espaço. Quando não couberem, quebram com `flex-wrap`; o item que cai na linha de baixo ocupa a largura disponível.
 
 ---
 
@@ -834,6 +841,16 @@ Exemplos possíveis:
 
 Não deverão ser utilizados modais desnecessariamente.
 
+O modal de avaliação do produto (`ProductRatingDialog`) utiliza Dialog do PrimeVue e contém somente:
+
+- título e instrução curta;
+- seleção de 1 a 5 estrelas (sempre em **uma única linha**, sem wrap);
+- confirmar (desabilitado sem seleção) e cancelar/fechar.
+
+Não inclui comentário, título da avaliação, nome do usuário nem upload.
+
+Em viewports de **320px a 450px**, o dialog mantém respiro lateral (~1rem de cada lado) para não colar nas bordas da tela. Padding interno do conteúdo e do rodapé é uniforme e contido (sem somar camadas extras). Light e dark mode usam os mesmos tokens visuais do restante da aplicação.
+
 ---
 
 # 44. Toasts
@@ -845,6 +862,8 @@ Exemplos:
 - produto criado (sucesso);
 - produto atualizado (sucesso);
 - falha contextual ao atualizar favoritos;
+- avaliação registrada ou atualizada (sucesso);
+- falha ao salvar avaliação;
 - falha ao carregar categorias.
 
 Erros persistentes de carregamento de página devem usar `ErrorState`, não apenas Toast.
@@ -979,6 +998,7 @@ A estrutura deverá considerar componentes reutilizáveis como:
     ProductSort
     ProductPagination
     ProductDetails
+    ProductRatingDialog
     FavoriteButton
     ProductForm
     LoadingState
@@ -1114,6 +1134,7 @@ A interface será considerada adequada quando:
 - [x] TailwindCSS é utilizado para estilização e layout.
 - [x] Interface possui navegação acessível por teclado.
 - [x] Componentes reutilizáveis foram priorizados.
+- [x] Avaliação local do usuário (1 a 5 estrelas) está disponível no detalhe, com modal e persistência em localStorage.
 
 ---
 
@@ -1121,7 +1142,7 @@ A interface será considerada adequada quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.16
+**Versão:** 1.17
 
 **Última atualização:** 2026-08-13
 
@@ -1139,6 +1160,10 @@ Seletor de idioma no Footer (pt-BR / es / en), textos de UI via `vue-i18n`, cate
 
 - Estado inválido: placeholder neutro; destaque na borda e na mensagem de erro; texto digitado sem vermelho indevido.
 - Contador de Favoritos no Header: associado ao texto via `inline-flex` (não ancorado no ícone com `absolute`).
+
+### Nota — modal de avaliação (2026-08-13)
+
+`ProductRatingDialog` (PrimeVue Dialog): só 1–5 estrelas; sempre em uma linha; em 320–450px o dialog tem respiro lateral; ações do detalhe (Favoritar / Avaliar / Editar) na mesma linha com wrap.
 
 ### Nota — Fase 11
 

@@ -212,6 +212,7 @@ A pasta `components/` será responsável pelos componentes reutilizáveis da int
         ├── ProductSort.vue
         ├── ProductPagination.vue
         ├── ProductDetails.vue
+        ├── ProductRatingDialog.vue
         └── ProductForm.vue
 
 A ordenação da listagem (preço, nome e avaliação) é apresentada por `ProductSort`, integrado em `ProductFilters`.
@@ -415,11 +416,13 @@ Estrutura prevista:
 
     src/stores/
     ├── favoritesStore.ts
+    ├── ratingsStore.ts
     └── themeStore.ts
 
 Estados globais implementados:
 
 - favoritos (`favoritesStore`);
+- avaliações locais do usuário (`ratingsStore`);
 - tema Light/Dark (`themeStore`).
 
 ---
@@ -448,6 +451,19 @@ O store de tema é responsável por:
 - alternar o tema sob ação explícita do usuário.
 
 A resolução inicial segue: preferência salva → preferência do sistema operacional → Light Mode.
+
+---
+
+## 10.3 — Ratings Store
+
+O store de avaliações é responsável por:
+
+- armazenar o mapa `productId → rating` (1 a 5 estrelas);
+- ler e gravar a persistência em `localStorage` (`product-management:product-ratings`);
+- não guardar o objeto completo do produto;
+- não chamar a FakeStoreAPI.
+
+A média e a quantidade exibidas são derivadas (`resolveDisplayedRating` / `useDisplayedRating`) a partir do `rating` original da API e da avaliação local. O objeto `Product` da API não é mutado.
 
 ---
 
@@ -609,6 +625,26 @@ Quando o usuário favoritar um produto:
 3. O identificador do produto é persistido localmente.
 4. As partes interessadas da aplicação recebem o novo estado.
 5. A interface é atualizada.
+
+---
+
+# 16.1 — Fluxo de Avaliação Local
+
+A avaliação do usuário é independente da FakeStoreAPI.
+
+Fluxo conceitual:
+
+    ProductDetails
+        ↓
+    ProductRatingDialog
+        ↓
+    Ratings Store
+        ↓
+    localStorage (`product-management:product-ratings`)
+
+A apresentação (catálogo e detalhes) deriva média e quantidade via `resolveDisplayedRating`, sem mutar o `rating` original da API.
+
+O `ProductRatingDialog` usa Dialog do PrimeVue. As cinco estrelas permanecem em uma única linha. Em telas de 320px a 450px o modal não cola nas laterais da viewport.
 
 ---
 
@@ -949,7 +985,7 @@ A arquitetura será considerada adequada quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.9
+**Versão:** 1.10
 
 **Última atualização:** 2026-08-13
 

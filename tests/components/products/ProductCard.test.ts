@@ -1,9 +1,11 @@
 import { nextTick } from 'vue'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 
 import FavoriteButton from '@/components/FavoriteButton.vue'
 import ProductCard from '@/components/products/ProductCard.vue'
+import ProductDetails from '@/components/products/ProductDetails.vue'
 import { i18n } from '@/i18n'
+import { useRatingsStore } from '@/stores/ratingsStore'
 import { formatPrice } from '@/utils/formatPrice'
 import { makeProduct } from '../../helpers/makeProduct'
 import { mountWithApp } from '../../helpers/mountComponent'
@@ -23,6 +25,9 @@ function normalizeSpaces(value: string): string {
 }
 
 describe('ProductCard', () => {
+  beforeEach(() => {
+    localStorage.clear()
+  })
   it('renderiza título, preço, categoria e avaliação', async () => {
     const { wrapper } = await mountWithApp(ProductCard, {
       props: { product, favorited: false },
@@ -107,5 +112,56 @@ describe('ProductCard', () => {
     )
 
     expect(product.price).toBe(7.95)
+  })
+
+  it('reflete a avaliação local no card sem alterar o produto original', async () => {
+    const originalRating = { ...product.rating }
+    const { wrapper, pinia } = await mountWithApp(ProductCard, {
+      props: { product, favorited: false },
+    })
+
+    useRatingsStore(pinia).setRating(product.id, 5)
+    await nextTick()
+
+    expect(wrapper.text()).toContain('4.5')
+    expect(wrapper.text()).toContain('(147)')
+    expect(
+      wrapper.get('[aria-label="Avaliação 4.5 de 5, com 147 avaliações"]').exists(),
+    ).toBe(true)
+    expect(product.rating).toEqual(originalRating)
+  })
+
+  it('atualiza o card ao alterar a avaliação sem incrementar o count de novo', async () => {
+    const { wrapper, pinia } = await mountWithApp(ProductCard, {
+      props: { product, favorited: false },
+    })
+    const store = useRatingsStore(pinia)
+
+    store.setRating(product.id, 5)
+    await nextTick()
+    expect(wrapper.text()).toContain('(147)')
+
+    store.setRating(product.id, 1)
+    await nextTick()
+    expect(wrapper.text()).toContain('(147)')
+    expect(wrapper.text()).not.toContain('(148)')
+  })
+
+  it('mantém a mesma avaliação calculada que ProductDetails', async () => {
+    const { wrapper: cardWrapper, pinia } = await mountWithApp(ProductCard, {
+      props: { product, favorited: false },
+    })
+    useRatingsStore(pinia).setRating(product.id, 5)
+
+    const { wrapper: detailsWrapper } = await mountWithApp(ProductDetails, {
+      props: { product, favorited: false },
+      pinia,
+    })
+    await nextTick()
+
+    expect(cardWrapper.text()).toContain('4.5')
+    expect(cardWrapper.text()).toContain('(147)')
+    expect(detailsWrapper.text()).toContain('4.5')
+    expect(detailsWrapper.text()).toContain('147')
   })
 })
