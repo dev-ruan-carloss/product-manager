@@ -7,5 +7,5 @@ export const THEME_STORAGE_KEY = 'product-management:theme'
 export const THEME_MODES = ['light', 'dark'] as const satisfies readonly ThemeMode[]
 
 export function isThemeMode(value: unknown): value is ThemeMode {
-  return value === 'light' || value === 'dark'
+  return typeof value === 'string' && (THEME_MODES as readonly string[]).includes(value)
 }

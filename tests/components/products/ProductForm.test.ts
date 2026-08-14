@@ -255,7 +255,7 @@ describe('ProductForm', () => {
     expect(wrapper.text()).toContain('Título do produto')
     await wrapper.get('#product-title').setValue('Preview Title')
     await nextTick()
-    expect(wrapper.get('#product-preview-heading').exists()).toBe(true)
+    expect(wrapper.find('#product-preview-heading').exists()).toBe(true)
     expect(wrapper.text()).toContain('Preview Title')
   })
 

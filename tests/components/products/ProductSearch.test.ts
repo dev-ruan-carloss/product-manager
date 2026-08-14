@@ -41,7 +41,7 @@ describe('ProductSearch', () => {
       props: { modelValue: '', inputId: 'product-search-mobile' },
     })
 
-    expect(wrapper.get('label[for="product-search-mobile"]').exists()).toBe(true)
+    expect(wrapper.find('label[for="product-search-mobile"]').exists()).toBe(true)
     expect(wrapper.get('#product-search-mobile').attributes('type')).toBe('search')
   })
 

@@ -48,7 +48,7 @@ describe('ProductCard', () => {
     const img = wrapper.get('img')
     expect(img.attributes('src')).toBe(product.image)
     expect(img.attributes('alt')).toBe('')
-    expect(wrapper.get(`a[href="/produtos/${product.id}"]`).exists()).toBe(true)
+    expect(wrapper.find(`a[href="/produtos/${product.id}"]`).exists()).toBe(true)
   })
 
   it('expõe aria-label de avaliação', async () => {
@@ -57,7 +57,7 @@ describe('ProductCard', () => {
     })
 
     expect(
-      wrapper.get('[aria-label="Avaliação 4.5 de 5, com 146 avaliações"]').exists(),
+      wrapper.find('[aria-label="Avaliação 4.5 de 5, com 146 avaliações"]').exists(),
     ).toBe(true)
   })
 
@@ -126,7 +126,7 @@ describe('ProductCard', () => {
     expect(wrapper.text()).toContain('4.5')
     expect(wrapper.text()).toContain('(147)')
     expect(
-      wrapper.get('[aria-label="Avaliação 4.5 de 5, com 147 avaliações"]').exists(),
+      wrapper.find('[aria-label="Avaliação 4.5 de 5, com 147 avaliações"]').exists(),
     ).toBe(true)
     expect(product.rating).toEqual(originalRating)
   })
@@ -195,9 +195,9 @@ describe('ProductCard', () => {
 
       expect(body.classes()).toEqual(expect.arrayContaining(['flex', 'flex-1', 'flex-col']))
       expect(summary.classes()).toContain('mt-auto')
-      expect(summary.get('[data-testid="product-card-price"]').exists()).toBe(true)
-      expect(summary.get('[data-testid="product-card-category"]').exists()).toBe(true)
-      expect(summary.get('[data-testid="product-card-rating"]').exists()).toBe(true)
+      expect(summary.find('[data-testid="product-card-price"]').exists()).toBe(true)
+      expect(summary.find('[data-testid="product-card-category"]').exists()).toBe(true)
+      expect(summary.find('[data-testid="product-card-rating"]').exists()).toBe(true)
       expect(main.find('[data-testid="product-card-price"]').exists()).toBe(false)
       expect(main.find('[data-testid="product-card-category"]').exists()).toBe(false)
       expect(main.find('[data-testid="product-card-rating"]').exists()).toBe(false)

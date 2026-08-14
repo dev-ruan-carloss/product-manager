@@ -399,7 +399,7 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 
 - Qualidade, testes manuais e critérios técnicos da Fase 10 foram validados.
 - Vitest configurado com suíte automatizada em `tests/` (separados de `src/`), incluindo `components/`, `composables/`, `services/`, `stores/`, `utils/`, `config/` e `i18n/`.
-- Resultado atual da suíte: **257 testes** passando em **43 arquivos**.
+- Resultado atual da suíte: **314 testes** passando em **48 arquivos**.
 
 ### Nota — melhoria bônus i18n
 

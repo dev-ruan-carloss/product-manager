@@ -64,9 +64,27 @@ describe('ProductDetails', () => {
     })
 
     expect(wrapper.get('img').attributes('alt')).toBe(product.title)
+    expect(wrapper.find('[data-testid="product-image-zoom"]').exists()).toBe(true)
+    expect(wrapper.get('[data-testid="product-image-zoom"]').attributes('data-zoomed')).toBe(
+      'false',
+    )
     expect(wrapper.get('article').attributes('aria-labelledby')).toBe(
       `product-title-${product.id}`,
     )
+  })
+
+  it('substitui a imagem por fallback acessível quando o carregamento falha', async () => {
+    const { wrapper } = await mountWithApp(ProductDetails, {
+      props: { product, favorited: false },
+    })
+
+    await wrapper.get('img').trigger('error')
+
+    expect(wrapper.find('[data-testid="product-image-zoom"]').exists()).toBe(false)
+    expect(wrapper.find('img').exists()).toBe(false)
+    const fallback = wrapper.get('[role="img"]')
+    expect(fallback.attributes('aria-label')).toBe(product.title)
+    expect(fallback.text()).toContain('Imagem indisponível')
   })
 
   it('mostra badge Favoritado e labels de remoção quando favorited', async () => {
@@ -172,7 +190,7 @@ describe('ProductDetails', () => {
     await wrapper.getComponent(ProductRatingDialog).vm.$emit('confirm', 5)
     await nextTick()
 
-    expect(wrapper.get('[aria-label="Avaliação 4.3 de 5, com 11 avaliações"]').exists()).toBe(true)
+    expect(wrapper.find('[aria-label="Avaliação 4.3 de 5, com 11 avaliações"]').exists()).toBe(true)
     expect(findRatingButton(wrapper)?.text()).toContain('Alterar avaliação')
     expect(rateableProduct.rating).toEqual(originalRating)
     expect(JSON.parse(localStorage.getItem(RATINGS_STORAGE_KEY) ?? '{}')).toEqual({ '21': 5 })
@@ -186,13 +204,13 @@ describe('ProductDetails', () => {
     store.setRating(rateableProduct.id, 5)
     await nextTick()
 
-    expect(wrapper.get('[aria-label="Avaliação 4.3 de 5, com 11 avaliações"]').exists()).toBe(true)
+    expect(wrapper.find('[aria-label="Avaliação 4.3 de 5, com 11 avaliações"]').exists()).toBe(true)
     expect(findRatingButton(wrapper)?.text()).toContain('Alterar avaliação')
 
     await wrapper.getComponent(ProductRatingDialog).vm.$emit('confirm', 3)
     await nextTick()
 
-    expect(wrapper.get('[aria-label="Avaliação 4.1 de 5, com 11 avaliações"]').exists()).toBe(true)
+    expect(wrapper.find('[aria-label="Avaliação 4.1 de 5, com 11 avaliações"]').exists()).toBe(true)
     expect(store.getRating(rateableProduct.id)).toBe(3)
   })
 

@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import StarFillIcon from '@primevue/icons/starfill'
 
 import FavoriteButton from '@/components/FavoriteButton.vue'
+import ProductImageZoom from '@/components/products/ProductImageZoom.vue'
 import ProductRatingDialog from '@/components/products/ProductRatingDialog.vue'
 import { useDisplayedRating } from '@/composables/useDisplayedRating'
 import { useSaveProductRating } from '@/composables/useSaveProductRating'
@@ -82,13 +83,10 @@ function onConfirmRating(rating: UserRatingValue): void {
         </div>
 
         <div class="flex items-center justify-center py-4 sm:py-6 lg:py-8">
-          <img
+          <ProductImageZoom
             v-if="!imageFailed"
             :src="product.image"
             :alt="imageAlt"
-            class="max-h-52 w-full max-w-full object-contain sm:max-h-72 lg:max-h-80"
-            width="320"
-            height="320"
             @error="onImageError"
           />
           <div

@@ -14,7 +14,7 @@ describe('LocaleSelector', () => {
     const { wrapper } = await mountWithApp(LocaleSelector)
 
     expect(wrapper.get('label[for="app-locale-select"]').text()).toBe('Idioma')
-    expect(wrapper.get('[aria-label="Selecionar idioma"]').exists()).toBe(true)
+    expect(wrapper.find('[aria-label="Selecionar idioma"]').exists()).toBe(true)
   })
 
   it('atualiza a localeStore ao emitir mudança no Select', async () => {

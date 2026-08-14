@@ -9,7 +9,7 @@ type CategoryMessageKey = keyof typeof ptBR.categories
  * Mapeia o valor original da FakeStoreAPI para a chave i18n de categoria.
  * O valor da API nunca é alterado — apenas a apresentação.
  */
-export const CATEGORY_I18N_KEYS: Readonly<Record<string, string>> = {
+export const CATEGORY_I18N_KEYS: Readonly<Record<string, CategoryMessageKey>> = {
   "men's clothing": 'mensClothing',
   "women's clothing": 'womensClothing',
   jewelery: 'jewelery',
@@ -50,8 +50,7 @@ export function getCategoryPresentationAliases(category: string): string[] {
     return []
   }
 
-  const key = messageKey as CategoryMessageKey
-  const labels = [ptBR.categories[key], en.categories[key], es.categories[key]]
+  const labels = [ptBR.categories[messageKey], en.categories[messageKey], es.categories[messageKey]]
 
-  return labels.filter((label): label is string => typeof label === 'string' && label.length > 0)
+  return labels.filter((label) => label.length > 0)
 }

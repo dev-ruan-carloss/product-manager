@@ -1402,6 +1402,32 @@ Permitir cadastro realista sem tratar a FakeStoreAPI como banco. Separar API × 
 
 ---
 
+## 35.22 — Zoom interativo da imagem nos detalhes
+
+**Data:** 2026-08-13
+
+**Decisão:**
+
+- Implementar zoom **in-place** na imagem principal de `/produtos/:id`, sem página extra e **sem dependência externa**.
+- Estratégia: posição relativa do ponteiro via `getBoundingClientRect()`, clamp entre 0% e 100%, CSS variables (`--zoom-x` / `--zoom-y`) + `transform-origin` + `scale`, com `overflow: hidden` no frame da imagem.
+- Desktop (ponteiro `mouse`): `pointerenter` ativa; `pointermove` atualiza a origem (com `requestAnimationFrame`); `pointerleave` / `pointercancel` restauram o estado normal.
+- Touch / ponteiro grosso: a imagem permanece no comportamento normal. Não há zoom por hover nem gesto complexo de pinça na aplicação (evita conflito com scroll, swipe e navegação).
+- O zoom **não** altera o tamanho estrutural do card/detalhe, não desloca o layout e não esconde título, preço, descrição ou ações.
+- Acessibilidade: `alt` do produto permanece na imagem; o zoom é enhancement visual — nenhuma informação essencial depende de hover; teclado e foco não são interceptados.
+- Camadas: `ProductImageZoom` (apresentação), `useImageZoom` (ponteiro + rAF + limpeza no dispose), `getRelativePointerPercent` (cálculo puro).
+
+**Motivo:**
+
+Reproduzir a experiência conceitual de marketplaces (região sob o cursor ↔ área ampliada) com CSS/eventos nativos, sem layout shift e sem biblioteca de zoom.
+
+**Impacto:**
+
+- `ProductDetails` passa a compor `ProductImageZoom`;
+- testes em `tests/utils/imageZoom.test.ts`, `tests/composables/useImageZoom.test.ts` e `tests/components/products/ProductImageZoom.test.ts`;
+- especificação de UI, arquitetura e README.
+
+---
+
 # 36. Critérios de Aceite
 
 As decisões técnicas serão consideradas definidas quando:
@@ -1429,9 +1455,13 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.33
+**Versão:** 1.34
 
 **Última atualização:** 2026-08-13
+
+### Nota — zoom da imagem nos detalhes
+
+A decisão 35.22 define zoom in-place na imagem de `/produtos/:id` (CSS `transform-origin` + escala, apenas ponteiro mouse). Touch permanece no estado normal. Sem dependência externa.
 
 ### Nota — conteúdo dinâmico de produtos
 
@@ -1443,7 +1473,7 @@ Erros HTTP/runtime passam por AppError + i18n errors.*, com ErrorState/Toast/sub
 
 ### Nota — testes automatizados
 
-Suíte em `tests/` (components, composables, services, stores, schemas, utils, config, i18n, views): **257 testes** passando.
+Suíte em `tests/` (components, composables, services, stores, schemas, utils, config, i18n, views): **314 testes** passando.
 
 ### Nota — limites do formulário de produto
 

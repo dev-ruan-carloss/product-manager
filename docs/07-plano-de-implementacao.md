@@ -988,10 +988,10 @@ Consolidar qualidade técnica, estados de interface, testes manuais e, quando ap
 - Scripts: `npm test`, `npm run test:watch`.
 - Testes organizados em `tests/` (separados de `src/`), por responsabilidade: `components/`, `composables/`, `services/`, `stores/`, `schemas/`, `utils/` (+ `helpers/` e `i18n/`).
 - Cobertura crítica de domínio: favoritos, schema do formulário, filtros/ordenação/paginação, debounce, `parseProductId`, `formatPrice` e `productService`.
-- Cobertura de componentes: AppHeader, AppFooter, FavoriteButton, ProductCard, ProductDetails, ProductForm, ProductFilters, ProductSearch, ProductSort, ProductPagination, ProductGrid, EmptyState, ErrorState, ErrorBoundary, LoadingState, ThemeToggle e LocaleSelector.
+- Cobertura de componentes: AppHeader, AppFooter, FavoriteButton, ProductCard, ProductDetails, ProductImageZoom, ProductForm, ProductFilters, ProductSearch, ProductSort, ProductPagination, ProductGrid, EmptyState, ErrorState, ErrorBoundary, LoadingState, ThemeToggle e LocaleSelector.
 - Estratégia de componentes: comportamento e acessibilidade observáveis (roles, aria-*, labels, emits), com Pinia + vue-i18n + Vue Router + PrimeVue via `tests/helpers/mountComponent.ts`.
 - Também cobertos: `tests/config/` (normalização de erros Axios) e utilitários de apresentação de erro.
-- Resultado atual: **257 testes** passando em **43 arquivos**.
+- Resultado atual: **314 testes** passando em **48 arquivos**.
 
 ---
 
@@ -1200,7 +1200,7 @@ Implementação opcional concluída sem alterar o status das Fases 1–10:
 ### Nota — Fase 11 (2026-08-13)
 
 - Auditoria README × código × desafio × SDD concluída.
-- Suíte atual: **257 testes** / 43 arquivos.
+- Suíte atual: **314 testes** / 48 arquivos.
 - Responsividade documentada de forma coerente: desafio **360px+**, alvo interno **320px+**.
 - Deep links na Vercel retornam HTTP 200.
 

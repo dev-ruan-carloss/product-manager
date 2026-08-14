@@ -544,6 +544,20 @@ A página deverá apresentar:
 
 As ações do rodapé do detalhe (Favoritar, Avaliar, Editar) permanecem na mesma linha quando há espaço. Quando não couberem, quebram com `flex-wrap`; o item que cai na linha de baixo ocupa a largura disponível.
 
+### Zoom da imagem (desktop)
+
+Na imagem principal dos detalhes, o desktop oferece zoom in-place semelhante à experiência de marketplaces:
+
+- ao entrar com o mouse na imagem, o modo de zoom é ativado;
+- a região ampliada acompanha a posição do ponteiro (`transform-origin` + escala);
+- ao sair, a imagem volta ao estado normal;
+- o card/container **não** muda de tamanho estrutural e o restante da página não se desloca;
+- overflow da imagem ampliada fica contido no frame (`overflow: hidden`).
+
+Em smartphone, tablet e ponteiro touch a imagem permanece no comportamento normal (sem depender de hover). O `alt` da imagem continua sendo o título do produto; o zoom não é a única forma de acessar a informação.
+
+Implementação: `ProductImageZoom` + `useImageZoom`, sem biblioteca externa.
+
 ---
 
 # 26. Carregamento dos Detalhes
@@ -1010,6 +1024,7 @@ A estrutura deverá considerar componentes reutilizáveis como:
     ProductSort
     ProductPagination
     ProductDetails
+    ProductImageZoom
     ProductRatingDialog
     FavoriteButton
     ProductForm
@@ -1147,6 +1162,7 @@ A interface será considerada adequada quando:
 - [x] Interface possui navegação acessível por teclado.
 - [x] Componentes reutilizáveis foram priorizados.
 - [x] Avaliação local do usuário (1 a 5 estrelas) está disponível no detalhe, com modal e persistência em localStorage.
+- [x] Zoom interativo da imagem está disponível no detalhe em desktop (mouse), sem depender de hover no touch.
 
 ---
 
@@ -1154,9 +1170,13 @@ A interface será considerada adequada quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.18
+**Versão:** 1.19
 
 **Última atualização:** 2026-08-13
+
+### Nota — zoom da imagem nos detalhes (2026-08-13)
+
+`ProductImageZoom`: zoom in-place no desktop (mouse); touch permanece no estado normal; `alt` preservado; sem layout shift.
 
 ### Nota — melhoria bônus i18n
 

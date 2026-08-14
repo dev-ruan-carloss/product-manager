@@ -212,6 +212,7 @@ A pasta `components/` será responsável pelos componentes reutilizáveis da int
         ├── ProductSort.vue
         ├── ProductPagination.vue
         ├── ProductDetails.vue
+        ├── ProductImageZoom.vue
         ├── ProductRatingDialog.vue
         └── ProductForm.vue
 
@@ -297,6 +298,7 @@ Exemplos possíveis:
     ├── useDebouncedRef.ts
     ├── useInitialFocus.ts
     ├── useProductDetails.ts
+    ├── useImageZoom.ts
     └── useFavoriteProducts.ts
 
 Nem todos esses composables precisarão necessariamente existir.
@@ -1006,7 +1008,7 @@ A arquitetura será considerada adequada quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.11
+**Versão:** 1.12
 
 **Última atualização:** 2026-08-13
 
@@ -1017,6 +1019,10 @@ Pasta `src/i18n/` e `localeStore` adicionadas para internacionalização. Fluxo 
 ### Nota — pasta `schemas/`
 
 Contratos Yup saíram de `utils/` para `src/schemas/` (decisão 35.17). `productFormSchema` continua compartilhado entre criação e edição.
+
+### Nota — zoom da imagem nos detalhes
+
+A imagem de `/produtos/:id` usa zoom in-place no desktop (`ProductImageZoom` + `useImageZoom`), sem dependência externa. Touch permanece no estado normal da imagem.
 
 ### Nota — estado do catálogo após CREATE/UPDATE
 

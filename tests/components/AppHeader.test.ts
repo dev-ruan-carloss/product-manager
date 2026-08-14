@@ -26,9 +26,9 @@ describe('AppHeader', () => {
     expect(nav.text()).toContain('Produtos')
     expect(nav.text()).toContain('Favoritos')
     expect(nav.text()).toContain('Novo Produto')
-    expect(nav.get('a[href="/produtos"]').exists()).toBe(true)
-    expect(nav.get('a[href="/favoritos"]').exists()).toBe(true)
-    expect(nav.get('a[href="/produtos/novo"]').exists()).toBe(true)
+    expect(nav.find('a[href="/produtos"]').exists()).toBe(true)
+    expect(nav.find('a[href="/favoritos"]').exists()).toBe(true)
+    expect(nav.find('a[href="/produtos/novo"]').exists()).toBe(true)
   })
 
   it('marca Produtos como página atual na rota produtos', async () => {
