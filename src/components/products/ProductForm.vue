@@ -15,11 +15,18 @@ import { useInitialFocus } from '@/composables/useInitialFocus'
 import type { Category } from '@/types/category'
 import type { ProductCreatePayload } from '@/types/product'
 import { EMPTY_PRODUCT_FORM, type ProductFormData } from '@/types/productForm'
+import {
+  PRODUCT_DESCRIPTION_MAX_LENGTH,
+  PRODUCT_PRICE_FRACTION_DIGITS,
+  PRODUCT_PRICE_MAX,
+  PRODUCT_TITLE_MAX_LENGTH,
+} from '@/schemas/productFormLimits'
 import { productFormSchema } from '@/schemas/productFormSchema'
 import {
   formatPrice,
   formatPriceInput,
   getCurrencyAffix,
+  isAllowedPriceInput,
   parsePriceInput,
 } from '@/utils/formatPrice'
 import { getLocalizedCategory } from '@/utils/localizeCategory'
@@ -75,6 +82,14 @@ const [price, priceAttrs] = defineField('price')
 const [description, descriptionAttrs] = defineField('description')
 const [category, categoryAttrs] = defineField('category')
 const [image, imageAttrs] = defineField('image')
+
+const titleLength = computed(() => title.value?.length ?? 0)
+const descriptionLength = computed(() => description.value?.length ?? 0)
+
+const priceInputLimits = {
+  max: PRODUCT_PRICE_MAX,
+  fractionDigits: PRODUCT_PRICE_FRACTION_DIGITS,
+} as const
 
 const previewImageFailed = ref(false)
 
@@ -161,9 +176,13 @@ function onPriceInput(raw: string | undefined): void {
 }
 
 function onPriceBlur(): void {
-  const parsed = parsePriceInput(priceDraft.value ?? '', locale.value)
+  const draft = priceDraft.value ?? ''
+  const parsed = parsePriceInput(draft, locale.value)
   price.value = parsed
-  priceDraft.value = null
+
+  if (isAllowedPriceInput(draft, locale.value, priceInputLimits)) {
+    priceDraft.value = null
+  }
 
   const blurHandler = priceAttrs.value.onBlur
   if (typeof blurHandler === 'function') {
@@ -189,6 +208,18 @@ function onPreviewImageError(): void {
 
 function fieldMessageId(field: (typeof FIELD_FOCUS_ORDER)[number]): string {
   return `product-${field}-message`
+}
+
+function fieldCounterId(field: 'title' | 'description'): string {
+  return `product-${field}-counter`
+}
+
+function fieldDescribedBy(field: (typeof FIELD_FOCUS_ORDER)[number]): string {
+  if (field === 'title' || field === 'description') {
+    return `${fieldMessageId(field)} ${fieldCounterId(field)}`
+  }
+
+  return fieldMessageId(field)
 }
 
 function focusFirstInvalidField(
@@ -273,24 +304,36 @@ function onCancel(): void {
               type="text"
               class="w-full"
               :placeholder="t('form.titlePlaceholder')"
+              :maxlength="PRODUCT_TITLE_MAX_LENGTH"
               :invalid="Boolean(errors.title)"
               :disabled="submitting"
               :aria-required="true"
               :aria-invalid="errors.title ? true : undefined"
-              :aria-describedby="fieldMessageId('title')"
+              :aria-describedby="fieldDescribedBy('title')"
               autocomplete="off"
             />
-            <p
-              :id="fieldMessageId('title')"
-              :class="
-                errors.title
-                  ? 'text-sm text-red-600 dark:text-red-400'
-                  : 'text-xs text-slate-500 dark:text-slate-400'
-              "
-              :role="errors.title ? 'alert' : undefined"
-            >
-              {{ errors.title || t('form.titleHint') }}
-            </p>
+            <div class="flex flex-wrap items-start justify-between gap-x-3 gap-y-1">
+              <p
+                :id="fieldMessageId('title')"
+                :class="
+                  errors.title
+                    ? 'text-sm text-red-600 dark:text-red-400'
+                    : 'text-xs text-slate-500 dark:text-slate-400'
+                "
+                :role="errors.title ? 'alert' : undefined"
+              >
+                {{ errors.title || t('form.titleHint') }}
+              </p>
+              <p :id="fieldCounterId('title')" class="shrink-0 text-xs tabular-nums text-slate-500 dark:text-slate-400">
+                <span aria-hidden="true">{{ titleLength }}/{{ PRODUCT_TITLE_MAX_LENGTH }}</span>
+                <span class="sr-only">{{
+                  t('form.characterCountAria', {
+                    current: titleLength,
+                    max: PRODUCT_TITLE_MAX_LENGTH,
+                  })
+                }}</span>
+              </p>
+            </div>
           </div>
 
           <div class="min-w-0 space-y-1.5 md:col-span-1">
@@ -313,7 +356,7 @@ function onCancel(): void {
               :disabled="submitting || categoriesLoading"
               :aria-required="true"
               :aria-invalid="errors.category ? true : undefined"
-              :aria-describedby="fieldMessageId('category')"
+              :aria-describedby="fieldDescribedBy('category')"
             />
             <p
               :id="fieldMessageId('category')"
@@ -367,7 +410,7 @@ function onCancel(): void {
                 :disabled="submitting"
                 :aria-required="true"
                 :aria-invalid="errors.price ? true : undefined"
-                :aria-describedby="fieldMessageId('price')"
+                :aria-describedby="fieldDescribedBy('price')"
                 @update:model-value="onPriceInput"
                 @focus="onPriceFocus"
                 @blur="onPriceBlur"
@@ -409,7 +452,7 @@ function onCancel(): void {
               :disabled="submitting"
               :aria-required="true"
               :aria-invalid="errors.image ? true : undefined"
-              :aria-describedby="fieldMessageId('image')"
+              :aria-describedby="fieldDescribedBy('image')"
               autocomplete="off"
             />
             <p
@@ -439,23 +482,38 @@ function onCancel(): void {
               rows="6"
               auto-resize
               :placeholder="t('form.descriptionPlaceholder')"
+              :maxlength="PRODUCT_DESCRIPTION_MAX_LENGTH"
               :invalid="Boolean(errors.description)"
               :disabled="submitting"
               :aria-required="true"
               :aria-invalid="errors.description ? true : undefined"
-              :aria-describedby="fieldMessageId('description')"
+              :aria-describedby="fieldDescribedBy('description')"
             />
-            <p
-              :id="fieldMessageId('description')"
-              :class="
-                errors.description
-                  ? 'text-sm text-red-600 dark:text-red-400'
-                  : 'text-xs text-slate-500 dark:text-slate-400'
-              "
-              :role="errors.description ? 'alert' : undefined"
-            >
-              {{ errors.description || t('form.descriptionHint') }}
-            </p>
+            <div class="flex flex-wrap items-start justify-between gap-x-3 gap-y-1">
+              <p
+                :id="fieldMessageId('description')"
+                :class="
+                  errors.description
+                    ? 'text-sm text-red-600 dark:text-red-400'
+                    : 'text-xs text-slate-500 dark:text-slate-400'
+                "
+                :role="errors.description ? 'alert' : undefined"
+              >
+                {{ errors.description || t('form.descriptionHint') }}
+              </p>
+              <p
+                :id="fieldCounterId('description')"
+                class="shrink-0 text-xs tabular-nums text-slate-500 dark:text-slate-400"
+              >
+                <span aria-hidden="true">{{ descriptionLength }}/{{ PRODUCT_DESCRIPTION_MAX_LENGTH }}</span>
+                <span class="sr-only">{{
+                  t('form.characterCountAria', {
+                    current: descriptionLength,
+                    max: PRODUCT_DESCRIPTION_MAX_LENGTH,
+                  })
+                }}</span>
+              </p>
+            </div>
           </div>
         </div>
       </section>

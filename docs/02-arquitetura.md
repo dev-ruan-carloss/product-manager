@@ -551,9 +551,10 @@ A pasta `schemas/` concentra os contratos de validação Yup utilizados pelos fo
 Estrutura implementada:
 
     src/schemas/
+    ├── productFormLimits.ts
     └── productFormSchema.ts
 
-`productFormSchema` é compartilhado entre criação e edição via `ProductForm`. As mensagens são resolvidas via i18n no momento da validação.
+`productFormSchema` é compartilhado entre criação e edição via `ProductForm`. As mensagens são resolvidas via i18n no momento da validação. Os limites de domínio (`productFormLimits.ts`) são a fonte única usada pelo Yup e pela restrição de entrada no formulário.
 
 A pasta não deve misturar helpers de formatação ou parse — esses permanecem em `utils/`.
 
@@ -985,7 +986,7 @@ A arquitetura será considerada adequada quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.10
+**Versão:** 1.11
 
 **Última atualização:** 2026-08-13
 

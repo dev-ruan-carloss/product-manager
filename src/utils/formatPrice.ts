@@ -124,6 +124,58 @@ export function parsePriceInput(text: string, locale?: string): number | undefin
   return Number.isFinite(value) ? value : undefined
 }
 
+export type PriceInputLimits = {
+  max: number
+  fractionDigits: number
+}
+
+/**
+ * Restrição de entrada do preço (UX). Não substitui a validação Yup.
+ * Considera o valor numérico, não símbolos de moeda nem separadores.
+ */
+export function isAllowedPriceInput(
+  text: string,
+  locale: string | undefined,
+  limits: PriceInputLimits,
+): boolean {
+  const resolved = resolvePriceLocale(locale)
+  const trimmed = text.trim()
+  if (!trimmed) {
+    return true
+  }
+
+  const { decimal } = getLocaleNumberSeparators(resolved)
+  const { symbol } = getCurrencyAffix(resolved)
+
+  let body = trimmed
+  if (symbol) {
+    body = body.split(symbol).join('')
+  }
+  body = body.replace(/\s/g, '')
+
+  if (body.includes('-')) {
+    return false
+  }
+
+  if (decimal) {
+    const decimalIndex = body.lastIndexOf(decimal)
+    if (decimalIndex >= 0) {
+      const fraction = body.slice(decimalIndex + decimal.length).replace(/\D/g, '')
+      if (fraction.length > limits.fractionDigits) {
+        return false
+      }
+    }
+  }
+
+  const parsed = parsePriceInput(text, resolved)
+  if (parsed === undefined) {
+    const digits = body.replace(/\D/g, '')
+    return digits.length === 0 && Boolean(decimal && body.includes(decimal))
+  }
+
+  return parsed >= 0 && parsed <= limits.max
+}
+
 /**
  * Formata um preço numérico para exibição no locale atual (ou informado).
  * Apenas apresentação — o valor do produto permanece `number`.

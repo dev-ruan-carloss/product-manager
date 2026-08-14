@@ -4,6 +4,11 @@ import { describe, expect, it } from 'vitest'
 
 import ProductForm from '@/components/products/ProductForm.vue'
 import { i18n } from '@/i18n'
+import {
+  PRODUCT_DESCRIPTION_MAX_LENGTH,
+  PRODUCT_PRICE_MAX,
+  PRODUCT_TITLE_MAX_LENGTH,
+} from '@/schemas/productFormLimits'
 import type { ProductFormData } from '@/types/productForm'
 import {
   formatPrice,
@@ -69,7 +74,17 @@ describe('ProductForm', () => {
     )
     expect(wrapper.get('#product-title').attributes('aria-required')).toBe('true')
     expect(wrapper.get('#product-title').attributes('aria-describedby')).toBe(
-      'product-title-message',
+      'product-title-message product-title-counter',
+    )
+    expect(wrapper.get('#product-title').attributes('maxlength')).toBe(
+      String(PRODUCT_TITLE_MAX_LENGTH),
+    )
+    expect(wrapper.get('#product-description').attributes('maxlength')).toBe(
+      String(PRODUCT_DESCRIPTION_MAX_LENGTH),
+    )
+    expect(wrapper.get('#product-title-counter').text()).toContain(`0/${PRODUCT_TITLE_MAX_LENGTH}`)
+    expect(wrapper.get('#product-description-counter').text()).toContain(
+      `0/${PRODUCT_DESCRIPTION_MAX_LENGTH}`,
     )
   })
 
@@ -126,7 +141,9 @@ describe('ProductForm', () => {
     const titleEl = titleInput.element as HTMLInputElement
 
     expect(titleInput.attributes('aria-invalid')).toBe('true')
-    expect(titleInput.attributes('aria-describedby')).toBe('product-title-message')
+    expect(titleInput.attributes('aria-describedby')).toBe(
+      'product-title-message product-title-counter',
+    )
     expect(titleInput.attributes('aria-required')).toBe('true')
     expect(titleMessage.attributes('role')).toBe('alert')
     expect(titleMessage.classes()).toContain('text-red-600')
@@ -386,5 +403,167 @@ describe('ProductForm', () => {
 
     expect(document.activeElement).toBe(wrapper.get('#product-title').element)
     wrapper.unmount()
+  })
+
+  it('impede submit com título ou descrição só de espaços', async () => {
+    const { wrapper } = await mountWithApp(ProductForm, {
+      props: {
+        categories,
+        initialValues: {
+          ...validValues,
+          title: '     ',
+          description: '     ',
+        },
+      },
+    })
+
+    await submitForm(wrapper)
+
+    expect(wrapper.get('#product-title-message').text()).toBe('O título é obrigatório.')
+    expect(wrapper.get('#product-description-message').text()).toBe('A descrição é obrigatória.')
+    expect(wrapper.emitted('submit')).toBeUndefined()
+  })
+
+  it('aceita título e descrição exatamente no limite na criação', async () => {
+    const atLimit: ProductFormData = {
+      ...validValues,
+      title: 'T'.repeat(PRODUCT_TITLE_MAX_LENGTH),
+      description: 'D'.repeat(PRODUCT_DESCRIPTION_MAX_LENGTH),
+      price: 10.5,
+    }
+
+    const { wrapper } = await mountWithApp(ProductForm, {
+      props: { categories, initialValues: atLimit },
+    })
+
+    expect(wrapper.get('#product-title-counter').text()).toContain(
+      `${PRODUCT_TITLE_MAX_LENGTH}/${PRODUCT_TITLE_MAX_LENGTH}`,
+    )
+    expect(wrapper.get('#product-description-counter').text()).toContain(
+      `${PRODUCT_DESCRIPTION_MAX_LENGTH}/${PRODUCT_DESCRIPTION_MAX_LENGTH}`,
+    )
+
+    await submitForm(wrapper)
+    expect(wrapper.emitted('submit')?.[0]?.[0]).toMatchObject({
+      title: atLimit.title,
+      description: atLimit.description,
+      price: 10.5,
+    })
+  })
+
+  it('aceita valores no limite na edição, incluindo preço máximo e duas casas', async () => {
+    const existingAtLimit: ProductFormData = {
+      title: 'E'.repeat(PRODUCT_TITLE_MAX_LENGTH),
+      description: 'E'.repeat(PRODUCT_DESCRIPTION_MAX_LENGTH),
+      price: PRODUCT_PRICE_MAX,
+      category: 'electronics',
+      image: 'https://example.com/existing.jpg',
+    }
+
+    const { wrapper } = await mountWithApp(ProductForm, {
+      props: {
+        categories,
+        initialValues: existingAtLimit,
+        submitLabel: 'Salvar Alterações',
+      },
+    })
+
+    const priceInput = wrapper.get('#product-price').element as HTMLInputElement
+    expect(priceInput.value).toBe(formatPriceInput(PRODUCT_PRICE_MAX, 'pt-BR'))
+
+    await submitForm(wrapper)
+    expect(wrapper.emitted('submit')?.[0]?.[0]).toMatchObject({
+      title: existingAtLimit.title,
+      description: existingAtLimit.description,
+      price: PRODUCT_PRICE_MAX,
+      category: 'electronics',
+      image: existingAtLimit.image,
+    })
+  })
+
+  it('não envia preço com três casas decimais e exibe a validação', async () => {
+    const { wrapper } = await mountWithApp(ProductForm, {
+      props: { categories, initialValues: existingProduct },
+    })
+
+    const input = wrapper.get('#product-price')
+    await input.setValue('10,999')
+    await input.trigger('blur')
+    await nextTick()
+    await submitForm(wrapper)
+
+    expect(wrapper.emitted('submit')).toBeUndefined()
+    expect(wrapper.get('#product-price-message').text()).toBe(
+      String(i18n.global.t('validation.priceDecimals')),
+    )
+    expect(wrapper.get('#product-price').attributes('aria-invalid')).toBe('true')
+  })
+
+  it('não envia preço acima do máximo e exibe a validação', async () => {
+    const { wrapper } = await mountWithApp(ProductForm, {
+      props: { categories, initialValues: existingProduct },
+    })
+
+    const input = wrapper.get('#product-price')
+    await input.setValue(formatPriceInput(1_000_000, 'pt-BR'))
+    await input.trigger('blur')
+    await nextTick()
+    await submitForm(wrapper)
+
+    expect(wrapper.emitted('submit')).toBeUndefined()
+    expect(wrapper.get('#product-price-message').text()).toBe(
+      String(i18n.global.t('validation.priceMax', { max: formatPrice(PRODUCT_PRICE_MAX) })),
+    )
+  })
+
+  it('envia payload normalizado na criação e na edição', async () => {
+    const createMount = await mountWithApp(ProductForm, {
+      props: { categories, initialValues: validValues },
+    })
+    await submitForm(createMount.wrapper)
+    expect(createMount.wrapper.emitted('submit')?.[0]?.[0]).toEqual({
+      title: validValues.title,
+      price: validValues.price,
+      description: validValues.description,
+      category: validValues.category,
+      image: validValues.image,
+    })
+    expect(typeof createMount.wrapper.emitted('submit')?.[0]?.[0]).toBe('object')
+    expect(typeof (createMount.wrapper.emitted('submit')?.[0]?.[0] as { price: number }).price).toBe(
+      'number',
+    )
+
+    const editMount = await mountWithApp(ProductForm, {
+      props: {
+        categories,
+        initialValues: existingProduct,
+        submitLabel: 'Salvar Alterações',
+      },
+    })
+    await submitForm(editMount.wrapper)
+    expect(editMount.wrapper.emitted('submit')?.[0]?.[0]).toMatchObject({
+      title: existingProduct.title,
+      price: existingPrice,
+      description: existingProduct.description,
+    })
+  })
+
+  it('associa o contador de caracteres ao campo para leitores de tela', async () => {
+    const { wrapper } = await mountWithApp(ProductForm, {
+      props: { categories, initialValues: validValues },
+    })
+
+    expect(wrapper.get('#product-title').attributes('aria-describedby')).toContain(
+      'product-title-counter',
+    )
+    expect(wrapper.get('#product-description').attributes('aria-describedby')).toContain(
+      'product-description-counter',
+    )
+    expect(wrapper.get('#product-title-counter').text()).toContain(
+      String(i18n.global.t('form.characterCountAria', {
+        current: validValues.title.length,
+        max: PRODUCT_TITLE_MAX_LENGTH,
+      })),
+    )
   })
 })

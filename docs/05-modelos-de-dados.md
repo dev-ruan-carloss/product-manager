@@ -313,6 +313,18 @@ Helper implementado:
 
 A separação entre `ProductFormData` e os payloads de escrita evita acoplar o estado visual do formulário ao contrato de envio.
 
+Limites de domínio (fonte: `src/schemas/productFormLimits.ts`), aplicados pelo Yup antes do POST/PUT:
+
+| Campo | Obrigatório | Trim / espaços | Máximo |
+|---|---|---|---|
+| `title` | Sim | trim nas pontas; `"   "` inválido; espaços internos preservados | 150 caracteres |
+| `description` | Sim | idem | 1000 caracteres |
+| `price` | Sim | valor `number` | 999.999,99; 2 casas decimais; maior que zero |
+| `category` | Sim | não aceita vazio/`null`/`undefined`/somente espaços | categorias da FakeStoreAPI |
+| `image` | Sim | trim; URL válida | — |
+
+O payload enviado permanece `{ title, price, description, category, image }` com `price: number`.
+
 ---
 
 # 14.1 — Apresentação de produtos e categorias
@@ -871,7 +883,7 @@ Os modelos de dados serão considerados definidos quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.10
+**Versão:** 1.11
 
 **Última atualização:** 2026-08-13
 

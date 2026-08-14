@@ -2,11 +2,16 @@ import { beforeEach, describe, expect, it } from 'vitest'
 
 import { i18n } from '@/i18n'
 import {
+  PRODUCT_PRICE_FRACTION_DIGITS,
+  PRODUCT_PRICE_MAX,
+} from '@/schemas/productFormLimits'
+import {
   CURRENCY_BY_LOCALE,
   formatPrice,
   formatPriceInput,
   getCurrencyAffix,
   getCurrencyForLocale,
+  isAllowedPriceInput,
   parsePriceInput,
   resolvePriceLocale,
 } from '@/utils/formatPrice'
@@ -105,5 +110,27 @@ describe('formatPrice', () => {
     formatPrice(value, 'es')
     formatPriceInput(value, 'es')
     expect(value).toBe(1234.56)
+  })
+
+  it('restringe o input de preço pelo valor numérico, não pela máscara', () => {
+    const limits = { max: PRODUCT_PRICE_MAX, fractionDigits: PRODUCT_PRICE_FRACTION_DIGITS }
+
+    expect(isAllowedPriceInput('', 'pt-BR', limits)).toBe(true)
+    expect(isAllowedPriceInput('7,95', 'pt-BR', limits)).toBe(true)
+    expect(isAllowedPriceInput('7.95', 'en', limits)).toBe(true)
+    expect(isAllowedPriceInput('7,95', 'es', limits)).toBe(true)
+    expect(isAllowedPriceInput('1.234,56', 'pt-BR', limits)).toBe(true)
+    expect(isAllowedPriceInput('1,234.56', 'en', limits)).toBe(true)
+    expect(isAllowedPriceInput(formatPriceInput(PRODUCT_PRICE_MAX, 'pt-BR'), 'pt-BR', limits)).toBe(
+      true,
+    )
+    expect(isAllowedPriceInput('10,99', 'pt-BR', limits)).toBe(true)
+    expect(isAllowedPriceInput('10,999', 'pt-BR', limits)).toBe(false)
+    expect(isAllowedPriceInput('10.999', 'en', limits)).toBe(false)
+    expect(isAllowedPriceInput('10,1234', 'es', limits)).toBe(false)
+    expect(isAllowedPriceInput('-1', 'pt-BR', limits)).toBe(false)
+    expect(isAllowedPriceInput('1.000.000,00', 'pt-BR', limits)).toBe(false)
+    expect(isAllowedPriceInput('abc', 'en', limits)).toBe(false)
+    expect(isAllowedPriceInput(',', 'pt-BR', limits)).toBe(true)
   })
 })

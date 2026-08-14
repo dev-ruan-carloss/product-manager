@@ -567,13 +567,13 @@ Regras:
 
 | Campo | Regras |
 |---|---|
-| Título | obrigatório; trim; conteúdo válido |
-| Preço | obrigatório; numérico; maior que zero |
-| Descrição | obrigatória; trim |
-| Categoria | obrigatória |
+| Título | obrigatório; trim; conteúdo válido; máximo 150 caracteres |
+| Preço | obrigatório; numérico; maior que zero; não negativo; 2 casas decimais; máximo 999.999,99 |
+| Descrição | obrigatória; trim; máximo 1000 caracteres |
+| Categoria | obrigatória; valor selecionado |
 | URL da imagem | obrigatória; URL válida |
 
-Mensagens de erro apresentadas próximas aos campos. Validação ocorre antes do `POST`.
+Mensagens de erro apresentadas próximas aos campos. Validação ocorre antes do `POST`. Limites em `src/schemas/productFormLimits.ts`. `maxlength` e a restrição do input de preço são UX; o Yup permanece a fonte da regra.
 
 ### Endpoint utilizado
 
@@ -630,7 +630,7 @@ Utilizada `public/cadastro-produtos.png` como referência de estrutura, hierarqu
 ### Divergências registradas
 
 1. **Editor rich text:** presente no mockup; não implementado (SDD não exige; usa `Textarea`).
-2. **Limite 10–1000 caracteres na descrição:** presente no mockup; não implementado (SDD exige apenas obrigatoriedade).
+2. **Limite mínimo de 10 caracteres na descrição:** presente no mockup; não implementado (SDD exige obrigatoriedade, não comprimento mínimo). O máximo de 1000 caracteres foi adotado na decisão 35.20.
 3. **Preço no mockup em USD:** a aplicação formata o valor numérico da API conforme o locale atual (`formatPrice`), não o símbolo do mockup.
 4. **Navegação pós-sucesso:** SDD pede "página apropriada"; decisão de implementação: `/produtos`.
 5. **Edição:** concluída na Fase 8 com reuso do `ProductForm`.
@@ -758,12 +758,12 @@ Link "Editar produto" na página de detalhes (`ProductDetails`) para `/produtos/
 
 ### Referência visual
 
-Utilizada `public/editar-produto.png` como referência de hierarquia e layout. Itens só do mockup e fora do SDD **não** implementados (exclusão, rich text, painel "Detalhes atuais", contador 10–1000).
+Utilizada `public/editar-produto.png` como referência de hierarquia e layout. Itens só do mockup e fora do SDD **não** implementados (exclusão, rich text, painel "Detalhes atuais"). O contador de caracteres da descrição/título foi adotado com o máximo da decisão 35.20 (sem mínimo de 10).
 
 ### Divergências registradas
 
 1. **Excluir produto:** presente no mockup; **não implementado** e permanece como item pendente de decisão de escopo (não deve ser tratado como descartado automaticamente).
-2. **Editor rich text / limite de caracteres:** presentes no mockup; não exigidos pelo SDD.
+2. **Editor rich text:** presente no mockup; não exigido pelo SDD. O limite máximo de caracteres da descrição (1000) foi adotado na decisão 35.20, sem mínimo de 10.
 3. **Painel "Detalhes atuais" e rating na prévia:** presentes no mockup; não previstos na especificação de UI do formulário reutilizado.
 4. **Navegação pós-sucesso:** SDD pede "página apropriada"; decisão: `/produtos`, alinhada à Fase 7.
 5. **Label do botão:** mockup usa "Salvar Alterações"; implementado via prop `submitLabel` (criação mantém "Salvar Produto").
@@ -991,7 +991,7 @@ Consolidar qualidade técnica, estados de interface, testes manuais e, quando ap
 - Cobertura de componentes: AppHeader, AppFooter, FavoriteButton, ProductCard, ProductDetails, ProductForm, ProductFilters, ProductSearch, ProductSort, ProductPagination, ProductGrid, EmptyState, ErrorState, ErrorBoundary, LoadingState, ThemeToggle e LocaleSelector.
 - Estratégia de componentes: comportamento e acessibilidade observáveis (roles, aria-*, labels, emits), com Pinia + vue-i18n + Vue Router + PrimeVue via `tests/helpers/mountComponent.ts`.
 - Também cobertos: `tests/config/` (normalização de erros Axios) e utilitários de apresentação de erro.
-- Resultado atual: **184 testes** passando em **37 arquivos**.
+- Resultado atual: **257 testes** passando em **43 arquivos**.
 
 ---
 
@@ -1200,7 +1200,7 @@ Implementação opcional concluída sem alterar o status das Fases 1–10:
 ### Nota — Fase 11 (2026-08-13)
 
 - Auditoria README × código × desafio × SDD concluída.
-- Suíte atual: **184 testes** / 37 arquivos.
+- Suíte atual: **257 testes** / 43 arquivos.
 - Responsividade documentada de forma coerente: desafio **360px+**, alvo interno **320px+**.
 - Deep links na Vercel retornam HTTP 200.
 
@@ -1215,6 +1215,6 @@ Implementação opcional concluída sem alterar o status das Fases 1–10:
 
 **Status:** Concluído
 
-**Versão:** 1.20
+**Versão:** 1.21
 
 **Última atualização:** 2026-08-13

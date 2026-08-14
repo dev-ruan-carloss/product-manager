@@ -228,21 +228,27 @@ Os formulários de criação e edição devem possuir validação estruturada.
 #### Título
 
 - obrigatório;
-- deve possuir conteúdo válido.
+- deve possuir conteúdo válido (não aceita vazio nem somente espaços);
+- máximo de 150 caracteres.
 
 #### Preço
 
 - obrigatório;
 - deve ser numérico;
-- deve ser maior que zero.
+- deve ser maior que zero;
+- não pode ser negativo;
+- no máximo 2 casas decimais;
+- máximo de 999.999,99 (valor numérico, independente da formatação do locale).
 
 #### Descrição
 
-- obrigatória.
+- obrigatória (não aceita vazio nem somente espaços);
+- máximo de 1000 caracteres.
 
 #### Categoria
 
-- obrigatória.
+- obrigatória;
+- deve ser um valor realmente selecionado (não aceita `null`, `undefined`, string vazia nem somente espaços).
 
 #### URL da imagem
 
@@ -854,7 +860,7 @@ Dessa forma, os requisitos permanecem independentes das decisões de implementa�
 
 **Status:** Concluído (requisitos alinhados ao código na Fase 11)
 
-**Versão:** 1.6
+**Versão:** 1.7
 
 **Última atualização:** 2026-08-13
 

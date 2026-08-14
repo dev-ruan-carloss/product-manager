@@ -1334,6 +1334,45 @@ A FakeStoreAPI **não** possui endpoint para avaliações feitas pelo usuário. 
 
 ---
 
+## 35.20 — Limites de validação do formulário de produto
+
+**Data:** 2026-08-13
+
+**Decisão anterior:**
+
+O `productFormSchema` exigia campos obrigatórios, trim, preço > 0 e URL válida, sem máximos de caracteres/dígitos. O mockup sugeria 10–1000 na descrição; isso não havia sido adotado porque o SDD pedia apenas obrigatoriedade.
+
+**Nova decisão:**
+
+Limites de domínio centralizados em `src/schemas/productFormLimits.ts` e aplicados pelo Yup (fonte da regra) e pela UX de entrada:
+
+| Campo | Obrigatório | Máximo | Observação |
+|---|---|---|---|
+| Título | sim | 150 caracteres | trim; `"   "` inválido; espaços internos preservados |
+| Descrição | sim | 1000 caracteres | trim; sem mínimo extra além de não vazio |
+| Preço | sim | 999.999,99 | `number`; > 0; 2 casas decimais; limite no valor, não na máscara |
+| Categoria | sim | — | valor selecionado; sem categorias fictícias |
+| Imagem | sim | — | URL válida; sem upload |
+
+Diferença entre camadas:
+
+- **Restrição de entrada:** `maxlength` no título/descrição; `isAllowedPriceInput` impede dígitos/decimais/sinal extras no preço. Não trunca silenciosamente um valor já carregado na edição.
+- **Validação Yup:** continua validando o payload final, inclusive se o formulário for manipulado externamente.
+
+Não há mínimo de 10 caracteres na descrição: o SDD exige obrigatoriedade, não comprimento mínimo. O máximo de 1000 alinha o mockup ao catálogo real da FakeStoreAPI (descrição mais longa ≈ 772). O título 150 cobre o maior título da API (97) com folga. O preço máximo cobre 999.99 da API sem restringir um catálogo de varejo a valores baixos.
+
+**Motivo:**
+
+Evitar payloads excessivos ou inválidos antes de POST/PUT, com UX previsível e a mesma regra em criação e edição, sem depender da FakeStoreAPI para descobrir erros locais.
+
+**Impacto:**
+
+- `productFormSchema`, `ProductForm`, mensagens i18n (pt-BR, en, es);
+- testes em `tests/schemas/` e no formulário;
+- documentação de requisitos, UI, modelos e arquitetura.
+
+---
+
 # 36. Critérios de Aceite
 
 As decisões técnicas serão consideradas definidas quando:
@@ -1361,7 +1400,7 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.31
+**Versão:** 1.32
 
 **Última atualização:** 2026-08-13
 
@@ -1375,7 +1414,11 @@ Erros HTTP/runtime passam por AppError + i18n errors.*, com ErrorState/Toast/sub
 
 ### Nota — testes automatizados
 
-Suíte em `tests/` (components, composables, services, stores, schemas, utils, config, i18n, views): **184 testes** passando.
+Suíte em `tests/` (components, composables, services, stores, schemas, utils, config, i18n, views): **257 testes** passando.
+
+### Nota — limites do formulário de produto
+
+A decisão 35.20 define máximos de título (150), descrição (1000) e preço (999.999,99 / 2 casas). Yup é a fonte da regra; `maxlength` e a restrição do input de preço são UX.
 
 ### Nota — formatação monetária por locale
 

@@ -647,17 +647,24 @@ Regras mínimas:
 
 ### Título
 
-- obrigatório.
+- obrigatório;
+- conteúdo válido após trim (somente espaços não conta);
+- máximo de 150 caracteres.
 
 ### Preço
 
 - obrigatório;
 - numérico;
-- maior que zero.
+- maior que zero;
+- não negativo;
+- no máximo 2 casas decimais;
+- máximo de 999.999,99 no valor numérico (a máscara `R$ 1.234,56` / `$1,234.56` / `1.234,56 €` não entra na contagem).
 
 ### Descrição
 
-- obrigatória quando definida pelo contrato do desafio.
+- obrigatória;
+- conteúdo válido após trim;
+- máximo de 1000 caracteres.
 
 ### Categoria
 
@@ -669,6 +676,8 @@ Regras mínimas:
 - deve possuir URL válida.
 
 As mensagens de validação deverão ser apresentadas próximas aos respectivos campos.
+
+A restrição de entrada (`maxlength` no título/descrição; bloqueio de dígitos extras no preço) melhora a UX, mas **não** substitui o Yup: o schema continua validando o payload final.
 
 Quando um campo possui texto auxiliar e entra em estado inválido, a mensagem de erro **substitui** o texto auxiliar na mesma região contextual (não devem aparecer as duas ao mesmo tempo). Ver seção 48.
 
@@ -960,7 +969,8 @@ Cada campo do `ProductForm` possui **uma única região contextual** abaixo do i
 Associações acessíveis:
 
 - `aria-invalid="true"` somente enquanto houver erro no campo;
-- `aria-describedby` aponta sempre para a região contextual atualmente apresentada;
+- `aria-describedby` aponta para a região contextual (hint ou erro) e, em título/descrição, também para o contador de caracteres (`product-title-counter` / `product-description-counter`);
+- o contador não é apenas visual: o texto acessível usa `form.characterCountAria`;
 - `aria-required` nos campos obrigatórios;
 - após envio inválido, o foco é movido para o primeiro campo inválido (ordem visual do formulário).
 
@@ -1142,7 +1152,7 @@ A interface será considerada adequada quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.17
+**Versão:** 1.18
 
 **Última atualização:** 2026-08-13
 
