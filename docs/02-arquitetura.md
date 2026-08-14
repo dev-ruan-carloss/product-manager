@@ -302,14 +302,20 @@ Eles deverão ser criados quando houver uma necessidade real de reutilização o
 
 ## 7.1 — useProductsCatalog
 
-Centraliza o carregamento do catálogo (produtos e categorias) via `productService`.
+Fonte única de verdade do catálogo **na sessão da aplicação**.
 
 Responsabilidades:
 
-- carregar produtos e categorias;
-- controlar estado de carregamento;
-- controlar erros;
-- disponibilizar dados para a listagem.
+- carregar produtos e categorias via `GET /products` e `GET /products/categories` (fonte inicial);
+- manter o estado compartilhado entre catálogo, detalhes, edição, criação e favoritos;
+- incorporar o produto retornado por `POST /products` (`addCreatedProduct`);
+- substituir o produto retornado por `PUT /products/:id` (`replaceProduct`);
+- recarregar o catálogo mesclando o GET remoto com as mutações locais da sessão;
+- controlar estado de carregamento e erro.
+
+O GET continua sendo a fonte inicial. Após CREATE/UPDATE, a aplicação **não** depende de um GET posterior para refletir a operação, porque a FakeStoreAPI pode não persistir escritas.
+
+Não é um store Pinia: o estado vive no composable (módulo compartilhado) enquanto a aplicação estiver em execução. Recarregar a página descarta as mutações locais.
 
 ---
 
@@ -335,9 +341,9 @@ Regras:
 
 ## 7.3 — useProductListControls / useFavoriteProducts / useProductDetails
 
-- `useProductListControls` — busca, filtro por categoria, ordenação e paginação locais sobre a coleção carregada via `GET /products` (não utiliza `GET /products/category/:category`).
-- `useProductDetails` — carregamento de um produto por ID (detalhes e edição).
-- `useFavoriteProducts` — resolve IDs favoritos em produtos via `getProducts()` + filtro.
+- `useProductListControls` — busca, filtro por categoria, ordenação e paginação locais sobre a coleção do catálogo da sessão (não utiliza `GET /products/category/:category`).
+- `useProductDetails` — carrega um produto por ID; prefere o catálogo da sessão quando o produto já estiver lá (CREATE/UPDATE) e usa `GET /products/:id` quando não houver cópia local.
+- `useFavoriteProducts` — resolve IDs favoritos em produtos a partir do catálogo da sessão (não faz GET independente que ignoraria mutações locais).
 
 A store Pinia (`useFavoritesStore`) permanece a fonte de verdade dos IDs favoritos.
 
@@ -507,9 +513,12 @@ Exemplos implementados:
     ├── parseProductId.ts
     ├── localizeCategory.ts
     ├── logError.ts
-    └── resolveErrorCopy.ts
+    ├── resolveErrorCopy.ts
+    └── normalizeProduct.ts
 
 `formatPrice.ts` é o único ponto de formatação monetária. Componentes de apresentação (`ProductCard`, `ProductDetails`, prévia do `ProductForm`) chamam `formatPrice`; o input de preço usa `formatPriceInput` / `parsePriceInput` e `getCurrencyAffix`. O locale segue `vue-i18n` (`pt-BR`/`BRL`, `en`/`USD`, `es`/`EUR`).
+
+`normalizeProduct.ts` valida e normaliza respostas de produto (POST/PUT podem omitir `rating`). Não duplicar essa transformação em views ou no service além da chamada a `toProduct`.
 
 Esses arquivos somente deverão existir quando houver uma necessidade real.
 
@@ -613,31 +622,39 @@ O fluxo de criação será:
            ↓
     Validação
            ↓
-    Product Service
+    Product Service (POST /products)
            ↓
     API
            ↓
-    Resultado
+    Produto retornado (normalizado)
            ↓
-    Feedback / Navegação
+    useProductsCatalog.addCreatedProduct
+           ↓
+    Feedback / Navegação para /produtos
 
 O fluxo de edição seguirá estrutura semelhante:
 
     ProdutoEditarView
            ↓
-    Carregamento do produto
+    Carregamento do produto (catálogo da sessão ou GET /products/:id)
            ↓
     ProductForm
            ↓
     Validação
            ↓
-    Product Service
+    Product Service (PUT /products/:id)
            ↓
     API
            ↓
-    Resultado
+    Produto retornado (normalizado)
            ↓
-    Feedback / Navegação
+    useProductsCatalog.replaceProduct
+           ↓
+    Feedback / Navegação para /produtos
+
+A navegação ocorre somente após sucesso da operação e da sincronização do estado. Em erro, o formulário permanece com os dados e o erro segue o tratamento global (`submitError`).
+
+`DELETE /products/:id` não faz parte do escopo e não é implementado.
 
 ---
 
@@ -932,7 +949,7 @@ A arquitetura será considerada adequada quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.8
+**Versão:** 1.9
 
 **Última atualização:** 2026-08-13
 
@@ -943,3 +960,7 @@ Pasta `src/i18n/` e `localeStore` adicionadas para internacionalização. Fluxo 
 ### Nota — pasta `schemas/`
 
 Contratos Yup saíram de `utils/` para `src/schemas/` (decisão 35.17). `productFormSchema` continua compartilhado entre criação e edição.
+
+### Nota — estado do catálogo após CREATE/UPDATE
+
+`useProductsCatalog` é a fonte única de verdade do catálogo na sessão. GET inicial carrega a FakeStoreAPI; respostas bem-sucedidas de POST/PUT atualizam o estado local. A API de demonstração não é tratada como banco persistente. Sem DELETE (fora do escopo).

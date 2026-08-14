@@ -602,12 +602,13 @@ A origem de cada informação deverá ser clara.
 
 | Informação | Fonte |
 |---|---|
-| Produtos | API |
+| Produtos (carga inicial) | API (`GET /products`) |
+| Produtos (após CREATE/UPDATE na sessão) | Resposta de POST/PUT incorporada em `useProductsCatalog` |
 | Categorias | API |
-| Detalhes do produto | API |
-| Criação de produto | API |
-| Atualização de produto | API |
-| Favoritos | `localStorage` |
+| Detalhes do produto | Catálogo da sessão, ou API (`GET /products/:id`) se ainda não houver cópia local |
+| Criação de produto | API (`POST /products`) + estado da sessão |
+| Atualização de produto | API (`PUT /products/:id`) + estado da sessão |
+| Favoritos | `localStorage` (somente IDs) |
 | Tema (Light/Dark) | `localStorage` |
 | Pesquisa | Estado da interface |
 | Filtro | Estado da interface |
@@ -850,10 +851,14 @@ Os modelos de dados serão considerados definidos quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.9
+**Versão:** 1.10
 
 **Última atualização:** 2026-08-13
 
 ### Nota — conteúdo dinâmico de produtos
 
 `title`/`description` permanecem no idioma original da FakeStoreAPI. Categorias conhecidas continuam localizáveis na apresentação. `price` permanece `number`; a string monetária existe só na UI (`formatPrice`).
+
+### Nota — catálogo da sessão
+
+CREATE/UPDATE atualizam `useProductsCatalog` com a resposta da API. Isso não é persistência no backend nem mock do catálogo. Recarregar a página volta ao GET da FakeStoreAPI.

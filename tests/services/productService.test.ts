@@ -48,10 +48,10 @@ describe('productService', () => {
     expect(result).toEqual({ id: 7 })
   })
 
-  it('cria produto via POST /products com payload do contrato', async () => {
+  it('cria produto via POST /products e normaliza a resposta para Product', async () => {
     const payload = {
       title: 'Novo',
-      price: 10,
+      price: 15.9,
       description: 'desc',
       category: 'electronics',
       image: 'https://example.com/a.jpg',
@@ -61,13 +61,18 @@ describe('productService', () => {
     const result = await productService.createProduct(payload)
 
     expect(api.post).toHaveBeenCalledWith('/products', payload)
-    expect(result.id).toBe(21)
+    expect(result).toEqual({
+      id: 21,
+      ...payload,
+      rating: { rate: 0, count: 0 },
+    })
+    expect(typeof result.price).toBe('number')
   })
 
-  it('atualiza produto via PUT /products/:id com payload do contrato', async () => {
+  it('atualiza produto via PUT /products/:id e normaliza a resposta para Product', async () => {
     const payload = {
       title: 'Editado',
-      price: 12,
+      price: 15.9,
       description: 'desc',
       category: 'electronics',
       image: 'https://example.com/a.jpg',
@@ -78,5 +83,35 @@ describe('productService', () => {
 
     expect(api.put).toHaveBeenCalledWith('/products/1', payload)
     expect(result.id).toBe(1)
+    expect(result.price).toBe(15.9)
+    expect(typeof result.price).toBe('number')
+  })
+
+  it('não trata resposta inválida de POST como sucesso', async () => {
+    vi.mocked(api.post).mockResolvedValueOnce({ data: { title: 'sem id' } })
+
+    await expect(
+      productService.createProduct({
+        title: 'Novo',
+        price: 10,
+        description: 'desc',
+        category: 'electronics',
+        image: 'https://example.com/a.jpg',
+      }),
+    ).rejects.toMatchObject({ kind: 'unexpected', retryable: false })
+  })
+
+  it('não trata resposta inválida de PUT como sucesso', async () => {
+    vi.mocked(api.put).mockResolvedValueOnce({ data: { price: 'R$ 15,90' } })
+
+    await expect(
+      productService.updateProduct(1, {
+        title: 'Editado',
+        price: 15.9,
+        description: 'desc',
+        category: 'electronics',
+        image: 'https://example.com/a.jpg',
+      }),
+    ).rejects.toMatchObject({ kind: 'unexpected', retryable: false })
   })
 })

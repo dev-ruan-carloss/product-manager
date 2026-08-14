@@ -1,32 +1,15 @@
 import { computed, ref, watch, type Ref } from 'vue'
 
 import { isAppError, toAppError } from '@/config/api'
+import { useProductsCatalog } from '@/composables/useProductsCatalog'
 import { productService } from '@/services/productService'
 import type { AppError } from '@/types/api'
 import type { Product } from '@/types/product'
-
-function isValidProduct(data: unknown): data is Product {
-  if (typeof data !== 'object' || data === null) {
-    return false
-  }
-
-  const candidate = data as Partial<Product>
-
-  return (
-    typeof candidate.id === 'number' &&
-    typeof candidate.title === 'string' &&
-    typeof candidate.price === 'number' &&
-    typeof candidate.description === 'string' &&
-    typeof candidate.category === 'string' &&
-    typeof candidate.image === 'string' &&
-    typeof candidate.rating === 'object' &&
-    candidate.rating !== null &&
-    typeof candidate.rating.rate === 'number' &&
-    typeof candidate.rating.count === 'number'
-  )
-}
+import { isValidProduct } from '@/utils/normalizeProduct'
 
 export function useProductDetails(productId: Ref<number | null>) {
+  const { getCatalogProduct } = useProductsCatalog({ autoLoad: false })
+
   const product = ref<Product | null>(null)
   const isLoading = ref(false)
   const error = ref<AppError | null>(null)
@@ -39,6 +22,16 @@ export function useProductDetails(productId: Ref<number | null>) {
       isLoading.value = false
       error.value = null
       notFound.value = true
+      return
+    }
+
+    const local = getCatalogProduct(productId.value)
+
+    if (local !== undefined) {
+      product.value = local
+      isLoading.value = false
+      error.value = null
+      notFound.value = false
       return
     }
 

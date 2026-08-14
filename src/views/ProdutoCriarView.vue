@@ -7,6 +7,7 @@ import { useToast } from 'primevue/usetoast'
 import ProductForm from '@/components/products/ProductForm.vue'
 import { isAppError, toAppError } from '@/config/api'
 import { useActionErrorMessage } from '@/composables/useErrorPresentation'
+import { useProductsCatalog } from '@/composables/useProductsCatalog'
 import { productService } from '@/services/productService'
 import type { Category } from '@/types/category'
 import type { ProductCreatePayload } from '@/types/product'
@@ -15,6 +16,7 @@ const { t } = useI18n()
 const router = useRouter()
 const toast = useToast()
 const { messageFor } = useActionErrorMessage()
+const { addCreatedProduct } = useProductsCatalog({ autoLoad: false })
 
 const categories = ref<Category[]>([])
 const categoriesLoading = ref(false)
@@ -49,7 +51,8 @@ async function handleSubmit(payload: ProductCreatePayload): Promise<void> {
   submitError.value = null
 
   try {
-    await productService.createProduct(payload)
+    const created = await productService.createProduct(payload)
+    addCreatedProduct(created)
 
     toast.add({
       severity: 'success',

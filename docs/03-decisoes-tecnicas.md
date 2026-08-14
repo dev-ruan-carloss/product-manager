@@ -1274,6 +1274,38 @@ Schemas de validação Yup passam a viver em `src/schemas/`. O schema de produto
 
 ---
 
+## 35.18 — Estado local do catálogo para CREATE/UPDATE (FakeStoreAPI)
+
+**Data:** 2026-08-13
+
+**Decisão anterior:**
+
+Após POST/PUT bem-sucedido, a aplicação navegava para `/produtos` e `useProductsCatalog` refazia `GET /products` a cada montagem. A resposta da escrita era descartada. A FakeStoreAPI simula CREATE/UPDATE sem persistir as alterações nos GETs posteriores, então o catálogo voltava aos dados originais.
+
+**Nova decisão:**
+
+- `useProductsCatalog` passa a ser a **fonte única de verdade do catálogo na sessão** (estado compartilhado no módulo do composable; sem novo store Pinia).
+- `GET /products` permanece a fonte **inicial** do catálogo. Não há lista mockada nem dados hardcoded no lugar da API.
+- `createProduct` / `updateProduct` no service apenas comunicam com a API e devolvem `Product` tipado (normalização via `toProduct` quando a escrita omite `rating`).
+- Após POST bem-sucedido, a view chama `addCreatedProduct` com o produto retornado **antes** de navegar.
+- Após PUT bem-sucedido, a view chama `replaceProduct` com o produto retornado (preservando `rating` já conhecido, pois o formulário não edita avaliação).
+- Um GET posterior que não contenha a criação/alteração **não** descarta as mutações da sessão: o recarregamento mescla o remoto com o overlay local.
+- Detalhes (`useProductDetails`) e favoritos (`useFavoriteProducts`) consomem esse catálogo. Favoritos continuam persistindo **somente IDs**.
+- Produto criado existe na sessão com o ID retornado pela API. `GET /products/:id` desse ID pode falhar; a aplicação não finge persistência no backend. Recarregar a página descarta mutações locais.
+- `DELETE /products/:id` **não** é implementado (fora do escopo do desafio).
+
+**Motivo:**
+
+A UX de CREATE/UPDATE precisa ser funcional. Tratar a FakeStoreAPI como banco real e refazer GET após escrita mascara o comportamento da API de demonstração e perde as alterações do usuário.
+
+**Impacto:**
+
+- Catálogo, detalhes e favoritos refletem CREATE/UPDATE imediatamente na sessão;
+- testes cobrem o cenário “POST/PUT sucesso + GET posterior sem a alteração”;
+- documentação de arquitetura, contrato da API e modelos alinhados.
+
+---
+
 # 36. Critérios de Aceite
 
 As decisões técnicas serão consideradas definidas quando:
@@ -1301,7 +1333,7 @@ As decisões técnicas serão consideradas definidas quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.28
+**Versão:** 1.29
 
 **Última atualização:** 2026-08-13
 
@@ -1315,7 +1347,7 @@ Erros HTTP/runtime passam por AppError + i18n errors.*, com ErrorState/Toast/sub
 
 ### Nota — testes automatizados
 
-Suíte em `tests/` (components, composables, services, stores, schemas, utils, config, i18n): **164 testes** passando.
+Suíte em `tests/` (components, composables, services, stores, schemas, utils, config, i18n, views): **184 testes** passando.
 
 ### Nota — formatação monetária por locale
 
@@ -1325,6 +1357,6 @@ Preço permanece `number` no modelo e na API. A apresentação usa `formatPrice`
 
 History Mode + `vercel.json` rewrite para `index.html`. Deep links e F5 em rotas internas retornam 200 com o shell da SPA.
 
-### Nota — Fase 11
+### Nota — estado do catálogo (CREATE/UPDATE)
 
-Auditoria final de documentação concluída. O estado vigente das decisões está refletido neste documento, no README e no código.
+A decisão 35.18 define o catálogo da sessão: GET inicial da FakeStoreAPI + overlay das respostas de POST/PUT. Sem DELETE. Sem mock de catálogo.

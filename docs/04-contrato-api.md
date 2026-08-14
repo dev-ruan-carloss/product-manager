@@ -226,7 +226,16 @@ A Fake Store API possui comportamento simulado para operações de escrita.
 
 A criação de um produto não deverá ser considerada como persistência real em um banco de dados permanente.
 
-O frontend deverá tratar a resposta da API respeitando essa característica.
+O frontend deverá tratar a resposta da API respeitando essa característica:
+
+1. Executar `POST /products`.
+2. Validar/normalizar o produto retornado (`toProduct`).
+3. Incorporar esse produto no estado do catálogo da sessão (`addCreatedProduct`).
+4. Só então navegar para `/produtos`.
+
+Um `GET /products` posterior **não** é a fonte da criação. Se a API não incluir o produto criado, o estado local da sessão continua contendo-o até o recarregamento da página.
+
+O ID utilizado é o retornado pela API. Não se gera ID aleatório no frontend. Não se assume que `GET /products/:id` recuperará o recurso criado.
 
 ---
 
@@ -277,6 +286,17 @@ A API deverá retornar uma representação do produto atualizado.
 ## Observação
 
 Assim como na criação, a atualização deverá ser considerada uma operação simulada quando realizada através da Fake Store API.
+
+Fluxo da aplicação:
+
+1. Executar `PUT /products/:id`.
+2. Validar/normalizar o produto retornado.
+3. Substituir o produto correspondente no catálogo da sessão (`replaceProduct`).
+4. Só então navegar.
+
+Um `GET /products` ou `GET /products/:id` posterior pode devolver o preço/título originais. O estado da sessão permanece com os dados retornados pelo PUT.
+
+`DELETE /products/:id` não faz parte do contrato utilizado pela aplicação.
 
 ---
 
@@ -640,9 +660,11 @@ Filtros, ordenação e paginação locais ficam em `useProductListControls`.
 
 # 26. Cache e Requisições
 
-A aplicação não deverá implementar uma camada de cache complexa inicialmente.
+A aplicação não implementa uma camada de cache HTTP complexa.
 
-Os dados poderão permanecer em memória enquanto a aplicação estiver em execução.
+O catálogo permanece em memória enquanto a aplicação estiver em execução (`useProductsCatalog`). Mutações de CREATE/UPDATE da sessão são reaplicadas se o GET for recarregado, porque a FakeStoreAPI pode não persistir escritas.
+
+Esse overlay **não** é persistido em `localStorage` e **não** substitui a FakeStoreAPI por dados fixos.
 
 Uma estratégia mais avançada de cache somente deverá ser adicionada caso exista uma necessidade real.
 
@@ -805,6 +827,6 @@ O contrato da API será considerado documentado quando:
 
 **Status:** Concluído (Fase 11 — auditoria documental)
 
-**Versão:** 1.3
+**Versão:** 1.4
 
 **Última atualização:** 2026-08-13

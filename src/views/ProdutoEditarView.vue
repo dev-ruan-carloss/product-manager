@@ -11,6 +11,7 @@ import ProductForm from '@/components/products/ProductForm.vue'
 import { isAppError, toAppError } from '@/config/api'
 import { useActionErrorMessage, useErrorPresentation } from '@/composables/useErrorPresentation'
 import { useProductDetails } from '@/composables/useProductDetails'
+import { useProductsCatalog } from '@/composables/useProductsCatalog'
 import { productService } from '@/services/productService'
 import type { Category } from '@/types/category'
 import type { ProductCreatePayload, ProductUpdatePayload } from '@/types/product'
@@ -27,6 +28,7 @@ const productId = computed(() => parseProductId(route.params.id))
 
 const { product, isLoading, error, hasError, notFound, loadProduct } = useProductDetails(productId)
 const { presentation } = useErrorPresentation(error, 'product')
+const { replaceProduct } = useProductsCatalog({ autoLoad: false })
 
 const categories = ref<Category[]>([])
 const categoriesLoading = ref(false)
@@ -77,7 +79,8 @@ async function handleSubmit(formPayload: ProductCreatePayload): Promise<void> {
   }
 
   try {
-    await productService.updateProduct(productId.value, payload)
+    const updated = await productService.updateProduct(productId.value, payload)
+    replaceProduct(updated, product.value)
 
     toast.add({
       severity: 'success',

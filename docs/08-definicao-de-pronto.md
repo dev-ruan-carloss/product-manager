@@ -391,7 +391,7 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 
 **Status:** Concluído
 
-**Versão:** 1.14
+**Versão:** 1.15
 
 **Última atualização:** 2026-08-13
 
@@ -399,7 +399,7 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 
 - Qualidade, testes manuais e critérios técnicos da Fase 10 foram validados.
 - Vitest configurado com suíte automatizada em `tests/` (separados de `src/`), incluindo `components/`, `composables/`, `services/`, `stores/`, `utils/`, `config/` e `i18n/`.
-- Resultado atual da suíte: **164 testes** passando em **33 arquivos**.
+- Resultado atual da suíte: **184 testes** passando em **37 arquivos**.
 
 ### Nota — melhoria bônus i18n
 
@@ -414,3 +414,8 @@ Somente após esses critérios serem atendidos a tarefa poderá ser considerada 
 - Responsividade: requisito do desafio **360px+**; alvo interno **320px+**.
 - Deploy: https://product-manager-eta-seven.vercel.app/ com fallback SPA validado (HTTP 200 em deep links).
 - Critério final de consistência documental atendido.
+
+### Nota — CREATE/UPDATE no catálogo da sessão
+
+- POST/PUT bem-sucedidos atualizam `useProductsCatalog`; GET posterior da FakeStoreAPI não precisa persistir a alteração para a UX funcionar.
+- DELETE permanece fora do escopo.
